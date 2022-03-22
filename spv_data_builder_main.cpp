@@ -31,24 +31,24 @@ __declspec(noreturn) static void panic(const char* msg, ...) noexcept
 enum class argument_type : uint8_t
 {
 	ID = 0,
-	STRING = 1,
+	STR = 1,
 	U32 = 2,
 	I32 = 3,
 	F32 = 4,
-	RESULT = 5,
-	RESULTTYPE = 6,
-	DECORATION = 7,
+	RST = 5,
+	RTYPE = 6,
+	DECO = 7,
 };
 
 static constexpr const char* argument_type_names[]{
 	"ID",
-	"STRING",
+	"STR",
 	"U32",
 	"I32",
 	"F32",
-	"RESULT",
-	"RESULTTYPE",
-	"DECORATION",
+	"RST",
+	"RTYPE",
+	"DECO",
 };
 
 enum class pstate
@@ -57,10 +57,8 @@ enum class pstate
 	seek_insn_name,
 	seek_insn_opcode,
 	seek_insn_args,
-	seek_args_open,
 	seek_args_name,
 	seek_args_type,
-	seek_args_close,
 	seek_insn_close,
 };
 
@@ -160,13 +158,15 @@ static const char* isolate_token_for_panic(const char* str) noexcept
 			return buf;
 		}
 
-		buf[i] = *str++;
+		buf[i++] = *str++;
 	}
+
+	buf[i] = '\0';
 
 	return buf;
 }
 
-__declspec(noreturn) static void standard_panic(const char* expected, const char* instead) noexcept
+__declspec(noreturn) static void parse_panic(const char* expected, const char* instead) noexcept
 {
 	panic("Line %d:Expected %s. Found '%s' instead.\n", line_number, expected, isolate_token_for_panic(instead));
 }
@@ -250,17 +250,17 @@ int main(int argc, const char** argv)
 	const char* curr = skip_whitespace(input);
 
 	if (strncmp(curr, instruction_array_string, strlen(instruction_array_string)) != 0)
-		standard_panic(instruction_array_string, curr);
+		parse_panic(instruction_array_string, curr);
 
 	curr = skip_whitespace(curr + strlen(instruction_array_string));
 
 	if (*curr != ':')
-		standard_panic(":", curr);
+		parse_panic(":", curr);
 
 	curr = skip_whitespace(curr + 1);
 
 	if (*curr != '[')
-		standard_panic("[", curr);
+		parse_panic("[", curr);
 
 	curr = skip_whitespace(curr + 1);
 
@@ -273,7 +273,6 @@ int main(int argc, const char** argv)
 	output_data output;
 
 	bool done = false;
-
 	while (!done)
 	{
 		switch (state)
@@ -295,7 +294,7 @@ int main(int argc, const char** argv)
 			}
 			else
 			{
-				standard_panic("{|]", curr);
+				parse_panic("{|]", curr);
 			}
 
 			curr = skip_whitespace(curr + 1);
@@ -305,17 +304,17 @@ int main(int argc, const char** argv)
 		case pstate::seek_insn_opcode:
 		{
 			if (strncmp(curr, instruction_opcode_string, strlen(instruction_opcode_string)) != 0)
-				standard_panic(instruction_opcode_string, curr);
+				parse_panic(instruction_opcode_string, curr);
 
 			curr = skip_whitespace(curr + strlen(instruction_opcode_string));
 
 			if (*curr != ':')
-				standard_panic(":", curr);
+				parse_panic(":", curr);
 
 			curr = skip_whitespace(curr + 1);
 
 			if (*curr < '0' || *curr > '9')
-				standard_panic("[0-9]", curr);
+				parse_panic("[0-9]", curr);
 
 			uint32_t opcode = 0;
 
@@ -336,17 +335,17 @@ int main(int argc, const char** argv)
 		case pstate::seek_insn_name:
 		{
 			if (strncmp(curr, instruction_name_string, strlen(instruction_name_string)) != 0)
-				standard_panic(instruction_name_string, curr);
+				parse_panic(instruction_name_string, curr);
 
 			curr = skip_whitespace(curr + strlen(instruction_name_string));
 
 			if (*curr != ':')
-				standard_panic(":", curr);
+				parse_panic(":", curr);
 
 			curr = skip_whitespace(curr + 1);
 
 			if (*curr != '"')
-				standard_panic("\"instruction-name\"", curr);
+				parse_panic("\"instruction-name\"", curr);
 
 			++curr;
 
@@ -355,7 +354,7 @@ int main(int argc, const char** argv)
 			while (curr[i] != '"')
 			{
 				if (curr[i] == '\0' || curr[i] == '\r' || curr[i] == '\n')
-					standard_panic("\"instruction-name\"", curr);
+					parse_panic("\"instruction-name\"", curr);
 
 				++i;
 			}
@@ -371,129 +370,93 @@ int main(int argc, const char** argv)
 		case pstate::seek_insn_args:
 		{
 			if (strncmp(curr, instruction_args_string, strlen(instruction_args_string)) != 0)
-				standard_panic(instruction_args_string, curr);
+				parse_panic(instruction_args_string, curr);
 
 			curr = skip_whitespace(curr + strlen(instruction_args_string));
 
 			if (*curr != ':')
-				standard_panic(":", curr);
+				parse_panic(":", curr);
 
 			curr = skip_whitespace(curr + 1);
 
 			if (*curr != '[')
-				standard_panic("[", curr);
+				parse_panic("[", curr);
 
 			curr = skip_whitespace(curr + 1);
 
-			state = pstate::seek_args_open;
-
-			break;
-		}
-		case pstate::seek_args_open:
-		{
-			if (*curr == '{')
-			{
-				if (curr_argc == 255)
-					panic("Line %d: Number of instruction arguments exceeds maximum of 255.\n", line_number);
-
-				++curr_argc;
-
-				state = pstate::seek_args_type;
-			}
-			else if (*curr == ']')
-			{
-				state = pstate::seek_insn_close;
-			}
-			else
-			{
-				standard_panic("{|]", curr);
-			}
-
-			curr = skip_whitespace(curr + 1);
+			state = pstate::seek_args_type;
 
 			break;
 		}
 		case pstate::seek_args_type:
 		{
-			if (strncmp(curr, argument_type_string, strlen(argument_type_string)) != 0)
-				standard_panic(argument_type_string, curr);
+			if (*curr != ']')
+			{
+				uint32_t name_idx = ~0u;
 
-			curr = skip_whitespace(curr + strlen(argument_type_string));
+				for (uint32_t i = 0; i != _countof(argument_type_names); ++i)
+					if (strncmp(curr, argument_type_names[i], strlen(argument_type_names[i])) == 0)
+					{
+						name_idx = i;
 
-			if (*curr != ':')
-				standard_panic(":", curr);
+						output.append(static_cast<argument_type>(i));
 
-			curr = skip_whitespace(curr + 1);
+						break;
+					}
 
-			uint32_t name_idx = ~0u;
+				++curr_argc;
 
-			for (uint32_t i = 0; i != _countof(argument_type_names); ++i)
-				if (strncmp(curr, argument_type_names[i], strlen(argument_type_names[i])) == 0)
-				{
-					name_idx = i;
+				if (name_idx == ~0u)
+					parse_panic("instruction-type", curr);
 
-					output.append(static_cast<argument_type>(i));
-				}
+				curr = skip_whitespace(curr + strlen(argument_type_names[name_idx]));
 
-			if (name_idx == ~0u)
-				standard_panic("ID|STRING|U32|I32|F32|RESULT", curr);
+				state = pstate::seek_args_name;
+			}
+			else
+			{
+				curr = skip_whitespace(curr + 1);
 
-			curr = skip_whitespace(curr + strlen(argument_type_names[name_idx]));
-
-			state = pstate::seek_args_name;
+				state = pstate::seek_insn_close;
+			}
 
 			break;
 		}
 		case pstate::seek_args_name:
 		{
-			if (strncmp(curr, argument_name_string, strlen(argument_name_string)) != 0)
-				standard_panic(argument_name_string, curr);
-
-			curr = skip_whitespace(curr + strlen(argument_name_string));
-
-			if (*curr != ':')
-				standard_panic(":", curr);
-
-			curr = skip_whitespace(curr + 1);
-
-			if (*curr != '"')
-				standard_panic("\"argument-name\"", curr);
-
-			++curr;
-
-			uint32_t i = 0;
-
-			while (curr[i] != '"')
+			if (*curr == '"')
 			{
-				if (curr[i] == '\0' || curr[i] == '\r' || curr[i] == '\n')
-					standard_panic("\"argument-name\"", curr);
+				++curr;
 
-				++i;
+				uint32_t i = 0;
+
+				while (curr[i] != '"')
+				{
+					if (curr[i] == '\0' || curr[i] == '\r' || curr[i] == '\n')
+						parse_panic("\"argument-name\"", curr);
+
+					++i;
+				}
+
+				output.append(curr, i);
+
+				curr = skip_whitespace(curr + i + 1);
+			}
+			else
+			{
+				char c = '\0';
+
+				output.append(&c, 0);
 			}
 
-			output.append(curr, i);
-
-			curr = skip_whitespace(curr + i + 1);
-
-			state = pstate::seek_args_close;
-
-			break;
-		}
-		case pstate::seek_args_close:
-		{
-			if (*curr != '}')
-				standard_panic("}", curr);
-
-			curr = skip_whitespace(curr + 1);
-
-			state = pstate::seek_args_open;
+			state = pstate::seek_args_type;
 
 			break;
 		}
 		case pstate::seek_insn_close:
 		{
 			if (*curr != '}')
-				standard_panic("}", curr);
+				parse_panic("}", curr);
 
 			output.overwrite(curr_index.byte_offset, curr_argc);
 
@@ -509,11 +472,7 @@ int main(int argc, const char** argv)
 	}
 
 	if (curr != input + input_bytes)
-		standard_panic("End of file", curr);
-
-	// TODO: Create Hashmap of indices
-
-	// TODO: Write results
+		parse_panic("End of file", curr);
 
 	return 0;
 }
