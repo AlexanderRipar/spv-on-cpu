@@ -17,3 +17,7 @@ add_executable(tests tests.cpp spvcpu.hpp)
 target_link_libraries(tests PRIVATE spvcpu ${Vulkan_LIBRARY})
 
 target_include_directories(tests PRIVATE ${Vulkan_INCLUDE_DIR})
+
+
+
+add_executable(spv-data-builder spv_data_builder_main.cpp spv_data_builder_strings.hpp)

@@ -1,0 +1,38 @@
+	
+instructions : [
+	{
+		opcode : 0
+		name : "Nop"
+		args : [
+		]
+	}
+	{
+		opcode : 1
+		name : "Undef"
+		args : [
+			{
+				type : RESULTTYPE
+				name : ""
+			}
+			{
+				type : RESULT
+				name : ""
+			}
+		]
+	}
+	{
+		opcode : 321
+		name : "SizeOf"
+		args : [
+			{
+
+			}
+			{
+
+			}
+			{
+				
+			}
+		]
+	}
+]
