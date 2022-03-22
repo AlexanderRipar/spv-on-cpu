@@ -217,10 +217,10 @@ int main(int argc, const char** argv)
 
 	FILE* output_file, * input_file;
 
-	if (fopen_s(&input_file, argv[1], "rb"))
+	if (fopen_s(&input_file, argv[1], "rb") != 0)
 		panic("Could not open file %s for reading.\n", argv[1]);
 
-	if (fopen_s(&output_file, argv[2], "wb"))
+	if (fopen_s(&output_file, argv[2], "wb") != 0)
 		panic("Could not open file %s for writing.\n", argv[2]);
 
 	if (fseek(input_file, 0, SEEK_END) != 0)
