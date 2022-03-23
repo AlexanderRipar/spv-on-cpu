@@ -12,7 +12,7 @@ Expected format: Pseudo-JSON with the following structure
 		opcode: instruction-opcode
 		name: "instruction-name"
 		args: [
-				INSN_TYPE [: "argument-name"]
+				[OPT] [VAR] INSN_TYPE [: "argument-name"]
 				...
 		]
 	}
@@ -43,6 +43,10 @@ and indicates argument's type.
 NOTE: RESULT also represents an ID type, but carries the additional semantic
 information, that the argument is the instruction's Result <id>.
 
+The optional flags OPT and VAR indicate that the presence of the argument is
+optional or that the argument is in fact variable-length list of arguments.
+If the variable list may be zero arguments long, OPT and ARG must both be
+specified. Otherwise, it is assumed that the list has at least one element.
 
 
 outputfile:
@@ -104,3 +108,5 @@ constexpr const char* const argument_name_string = "name";
 constexpr const char* const argument_type_string = "type";
 
 constexpr const char* const argument_optional_string = "OPT";
+
+constexpr const char* const argument_variadic_string = "VAR";

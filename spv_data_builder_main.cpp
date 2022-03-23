@@ -177,9 +177,14 @@ __declspec(noreturn) static void parse_panic(const char* expected, const char* i
 	panic("Line %d:Expected '%s'. Found '%s' instead.\n", line_number, expected, isolate_token_for_panic(instead));
 }
 
+static bool is_whitespace(char c) noexcept
+{
+	return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\0';
+}
+
 static const char* skip_whitespace(const char* str) noexcept
 {
-	while (*str == ' ' || *str == '\t' || *str == '\n' || *str == '\r' || *str == '#')
+	while (is_whitespace(*str) || *str == '#')
 	{
 		if (*str == '#')
 		{
@@ -279,6 +284,8 @@ int main(int argc, const char** argv)
 	output_data output;
 
 	bool prev_arg_was_optional;
+
+	bool prev_arg_was_variadic;
 
 	bool done = false;
 
@@ -393,6 +400,8 @@ int main(int argc, const char** argv)
 
 			prev_arg_was_optional = false;
 
+			prev_arg_was_variadic = false;
+
 			curr = skip_whitespace(curr + 1);
 
 			state = pstate::seek_args_type;
@@ -403,29 +412,66 @@ int main(int argc, const char** argv)
 		{
 			if (*curr != ']')
 			{
-				bool is_optional = false;
+				if (prev_arg_was_variadic)
+					panic("Line %d: Cannot have another argument after variadic argument.\n", line_number);
 
-				if (strncmp(curr, argument_optional_string, strlen(argument_optional_string)) == 0)
+				uint32_t name_len = 0;
+
+				bool flag_optional = false;
+
+				bool flag_variadic = false;
+
+				bool is_flag = true;
+
+				while (is_flag)
 				{
-					curr = skip_whitespace(curr + strlen(argument_optional_string));
+					while (!is_whitespace(curr[name_len]))
+						++name_len;
 
-					prev_arg_was_optional = true;
+					if (strncmp(curr, argument_optional_string, strlen(argument_optional_string)) == 0 && is_whitespace(curr[strlen(argument_optional_string)]))
+					{
+						curr = skip_whitespace(curr + strlen(argument_optional_string));
 
-					is_optional = true;
-				}
-				else if (prev_arg_was_optional)
-				{
+						prev_arg_was_optional = true;
+
+						if (flag_optional)
+							panic("Line %d: '%s' specified more than once.\n", line_number, argument_optional_string);
+
+						flag_optional = true;
+
+						is_flag = true;
+					}
+					else if (prev_arg_was_optional)
+					{
 						panic("Line %d: Cannot have non-optional argument after optional argument.\n", line_number);
+					}
+					else if (strncmp(curr, argument_variadic_string, strlen(argument_variadic_string)) == 0 && is_whitespace(curr[strlen(argument_variadic_string)]))
+					{
+						curr = skip_whitespace(curr + strlen(argument_variadic_string));
+
+						prev_arg_was_variadic = true;
+
+						if (flag_variadic)
+							panic("Line %d: '%s' specified more than once.\n", line_number, argument_optional_string);
+
+						flag_variadic = true;
+
+						is_flag = true;
+					}
+					else
+					{
+						is_flag = false;
+					}
 				}
 
 				uint32_t name_idx = ~0u;
-
+				
 				for (uint32_t i = 0; i != _countof(argument_type_names); ++i)
 					if (strncmp(curr, argument_type_names[i], strlen(argument_type_names[i])) == 0)
 					{
 						name_idx = i;
 
-						output.append(static_cast<argument_type>(i | static_cast<uint8_t>(is_optional << 7)));
+						output.append(static_cast<argument_type>(i | (static_cast<uint8_t>(flag_optional) << 7) | (static_cast<uint8_t>(flag_variadic) << 6)));
 
 						break;
 					}
