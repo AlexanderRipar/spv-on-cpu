@@ -179,7 +179,7 @@ __declspec(noreturn) static void parse_panic(const char* expected, const char* i
 
 static bool is_whitespace(char c) noexcept
 {
-	return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\0';
+	return c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
 
 static const char* skip_whitespace(const char* str) noexcept
