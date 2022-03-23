@@ -428,9 +428,9 @@ int main(int argc, const char** argv)
 					while (!is_whitespace(curr[name_len]))
 						++name_len;
 
-					if (strncmp(curr, argument_optional_string, strlen(argument_optional_string)) == 0 && is_whitespace(curr[strlen(argument_optional_string)]))
+					if (strncmp(curr, argument_optional_string, name_len) == 0 && argument_optional_string[name_len] == '\0')
 					{
-						curr = skip_whitespace(curr + strlen(argument_optional_string));
+						curr = skip_whitespace(curr + name_len);
 
 						prev_arg_was_optional = true;
 
@@ -445,9 +445,9 @@ int main(int argc, const char** argv)
 					{
 						panic("Line %d: Cannot have non-optional argument after optional argument.\n", line_number);
 					}
-					else if (strncmp(curr, argument_variadic_string, strlen(argument_variadic_string)) == 0 && is_whitespace(curr[strlen(argument_variadic_string)]))
+					else if (strncmp(curr, argument_variadic_string, name_len) == 0 && argument_variadic_string[name_len] == '\0')
 					{
-						curr = skip_whitespace(curr + strlen(argument_variadic_string));
+						curr = skip_whitespace(curr + name_len);
 
 						prev_arg_was_variadic = true;
 
@@ -467,7 +467,7 @@ int main(int argc, const char** argv)
 				uint32_t name_idx = ~0u;
 				
 				for (uint32_t i = 0; i != _countof(argument_type_names); ++i)
-					if (strncmp(curr, argument_type_names[i], strlen(argument_type_names[i])) == 0)
+					if (strncmp(curr, argument_type_names[i], name_len) == 0 && argument_optional_string[name_len] == '\0')
 					{
 						name_idx = i;
 
@@ -481,7 +481,7 @@ int main(int argc, const char** argv)
 				if (name_idx == ~0u)
 					parse_panic("instruction-type", curr);
 
-				curr = skip_whitespace(curr + strlen(argument_type_names[name_idx]));
+				curr = skip_whitespace(curr + name_len);
 
 				state = pstate::seek_args_name;
 			}
