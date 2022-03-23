@@ -174,7 +174,7 @@ static const char* isolate_token_for_panic(const char* str) noexcept
 
 __declspec(noreturn) static void parse_panic(const char* expected, const char* instead) noexcept
 {
-	panic("Line %d:Expected %s. Found '%s' instead.\n", line_number, expected, isolate_token_for_panic(instead));
+	panic("Line %d:Expected '%s'. Found '%s' instead.\n", line_number, expected, isolate_token_for_panic(instead));
 }
 
 static const char* skip_whitespace(const char* str) noexcept
