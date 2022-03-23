@@ -38,6 +38,9 @@ enum class argument_type : uint8_t
 	RST = 5,
 	RTYPE = 6,
 	DECO = 7,
+	LANGID = 8,
+	TYPID = 9,
+	MEMBER = 10,
 };
 
 static constexpr const char* argument_type_names[]{
@@ -49,6 +52,9 @@ static constexpr const char* argument_type_names[]{
 	"RST",
 	"RTYPE",
 	"DECO",
+	"LANGID",
+	"TYPID",
+	"MEMBER",
 };
 
 enum class pstate
@@ -272,7 +278,10 @@ int main(int argc, const char** argv)
 
 	output_data output;
 
+	bool prev_arg_was_optional;
+
 	bool done = false;
+
 	while (!done)
 	{
 		switch (state)
@@ -281,8 +290,6 @@ int main(int argc, const char** argv)
 		{
 			if (*curr == '{')
 			{
-				curr_argc = 0;
-
 				curr_index.byte_offset = output.reserve_byte();
 
 				state = pstate::seek_insn_opcode;
@@ -382,6 +389,10 @@ int main(int argc, const char** argv)
 			if (*curr != '[')
 				parse_panic("[", curr);
 
+			curr_argc = 0;
+
+			prev_arg_was_optional = false;
+
 			curr = skip_whitespace(curr + 1);
 
 			state = pstate::seek_args_type;
@@ -392,6 +403,21 @@ int main(int argc, const char** argv)
 		{
 			if (*curr != ']')
 			{
+				bool is_optional = false;
+
+				if (strncmp(curr, argument_optional_string, strlen(argument_optional_string)) == 0)
+				{
+					curr = skip_whitespace(curr + strlen(argument_optional_string));
+
+					prev_arg_was_optional = true;
+
+					is_optional = true;
+				}
+				else if (prev_arg_was_optional)
+				{
+						panic("Line %d: Cannot have non-optional argument after optional argument.\n", line_number);
+				}
+
 				uint32_t name_idx = ~0u;
 
 				for (uint32_t i = 0; i != _countof(argument_type_names); ++i)
@@ -399,7 +425,7 @@ int main(int argc, const char** argv)
 					{
 						name_idx = i;
 
-						output.append(static_cast<argument_type>(i));
+						output.append(static_cast<argument_type>(i | static_cast<uint8_t>(is_optional << 7)));
 
 						break;
 					}

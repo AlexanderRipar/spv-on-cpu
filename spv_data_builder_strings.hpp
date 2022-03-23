@@ -35,6 +35,9 @@ INSN_TYPE must be one of
 	RST          -> 5
 	RTYPE        -> 6
 	DECO         -> 7
+	LANGID       -> 8
+	TYPID        -> 9
+	MEMBER       -> 10
 
 and indicates argument's type.
 NOTE: RESULT also represents an ID type, but carries the additional semantic
@@ -99,3 +102,5 @@ constexpr const char* const instruction_args_string = "args";
 constexpr const char* const argument_name_string = "name";
 
 constexpr const char* const argument_type_string = "type";
+
+constexpr const char* const argument_optional_string = "OPT";
