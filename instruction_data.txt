@@ -2233,773 +2233,1670 @@ instructions : [
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 207
+		name : "DPdx"
 		args : [
-			
+			RTYPE
+			RST
+			ID "P"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 208
+		name : "DPdy"
 		args : [
-			
+			RTYPE
+			RST
+			ID "P"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 209
+		name : "Fwidth"
 		args : [
-			
+			RTYPE
+			RST
+			ID "P"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 210
+		name : "DPdxFine"
 		args : [
-			
+			RTYPE
+			RST
+			ID "P"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 211
+		name : "DPdyFine"
 		args : [
-			
+			RTYPE
+			RST
+			ID "P"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 212
+		name : "FwidthFine"
 		args : [
-			
+			RTYPE
+			RST
+			ID "P"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 213
+		name : "DPdxCoarse"
 		args : [
-			
+			RTYPE
+			RST
+			ID "P"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 214
+		name : "DPdyCoarse"
 		args : [
-			
+			RTYPE
+			RST
+			ID "P"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 215
+		name : "FwidthCoarse"
 		args : [
-			
+			RTYPE
+			RST
+			ID "P"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 245
+		name : "Phi"
 		args : [
-			
+			RTYPE
+			RST
+			VAR ID "TODO"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 246
+		name : "LoopMerge"
 		args : [
-			
+			ID "MergeBlock"
+			ID "ContinueTarget"
+			LOOPCTRL
+			OPT VAR LOOPCTRLARG
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 247
+		name : "SelectionMerge"
 		args : [
-			
+			ID "MergeBlock"
+			SELECTIONCTRL
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 248
+		name : "Label"
 		args : [
-			
+			RST
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 249
+		name : "Branch"
 		args : [
-			
+			ID "TargetLabel"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 250
+		name : "BranchConditional"
 		args : [
-			
+			ID "Condition"
+			ID "TrueLabel"
+			ID "FalseLabel"
+			OPT U32 "TrueWeigth"
+			OPT U32 "FalseWeight"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 251
+		name : "Switch"
 		args : [
-			
+			ID "Selector"
+			ID "Default"
+			OPT VAR UNKNOWN "TODO"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 252
+		name : "Kill"
 		args : [
-			
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 253 
+		name : "Return"
 		args : [
-			
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 254
+		name : "ReturnValue"
 		args : [
-			
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 255
+		name : "Unreachable"
 		args : [
-			
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 256
+		name : "LifetimeStart"
 		args : [
-			
+			ID "Pointer"
+			U32 "Size"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 257
+		name : "LifetimeStop"
 		args : [
-			
+			ID "Pointer"
+			U32 "Size"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 4416
+		name : "TerminateInvocation"
 		args : [
-			
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5380
+		name : "DemoteToHelperInvocation"
 		args : [
-			
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 227
+		name : "AtomicLoad"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 228
+		name : "AtomicStore"
 		args : [
-			
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 229
+		name : "AtomicExchange"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 230
+		name : "AtomicCompareExchange"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID "Equal"
+			MEMSEMANTICID "Unequal"
+			ID "Value"
+			ID "Comparator"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 231
+		name : "AtomicCompareExchangeWeak"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID "Equal"
+			MEMSEMANTICID "Unequal"
+			ID "Value"
+			ID "Comparator"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 232
+		name : "AtomicIncrement"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 233
+		name : "AtomicDecrement"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 234
+		name : "AtomicIAdd"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 235
+		name : "AtomicISub"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 236
+		name : "AtomicSMin"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 237
+		name : "AtomicUMin"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 238
+		name : "AtomicSMax"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 239
+		name : "AtomicUMax"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 240
+		name : "AtomicAnd"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 241
+		name : "AtomicOr"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 242
+		name : "AtomicXor"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 318
+		name : "AtomicFlagTestAndSet"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 319
+		name : "AtomicFlagClear"
 		args : [
-			
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5614
+		name : "AtomicFMinEXT"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5615
+		name : "AtomicFMaxEXT"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 6035
+		name : "AtomicFAddEXT"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
+			SCOPEID
+			MEMSEMANTICID
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 218
+		name : "EmitVertex"
 		args : [
-			
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 219 
+		name : "EndPrimitive"
 		args : [
-			
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 220
+		name : "EmitStreamVertex"
 		args : [
-			
+			ID "Stream"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 221
+		name : "EndStreamPrimitive"
 		args : [
-			
+			ID "Stream"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 224
+		name : "ControlBarrier"
 		args : [
-			
+			SCOPEID "Execution"
+			SCOPEID "Memory"
+			MEMSEMANTICID
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 225
+		name : "MemoryBarrier"
 		args : [
-			
+			SCOPEID "Memory"
+			MEMSEMANTICID
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 328
+		name : "NamedBarrierInitialize"
 		args : [
-			
+			RTYPE
+			RST
+			ID "SubgroupCount"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 329
+		name : "MemoryNamedBarrier"
 		args : [
-			
+			ID "NamedBarrier"
+			SCOPEID
+			MEMSEMANTICID
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 259
+		name : "GroupAsyncCopy"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			ID "Destination"
+			ID "Source"
+			ID "NumElements"
+			ID "Stride"
+			ID "Event"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 260
+		name : "GroupWaitEvents"
 		args : [
-			
+			SCOPEID
+			ID "NumEvents"
+			ID "EventsList"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 261
+		name : "GroupAll"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			ID "Predicate"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 262
+		name : "GroupAny"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			ID "Predicate"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 263
+		name : "GroupBroadcast"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+			ID "LocalId"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 264
+		name : "GroupIAdd"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 265
+		name : "GroupFAdd"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 266
+		name : "GroupFMin"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 267
+		name : "GroupUMin"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 268
+		name : "GroupSMin"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 269
+		name : "GroupFMax"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 270
+		name : "GroupUMax"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 271
+		name : "GroupSMax"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 4421
+		name : "SubgroupBallotKHR"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Predicate"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 4422
+		name : "SubgroupFirstInvocationKHR"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 4428
+		name : "SubgroupAllKHR"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Predicate"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 4429
+		name : "SubgroupAnyKHR"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Predicate"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 4430
+		name : "SubgroupAllEqualKHR"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Predicate"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 4432
+		name : "SubgroupReadInvocationKHR"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Value"
+			ID "Index"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5000
+		name : "GroupIAddNonUniformAMD"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5001
+		name : "GroupFAddNonUniformAMD"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5002
+		name : "GroupFMinNonUniformAMD"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5003
+		name : "GroupUMinNonUniformAMD"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5004
+		name : "GroupSMinNonUniformAMD"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5005
+		name : "GroupFMaxNonUniformAMD"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5006
+		name : "GroupUMaxNonUniformAMD"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5007
+		name : "GroupSMaxNonUniformAMD"
 		args : [
-			
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5571
+		name : "SubgroupShuffleINTEL"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Data"
+			ID "InvocationId"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5572
+		name : "SubgroupShuffleDownINTEL"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Current"
+			ID "Next"
+			ID "Delta"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5573
+		name : "SubgroupShuffleUpINTEL"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Previous"
+			ID "Current"
+			ID "Delta"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5574
+		name : "SubgroupShuffleXorINTEL"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Data"
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5575
+		name : "SubgroupBlockReadINTEL"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pointer"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5576
+		name : "SubgroupBlockWriteINTEL"
 		args : [
-			
+			ID "Pointer"
+			ID "Data"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5577
+		name : "SubgroupImageBlockReadINTEL"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Image"
+			ID "Coordinate"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5578
+		name : "SubgroupImageBlockWriteINTEL"
 		args : [
-			
+			ID "Image"
+			ID "Coordinate"
+			ID "Data"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5580
+		name : "SubgroupImageMediaBlockReadINTEL"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Image"
+			ID "Coordinate"
+			ID "Width"
+			ID "Height"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 5581
+		name : "SubgroupImageMediaBlockWriteINTEL"
 		args : [
-			
+			ID "Image"
+			ID "Coordinate"
+			ID "Width"
+			ID "Height"
+			ID "Data"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 291
+		name : "EnqueueMarker"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Queue"
+			ID "NumEvents"
+			ID "WaitEvents"
+			ID "RetEvent"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 292
+		name : "EnqueueKernel"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Queue"
+			ID "Flags"
+			ID "NDrange"
+			ID "NumEvents"
+			ID "WaitEvents"
+			ID "RetEvent"
+			ID "Invoke"
+			ID "Param"
+			ID "ParamSize"
+			ID "ParamAlign"
+			OPT VAR ID "LocalSize"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 293
+		name : "GetKernelNDrangeSubGroupCount"
 		args : [
-			
+			RTYPE
+			RST
+			ID "NDrange"
+			ID "Invoke"
+			ID "Param"
+			ID "ParamSize"
+			ID "ParamAlign"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 294
+		name : "GetKerlenNDrangeMaxSubGroupSize"
 		args : [
-			
+			RTYPE
+			RST
+			ID "NDrange"
+			ID "Invoke"
+			ID "Param"
+			ID "ParamSize"
+			ID "ParamAlign"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 295
+		name : "GetKernelWorkGroupSize"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Invoke"
+			ID "Param"
+			ID "ParamSize"
+			ID "ParamAlign"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 296
+		name : "GetKernelPreferredWorkGroupSizeMultiple"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Invoke"
+			ID "Param"
+			ID "ParamSize"
+			ID "ParamAlign"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 297
+		name : "RetainEvent"
 		args : [
-			
+			ID "Event"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 298
+		name : "ReleaseEvent"
 		args : [
-			
+			ID "Event"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 299
+		name : "CreateUserEvent"
 		args : [
-			
+			RTYPE
+			RST
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 300
+		name : "IsValidEvent"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Event"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 301
+		name : "SetUserEventStatus"
 		args : [
-			
+			ID "Event"
+			ID "Status"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 302
+		name : "CaptureEventProfilingInfo"
 		args : [
-			
+			ID "Event"
+			ID "ProfilingInfo"
+			ID "Value"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 303
+		name : "GetDefaultQueue"
 		args : [
-			
+			RTYPE
+			RST
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 304
+		name : "BuildNDRange"
 		args : [
-			
+			RTYPE
+			RST
+			ID "GlobalWorkSize"
+			ID "LocalWorkSize"
+			ID "GloablWorkOffset"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 325
+		name : "GetKernelLocalSizeForSubgroupCount"
 		args : [
-			
+			RTYPE
+			RST
+			ID "SubgroupCount"
+			ID "Invoke"
+			ID "Param"
+			ID "ParamSize"
+			ID "ParamAlign"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 326
+		name : "GetKernelMaxNumSubgroups"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Invoke"
+			ID "Param"
+			ID "ParamSize"
+			ID "ParamAlign"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 274
+		name : "ReadPipe"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pipe"
+			ID "Pointer"
+			ID "PacketSize"
+			ID "PacketAlignment"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 275
+		name : "WritePipe"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pipe"
+			ID "Pointer"
+			ID "PacketSize"
+			ID "PacketAlignment"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 276
+		name : "ReservedReadPipe"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pipe"
+			ID "ReservId"
+			ID "Index"
+			ID "Pointer"
+			ID "PacketSize"
+			ID "PacketAlignment"
 		]
 	}
 	{
-		opcode : 
-		name : ""
+		opcode : 277
+		name : "ReservedWritePipe"
 		args : [
-			
+			RTYPE
+			RST
+			ID "Pipe"
+			ID "ReservId"
+			ID "Index"
+			ID "Pointer"
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 278
+		name : "ReserveReadPipePackets"
+		args : [
+			RTYPE
+			RST
+			ID "Pipe"
+			ID "NumPackets"
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 279
+		name : "ReserveWritePipePackets"
+		args : [
+			RTYPE
+			RST
+			ID "Pipe"
+			ID "NumPackets"
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 280
+		name : "CommitReadPipe"
+		args : [
+			ID "Pipe"
+			ID "ReserveId"
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 281
+		name : "CommitWritePipe"
+		args : [
+			ID "Pipe"
+			ID "ReserveId"
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 282
+		name : "IsValidReserveId"
+		args : [
+			RTYPE
+			RST
+			ID "ReserveId"
+		]
+	}
+	{
+		opcode : 283
+		name : "GetNumPipePackets"
+		args : [
+			RTYPE
+			RST
+			ID "Pipe"
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 284
+		name : "GetMaxPipePackets"
+		args : [
+			RTYPE
+			RST
+			ID "Pipe"
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 285
+		name : "GroupReserveReadPipePackets"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Pipe"
+			ID "NumPackets"
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 286
+		name : "GroupReserveWritePipePackets"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Pipe"
+			ID "NumPackets"
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 287
+		name : "GroupCommitReadPipe"
+		args : [
+			SCOPEID
+			ID "Pipe"
+			ID "ReserveId"
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 288
+		name : "GroupCommitWritePipe"
+		args : [
+			SCOPEID
+			ID "Pipe"
+			ID "ReserveId"
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 323
+		name : "ConstantPipeStorage"
+		args : [
+			RTYPE
+			RST
+			U32 "PacketSize"
+			U32 "PacketAlignment"
+			U32 "Capacity"
+		]
+	}
+	{
+		opcode : 324
+		name : "CreatePipeFromPipeStorage"
+		args : [
+			RTYPE
+			RST
+			ID "PipeStorage"
+		]
+	}
+	{
+		opcode : 5946
+		name : "ReadPipeBlockingINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 5947
+		name : "WritePipeBlockingINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "PacketSize"
+			ID "PacketAlignment"
+		]
+	}
+	{
+		opcode : 333
+		name : "GroupNonUniformElect"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+		]
+	}
+	{
+		opcode : 334
+		name : "GroupNonUniformAll"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Predicate"
+		]
+	}
+	{
+		opcode : 335
+		name : "GroupNonUniformAny"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Predicate"
+		]
+	}
+	{
+		opcode : 336
+		name : "GroupNonUniformAllEqual"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+		]
+	}
+	{
+		opcode : 337
+		name : "GroupNonUniformBroadcast"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+			ID "InvocationId"
+		]
+	}
+	{
+		opcode : 338
+		name : "GroupNonUniformBroadcastFirst"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+		]
+	}
+	{
+		opcode : 339
+		name : "GroupNonUniformBallot"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Predicate"
+		]
+	}
+	{
+		opcode : 340
+		name : "GroupNonUniformInverseBallot"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+		]
+	}
+	{
+		opcode : 341
+		name : "GroupNonUniformBallotBitExtract"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+			ID "Index"
+		]
+	}
+	{
+		opcode : 342
+		name : "GroupNonUniformBallotBitCount"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+		]
+	}
+	{
+		opcode : 343
+		name : "GroupNonUniformBallotFindLSB"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+		]
+	}
+	{
+		opcode : 344
+		name : "GroupNonUniformBallotFindMSB"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+		]
+	}
+	{
+		opcode : 345
+		name : "GroupNonUniformShuffle"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+			ID "InvocationId"
+		]
+	}
+	{
+		opcode : 346
+		name : "GroupNonUniformShuffleXor"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+			ID "Mask"
+		]
+	}
+	{
+		opcode : 347
+		name : "GroupNonUniformShuffleUp"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+			ID "Delta"
+		]
+	}
+	{
+		opcode : 348
+		name : "GroupNonUniformShuffleDown"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+			ID "Delta"
+		]
+	}
+	{
+		opcode : 349
+		name : "GroupNonUniformIAdd"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 350
+		name : "GroupNonUniformFAdd"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 351
+		name : "GroupNonUniformIMul"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 352
+		name : "GroupNonUniformFMul"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 353
+		name : "GroupNonUniformSMin"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 354
+		name : "GroupNonUniformUMin"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 355
+		name : "GroupNonUniformFMin"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 356
+		name : "GroupNonUniformSMax"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 357
+		name : "GroupNonUniformUMax"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 358
+		name : "GroupNonUniformFMax"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 359
+		name : "GroupNonUniformBitwiseAnd"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 360
+		name : "GroupNonUniformBitwiseOr"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 361
+		name : "GroupNonUniformBitwiseXor"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 362
+		name : "GroupNonUniformLogicalAnd"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 363
+		name : "GroupNonUniformLogicalOr"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 364
+		name : "GroupNonUniformLogicalXor"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 365
+		name : "GroupNonUniformQuadBroadcast"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			GROUPOP
+			ID "Value"
+			OPT ID "ClusterSize"
+		]
+	}
+	{
+		opcode : 366
+		name : "GroupNonUniformQuadSwap"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+			ID "Value"
+			ID "Direction"
+		]
+	}
+	{
+		opcode : 5296
+		name : "GroupNonUniformPartitionNV"
+		args : [
+			RTYPE
+			RST
+			ID "Value"
 		]
 	}
 ]
