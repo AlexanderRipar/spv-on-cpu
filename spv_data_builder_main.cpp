@@ -514,7 +514,7 @@ int main(int argc, const char** argv)
 					}
 				}
 
-				if(!flag_optional && prev_arg_was_optional)
+				if (!flag_optional && prev_arg_was_optional)
 					panic("Line %d: Cannot have non-optional argument after optional argument.\n", line_number);
 
 				uint32_t name_idx = ~0u;
