@@ -60,7 +60,13 @@ enum class argument_type : uint8_t
 	MEMOPERAND = 27,
 	IMGOPERAND = 28,
 	FUNCCTRL = 29,
-	PACKEDVECFMT = 30,
+	SELECTIONCTRL = 30,
+	LOOPCTRL = 31,
+	LOOPCTRLARG = 32,
+	PACKEDVECFMT = 33,
+	SCOPEID = 34,
+	MEMSEMANTICID = 35,
+	GROUPOP = 36,
 };
 
 static constexpr const char* argument_type_names[]{
@@ -94,7 +100,13 @@ static constexpr const char* argument_type_names[]{
 	"MEMOPERAND",
 	"IMGOPERAND",
 	"FUNCCTRL",
+	"SELECTIONCTRL",
+	"LOOPCTRL",
+	"LOOPCTRLARG",
 	"PACKEDVECFMT",
+	"SCOPEID",
+	"MEMSEMANTICID",
+	"GROUPOP",
 };
 
 enum class pstate
