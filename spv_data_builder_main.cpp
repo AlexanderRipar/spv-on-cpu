@@ -530,7 +530,7 @@ int main(int argc, const char** argv)
 				++curr_argc;
 
 				if (name_idx == ~0u)
-					parse_panic("instruction-type", curr);
+					parse_panic("argument-type", curr);
 
 				curr = skip_whitespace(curr + name_len);
 
