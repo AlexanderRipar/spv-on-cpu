@@ -467,7 +467,7 @@ int main(int argc, const char** argv)
 				if (prev_arg_was_variadic)
 					panic("Line %d: Cannot have another argument after variadic argument.\n", line_number);
 
-				uint32_t name_len = 0;
+				uint32_t name_len;
 
 				bool flag_optional = false;
 
@@ -477,6 +477,8 @@ int main(int argc, const char** argv)
 
 				while (is_flag)
 				{
+					name_len = 0;
+
 					while (!is_whitespace(curr[name_len]))
 						++name_len;
 
