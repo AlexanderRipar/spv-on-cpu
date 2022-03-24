@@ -10,29 +10,2996 @@ instructions : [
 		opcode : 1
 		name : "Undef"
 		args : [
-			{
-				type : RESULTTYPE
-				name : ""
-			}
-			{
-				type : RESULT
-				name : ""
-			}
+				RTYPE
+				RST
 		]
 	}
 	{
 		opcode : 321
-		name : "SizeOf"
+		name : "Sizeof"
 		args : [
-			{
-
-			}
-			{
-
-			}
-			{
-				
-			}
+			RTYPE
+			RST
+			ID "Pointer"
+		]
+	}
+	{
+		opcode : 5630
+		name : "AssumeTrueKHR"
+		args : [
+			ID "Condition"
+		]
+	}
+	{
+		opcode : 5631
+		name : "ExpectKHR"
+		args : [
+			RTYPE
+			RST
+			ID "Value"
+			ID "ExpectedValue"
+		]
+	}
+	{
+		opcode : 2
+		name : "SourceContinued"
+		args : [
+			STR "Source"
+		]
+	}
+	{
+		opcode : 3
+		name : "Source"
+		args : [
+			LANGID
+			U32 "Version"
+			OPT STR "File"
+			OPT STR "Source"
+		]
+	}
+	{
+		opcode : 4
+		name : "SourceExtension"
+		args : [
+			STR "Extension"
+		]
+	}
+	{
+		opcode : 5
+		name : "Name"
+		args : [
+			ID "Target"
+			STR "Name"
+		]
+	}
+	{
+		opcode : 6
+		name : "MemberName"
+		args : [
+			TYPID "Type"
+			MEMBER "Member"
+			STR "Name"
+		]
+	}
+	{
+		opcode : 7
+		name : "String"
+		args : [
+			RST
+			STR
+		]
+	}
+	{
+		opcode : 8
+		name : "Line"
+		args : [
+			STRID "File"
+			U32 "Line"
+			U32 "Column"
+		]
+	}
+	{
+		opcode : 317
+		name : "NoLine"
+		args : [
+		]
+	}
+	{
+		opcode : 330
+		name : "ModuleProcessed"
+		args : [
+			STR "Process"
+		]
+	}
+	{
+		opcode : 71
+		name : "Decorate"
+		args : [
+			ID "Target"
+			DECO
+			OPT VAR DECOARG
+		]
+	}
+	{
+		opcode : 72
+		name : "MemberDecorate"
+		args : [
+			TYPID
+			MEMBER
+			DECO
+			OPT VAR DECOARG
+		]
+	}
+	{
+		opcode : 73
+		name : "DecorationGroup"
+		args : [
+			RST
+		]
+	}
+	{
+		opcode : 74
+		name : "GroupDecorate"
+		args : [
+			ID "Group"
+			ID "Targets"
+		]
+	}
+	{
+		opcode : 75
+		name : "GroupMemberDecorate"
+		args : [
+			VAR U32 "TODO"
+		]
+	}
+	{
+		opcode : 332
+		name : "DecorateId"
+		args : [
+			ID "Target"
+			DECO
+			OPT VAR DECOARGID
+		]
+	}
+	{
+		opcode : 5632
+		name : "DecorateString"
+		args : [
+			ID "Target"
+			DECO
+			VAR STR "Args"
+		]
+	}
+	{
+		opcode : 5633
+		name : "MemberDecorateString"
+		args : [
+			TYPID
+			MEMBER
+			DECO
+			VAR STR "Args"
+		]
+	}
+	{
+		opcode : 10
+		name : "Extension"
+		args : [
+			STR "Name"
+		]
+	}
+	{
+		opcode : 11
+		name : "ExtInstImport"
+		args : [
+			RST
+			STR "InstructionName"
+		]
+	}
+	{
+		opcode : 12
+		name : "ExtInst"
+		args : [
+			RTYPE
+			RST
+			ID "Set"
+			U32 "Instruction"
+			OPT VAR UNKNOWN
+		]
+	}
+	{
+		opcode : 14
+		name : "MemoryModel"
+		args : [
+			ADDRMODEL
+			MEMMODEL
+		]
+	}
+	{
+		opcode : 15
+		name : "EntryPoint"
+		args : [
+			EXEMODEL
+			ID "EntryPoint"
+			STR "Name"
+			OPT VAR ID "Interface"
+		]
+	}
+	{
+		opcode : 16
+		name : "ExecutionMode"
+		args : [
+			ID "EntryPoint"
+			EXEMODE
+			OPT VAR UNKNOWN "Args"
+		]
+	}
+	{
+		opcode : 17
+		name : "Capability"
+		args : [
+			CAPABILITY
+		]
+	}
+	{
+		opcode : 331
+		name : "ExecutionModeId"
+		args : [
+			ID "EntryPoint"
+			EXEMODE
+			VAR ID "Args"
+		]
+	}
+	{
+		opcode : 19
+		name : "TypeVoid"
+		args : [
+			RST
+		]
+	}
+	{
+		opcode : 20
+		name : "TypeBool"
+		args : [
+			RST
+		]
+	}
+	{
+		opcode : 21
+		name : "TypeInt"
+		args : [
+			RST
+			U32 "Width"
+			U32 "Signedness"
+		]
+	}
+	{
+		opcode : 22
+		name : "TypeFloat"
+		args : [
+			RST
+			U32 "Width"
+		]
+	}
+	{
+		opcode : 23
+		name : "TypeVector"
+		args : [
+			RST
+			TYPID "ComponentType"
+			U32 "ComponentCount"
+		]
+	}
+	{
+		opcode : 24
+		name : "TypeMatrix"
+		args : [
+			RST
+			TYPID "ColumnType"
+			U32 "ColumnCount"
+		]
+	}
+	{
+		opcode : 25
+		name : "TypeImage"
+		args : [
+			RST
+			TYPID "SampledType"
+			DIMENSION
+			U32 "Depth"
+			U32 "Arrayed"
+			U32 "Multisampled"
+			U32 "Sampled"
+			IMGFORMAT
+			OPT ACCESSQUAL
+		]
+	}
+	{
+		opcode : 26
+		name : "TypeSampler"
+		args : [
+			RST
+		]
+	}
+	{
+		opcode : 27
+		name : "TypeSampledImage"
+		args : [
+			RST
+			TYPID "ImageType"
+		]
+	}
+	{
+		opcode : 28
+		name : "TypeArray"
+		args : [
+			RST
+			TYPID "ElemType"
+			ID "Length"
+		]
+	}
+	{
+		opcode : 29
+		name : "TypeRuntimeArray"
+		args : [
+			RST
+			TYPID "ElemType"
+		]
+	}
+	{
+		opcode : 30
+		name : "TypeStruct"
+		args : [
+			RST
+			OPT VAR TYPID "Members"
+		]
+	}
+	{
+		opcode : 31
+		name : "TypeOpaque"
+		args : [
+			RST
+			STR "TypeName"
+		]
+	}
+	{
+		opcode : 32
+		name : "TypePointer"
+		args : [
+			RST
+			STORAGECLASS
+			TYPID "Pointee"
+		]
+	}
+	{
+		opcode : 33
+		name : "TypeFunction"
+		args : [
+			RST
+			TYPID "ReturnType"
+			OPT VAR TYPID "ArgTypes"
+		]
+	}
+	{
+		opcode : 34
+		name : "TypeEvent"
+		args : [
+			RST
+		]
+	}
+	{
+		opcode : 35
+		name : "TypeDeviceEvent"
+		args : [
+			RST
+		]
+	}
+	{
+		opcode : 36
+		name : "TypeReserveId"
+		args : [
+			RST
+		]
+	}
+	{
+		opcode : 37
+		name : "TypeQueue"
+		args : [
+			RST
+		]
+	}
+	{
+		opcode : 38
+		name : "TypePipe"
+		args : [
+			RST
+			ACCESSQUAL
+		]
+	}
+	{
+		opcode : 39
+		name : "TypeForwardPointer"
+		args : [
+			TYPID "PointerType"
+			STORAGECLASS
+		]
+	}
+	{
+		opcode : 322
+		name : "TypePipeStorage"
+		args : [
+			RST
+		]
+	}
+	{
+		opcode : 327
+		name : "TypeNamedBarrier"
+		args : [
+			RST
+		]
+	}
+	{
+		opcode : 6086
+		name : "TypeBufferSurfaceINTEL"
+		args : [
+			RST
+			ACCESSQUAL
+		]
+	}
+	{
+		opcode : 6090
+		name : "TypeStructContinuedINTEL"
+		args : [
+			VAR TYPID "MemberTypes"
+		]
+	}
+	{
+		opcode : 41
+		name : "ConstantTrue"
+		args : [
+			RTYPE
+			RST
+		]
+	}
+	{
+		opcode : 42
+		name : "ConstantFalse"
+		args : [
+			RTYPE
+			RST
+		]
+	}
+	{
+		opcode : 43
+		name : "Constant"
+		args : [
+			RTYPE
+			RST
+			UNKNOWN "Value"
+		]
+	}
+	{
+		opcode : 44
+		name : "ConstantComposite"
+		args : [
+			RTYPE
+			RST
+			VAR ID "Constituents"
+		]
+	}
+	{
+		opcode : 45
+		name : "ConstantSampler"
+		args : [
+			RTYPE
+			RST
+			SAMPADDRMODE
+			U32 "Param"
+			SAMPFILTMODE
+		]
+	}
+	{
+		opcode : 46
+		name : "ConstantNull"
+		args : [
+			RTYPE
+			RST
+		]
+	}
+	{
+		opcode : 48
+		name : "SpecConstantTrue"
+		args : [
+			RTYPE
+			RST
+		]
+	}
+	{
+		opcode : 49
+		name : "SpecConstantFalse"
+		args : [
+			RTYPE
+			RST
+		]
+	}
+	{
+		opcode : 50
+		name : "SpecConstant"
+		args : [
+			RTYPE
+			RST
+			UNKNOWN "Value"
+		]
+	}
+	{
+		opcode : 51
+		name : "SpecConstantComposite"
+		args : [
+			RTYPE
+			RST
+			VAR ID "Constituents"
+		]
+	}
+	{
+		opcode : 52
+		name : "SpecConstantOp"
+		args : [
+			RTYPE
+			RST
+			OPCODE
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 6091
+		name : "ConstantCompositeContinuedINTEL"
+		args : [
+			VAR ID "Constituents"
+		]
+	}
+	{
+		opcode : 6092
+		name : "SpecConstantCompositeContinuedINTEL"
+		args : [
+			VAR ID "Constituents"
+		]
+	}
+	{
+		opcode : 59
+		name : "Variable"
+		args : [
+			RTYPE
+			RST
+			STORAGECLASS
+			OPT ID "Initializer"
+		]
+	}
+	{
+		opcode : 60
+		name : "ImageTexelPointer"
+		args : [
+			RTYPE
+			RST
+			TYPID "Image"
+			ID "Coordinate"
+			ID "Sample"
+		]
+	}
+	{
+		opcode : 61
+		name : "Load"
+		args : [
+			RTYPE
+			RST
+			ID "Pointer"
+			OPT MEMOPERAND
+		]
+	}
+	{
+		opcode : 62
+		name : "Store"
+		args : [
+			ID "Pointer"
+			ID "Object"
+			OPT MEMOPERAND
+		]
+	}
+	{
+		opcode : 63
+		name : "CopyMemory"
+		args : [
+			ID "Target"
+			ID "Source"
+			OPT MEMOPERAND
+			OPT MEMOPERAND
+		]
+	}
+	{
+		opcode : 64
+		name : "CopyMemorySized"
+		args : [
+			ID "Target"
+			ID "Source"
+			ID "Size"
+			OPT MEMOPERAND
+			OPT MEMOPERAND
+		]
+	}
+	{
+		opcode : 65
+		name : "AcessChain"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+			VAR ID "Indices"
+		]
+	}
+	{
+		opcode : 66
+		name : "InBoundsAccessChain"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+			VAR ID "Indices"
+		]
+	}
+	{
+		opcode : 67
+		name : "OpPtrAcessChain"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+			ID "Element"
+			VAR ID "Indices"
+		]
+	}
+	{
+		opcode : 68
+		name : "ArrayLength"
+		args : [
+			RTYPE
+			RST
+			TYPID "Structure"
+			MEMBER
+		]
+	}
+	{
+		opcode : 69
+		name : "GenericPtrMemSemantics"
+		args : [
+			RTYPE
+			RST
+			ID "Pointer"
+		]
+	}
+	{
+		opcode : 70
+		name : "InBoundsPtrAccessChain"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+			ID "Element"
+			VAR ID "Indices"
+		]
+	}
+	{
+		opcode : 401
+		name : "PtrEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 402
+		name : "PtrNotEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 403
+		name : "PtrDiff"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 54
+		name : "Function"
+		args : [
+			RTYPE
+			RST
+			FUNCCTRL
+			TYPID "FunctionType"
+		]
+	}
+	{
+		opcode : 55
+		name : "FunctionParameter"
+		args : [
+			RTYPE
+			RST
+		]
+	}
+	{
+		opcode : 56
+		name : "FunctionEnd"
+		args : [
+		]
+	}
+	{
+		opcode : 57 
+		name : "FunctionCall"
+		args : [
+			RTYPE
+			RST
+			ID "Function"
+			OPT VAR ID "Args"
+		]
+	}
+	{
+		opcode : 86
+		name : "SampledImage"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+			ID "Sampler"
+		]
+	}
+	{
+		opcode : 87
+		name : "ImageSampleImplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 88
+		name : "ImageSampleExplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			IMGOPERAND
+			VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 89
+		name : "ImageSampleDrefImplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Dref"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 90
+		name : "ImageSampleDrefExplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Dref"
+			IMGOPERAND
+			VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 91
+		name : "ImageSampleProjImplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 92
+		name : "ImageSampleProjExplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID  "Coordinate"
+			IMGOPERAND
+			VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 93
+		name : "ImageSampleProjDrefImplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Dref"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 94
+		name : "ImageSampleProjDrefExplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Dref"
+			IMGOPERAND
+			VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 95
+		name : "ImageFetch"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+			ID "Coordinate"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 96
+		name : "ImageGather"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Component"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 97
+		name : "ImageDrefGather"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Dref"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 98
+		name : "ImageRead"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+			ID "Coordinate"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 99
+		name : "ImageWrite"
+		args : [
+			ID "Image"
+			ID "Coordinate"
+			ID "Texel"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 100
+		name : "Image"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+		]
+	}
+	{
+		opcode : 101
+		name : "ImageQueryFormat"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+		]
+	}
+	{
+		opcode : 102
+		name : "ImageQueryOrder"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+		]
+	}
+	{
+		opcode : 103
+		name : "ImageQuerySizeLod"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+			ID "Lod"
+		]
+	}
+	{
+		opcode : 104
+		name : "ImageQuerySize"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+		]
+	}
+	{
+		opcode : 105
+		name : "ImageQueryLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+		]
+	}
+	{
+		opcode : 106
+		name : "ImageQueryLevels"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+		]
+	}
+	{
+		opcode : 107
+		name : "ImageQuerySamples"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+		]
+	}
+	{
+		opcode : 305
+		name : "ImageSparseSampleImplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 306
+		name : "ImageSparseSampleImplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			IMGOPERAND
+			VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 307
+		name : "ImageSparseSampleDrefImplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Dref"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 308
+		name : "ImageSparseSampleDrefExplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Dref"
+			IMGOPERAND
+			VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 309
+		name : "ImageSparseSampleProjImplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 310
+		name : "ImageSparseSampleProjExplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			IMGOPERAND
+			VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 311
+		name : "ImageSparseSampleProjDrefImplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Dref"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 312
+		name : "ImageSparseSampleProjDrefExplicitLod"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Dref"
+			IMGOPERAND
+			VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 313
+		name : "ImageSparseFetch"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+			ID "Coordinate"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 314
+		name : "ImageSparseGather"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Component"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 315
+		name : "ImageSparseDrefGather"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Dref"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 316
+		name : "ImageSparseTexelResident"
+		args : [
+			RTYPE
+			RST
+			ID "ResidentCode"
+		]
+	}
+	{
+		opcode : 320
+		name : "ImageSparseRead"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+			ID "Coordinate"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 5283
+		name : "ImageSampleFootprintNV"
+		args : [
+			RTYPE
+			RST
+			ID "SampledImage"
+			ID "Coordinate"
+			ID "Granularity"
+			ID "Coarse"
+			OPT IMGOPERAND
+			OPT VAR ID "Operands"
+		]
+	}
+	{
+		opcode : 109
+		name : "ConvertFToU"
+		args : [
+			RTYPE
+			RST
+			ID "FloatValue"
+		]
+	}
+	{
+		opcode : 110
+		name : "ConvertFToS"
+		args : [
+			RTYPE
+			RST
+			ID "FloatValue"
+		]
+	}
+	{
+		opcode : 111
+		name : "ConvertSToF"
+		args : [
+			RTYPE
+			RST
+			ID "SignedValue"
+		]
+	}
+	{
+		opcode : 112
+		name : "ConvertUToF"
+		args : [
+			RTYPE
+			RST
+			ID "UnsignedValue"
+		]
+	}
+	{
+		opcode : 113
+		name : "UConvert"
+		args : [
+			RTYPE
+			RST
+			ID "UnsignedValue"
+		]
+	}
+	{
+		opcode : 114
+		name : "SConvert"
+		args : [
+			RTYPE
+			RST
+			ID "SignedValue"
+		]
+	}
+	{
+		opcode : 115
+		name : "FConvert"
+		args : [
+			RTYPE
+			RST
+			ID "FloatValue"
+		]
+	}
+	{
+		opcode : 116
+		name : "QuantizeToF16"
+		args : [
+			RTYPE
+			RST
+			ID "Value"
+		]
+	}
+	{
+		opcode : 117
+		name : "ConvertPtrToU"
+		args : [
+			RTYPE
+			RST
+			ID "Pointer"
+		]
+	}
+	{
+		opcode : 118
+		name : "SatConvertSToU"
+		args : [
+			RTYPE
+			RST
+			ID "SignedValue"
+		]
+	}
+	{
+		opcode : 119
+		name : "SatConvertUToS"
+		args : [
+			RTYPE
+			RST
+			ID "UnsignedValue"
+		]
+	}
+	{
+		opcode : 120
+		name : "ConvertUToPtr"
+		args : [
+			RTYPE
+			RST
+			ID "IntegerValue"
+		]
+	}
+	{
+		opcode : 121
+		name : "PtrCastToGeneric"
+		args : [
+			RTYPE
+			RST
+			ID "Pointer"
+		]
+	}
+	{
+		opcode : 122
+		name : "GenericCastToPtr"
+		args : [
+			RTYPE
+			RST
+			ID "Pointer"
+		]
+	}
+	{
+		opcode : 123
+		name : "GenericCastToPtrExplicit"
+		args : [
+			RTYPE
+			RST
+			ID "Pointer"
+			STORAGECLASS
+		]
+	}
+	{
+		opcode : 124
+		name : "Bitcast"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		opcode : 77
+		name : "VectorExtractDynamic"
+		args : [
+			RTYPE
+			RST
+			ID "Vector"
+			ID "Index"
+		]
+	}
+	{
+		opcode : 78
+		name : "VectorInsertDynamic"
+		args : [
+			RTYPE
+			RST
+			ID "Vector"
+			ID "Component"
+			ID "Index"
+		]
+	}
+	{
+		opcode : 79
+		name : "VectorShuffle"
+		args : [
+			RTYPE
+			RST
+			ID "Vector1"
+			ID "Vector2"
+			OPT VAR U32 "Components"
+		]
+	}
+	{
+		opcode : 80
+		name : "CompositeConstruct"
+		args : [
+			RTYPE
+			RST
+			OPT VAR ID "Constituents" 
+		]
+	}
+	{
+		opcode : 81
+		name : "CompositeExtract"
+		args : [
+			RTYPE
+			RST
+			ID "Composite"
+			VAR U32 "Indices"
+		]
+	}
+	{
+		opcode : 82
+		name : "CompositeInsert"
+		args : [
+			RTYPE
+			RST
+			ID "Object"
+			ID "Composite"
+			VAR U32 "Indices"
+		]
+	}
+	{
+		opcode : 83
+		name : "CpoyObject"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		opcode : 84
+		name : "Transpose"
+		args : [
+			RTYPE
+			RST
+			ID "Matrix"
+		]
+	}
+	{
+		opcode : 400
+		name : "CopyLogical"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		opcode : 126
+		name : "SNegate"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		opcode : 127
+		name : "FNegate"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		opcode : 128
+		name : "IAdd"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 129
+		name : "FAdd"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 130
+		name : "ISub"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 131
+		name : "FSub"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 132
+		name : "IMul"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 133
+		name : "FMul"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 134
+		name : "UDiv"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 135
+		name : "SDiv"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 136
+		name : "FDiv"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 137
+		name : "UMod"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 138
+		name : "SRem"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 139
+		name : "SMod"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 140
+		name : "FRem"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 141
+		name : "FMod"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 142
+		name : "VectorTimesScalar"
+		args : [
+			RTYPE
+			RST
+			ID "Vector"
+			ID "Scalar"
+		]
+	}
+	{
+		opcode : 143
+		name : "MatrixTimesScalar"
+		args : [
+			RTYPE
+			RST
+			ID "Matrix"
+			ID "Scalar"
+		]
+	}
+	{
+		opcode : 144
+		name : "VectorTimesMatrix"
+		args : [
+			RTYPE
+			RST
+			ID "Vector"
+			ID "Matrix"
+		]
+	}
+	{
+		opcode : 145
+		name : "MatrixTimesVector"
+		args : [
+			RTYPE
+			RST
+			ID "Matrix"
+			ID "Vector"
+		]
+	}
+	{
+		opcode : 146
+		name : "MatrixTimesMatrix"
+		args : [
+			RTYPE
+			RST
+			ID "LeftMatrix"
+			ID "RightMatrix"
+		]
+	}
+	{
+		opcode : 147
+		name : "OuterProduct"
+		args : [
+			RTYPE
+			RST
+			ID "Vector1"
+			ID "Vector2"
+		]
+	}
+	{
+		opcode : 148
+		name : "Dot"
+		args : [
+			RTYPE
+			RST
+			ID "Vector1"
+			ID "Vector2"
+		]
+	}
+	{
+		opcode : 149
+		name : "IAddCarry"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 150
+		name : "ISubBorrow"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 151
+		name : "UMulExtended"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 152
+		name : "SMulExtended"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 4450
+		name : "SDot"
+		args : [
+			RTYPE
+			RST
+			ID "Vector1"
+			ID "Vector2"
+			OPT PACKEDVECFMT
+		]
+	}
+	{
+		opcode : 4451
+		name : "UDot"
+		args : [
+			RTYPE
+			RST
+			ID "Vector1"
+			ID "Vector2"
+			OPT PACKEDVECFMT
+		]
+	}
+	{
+		opcode : 4452
+		name : "SUDot"
+		args : [
+			RTYPE
+			RST
+			ID "Vector1"
+			ID "Vector2"
+			OPT PACKEDVECFMT
+		]
+	}
+	{
+		opcode : 4453
+		name : "SDotAccSat"
+		args : [
+			RTYPE
+			RST
+			ID "Vector1"
+			ID "Vector2"
+			ID "Accumulator"
+			OPT PACKEDVECFMT
+		]
+	}
+	{
+		opcode : 4454
+		name : "UDotAccSat"
+		args : [
+			RTYPE
+			RST
+			ID "Vector1"
+			ID "Vector2"
+			ID "Accumulator"
+			OPT PACKEDVECFMT
+		]
+	}
+	{
+		opcode : 4455
+		name : "SUDotAccSat"
+		args : [
+			RTYPE
+			RST
+			ID "Vector1"
+			ID "Vector2"
+			ID "Accumulator"
+			OPT PACKEDVECFMT
+		]
+	}
+	{
+		opcode : 194
+		name : "ShiftRightLogical"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+			ID "Shift"
+		]
+	}
+	{
+		opcode : 195
+		name : "ShiftRightArithmetic"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+			ID "Shift"
+		]
+	}
+	{
+		opcode : 196
+		name : "ShiftLeftLogical"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+			ID "Shift"
+		]
+	}
+	{
+		opcode : 197
+		name : "BitwiseOr"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 198
+		name : "BitwiseXor"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 199
+		name : "BitwiseAnd"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 200
+		name : "Not"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		opcode : 201
+		name : "BitFieldInsert"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+			ID "Insert"
+			ID "Offset"
+			ID "Count"
+		]
+	}
+	{
+		opcode : 202
+		name : "BitFieldSExtract"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+			ID "Offset"
+			ID "Count"
+		]
+	}
+	{
+		opcode : 203
+		name : "BitFieldUExtract"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+			ID "Offset"
+			ID "Count"
+		]
+	}
+	{
+		opcode : 204
+		name : "BitReverse"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+		]
+	}
+	{
+		opcode : 205
+		name : "BitCount"
+		args : [
+			RTYPE
+			RST
+			ID "Base"
+		]
+	}
+	{
+		opcode : 154
+		name : "Any"
+		args : [
+			RTYPE
+			RST
+			ID "Vector"
+		]
+	}
+	{
+		opcode : 155
+		name : "All"
+		args : [
+			RTYPE
+			RST
+			ID "Vector"
+		]
+	}
+	{
+		opcode : 156
+		name : "IsNan"
+		args : [
+			RTYPE
+			RST
+			ID "Value"
+		]
+	}
+	{
+		opcode : 157
+		name : "IsInf"
+		args : [
+			RTYPE
+			RST
+			ID "Value"
+		]
+	}
+	{
+		opcode : 158
+		name : "IsFinite"
+		args : [
+			RTYPE
+			RST
+			ID "Value"
+		]
+	}
+	{
+		opcode : 159
+		name : "IsNormal"
+		args : [
+			RTYPE
+			RST
+			ID "Value"
+		]
+	}
+	{
+		opcode : 160
+		name : "SignBitSet"
+		args : [
+			RTYPE
+			RST
+			ID "Value"
+		]
+	}
+	{
+		opcode : 161
+		name : "LessOrGreater"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 162
+		name : "Ordered"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 163
+		name : "Unordered"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 164
+		name : "LogicalEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 165
+		name : "LogicalNotEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 166
+		name : "LogicalOr"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 167
+		name : "LogicalAnd"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 168
+		name : "LogicalNot"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		opcode : 169
+		name : "Select"
+		args : [
+			RTYPE
+			RST
+			ID "Condition"
+			ID "Object1"
+			ID "Object2"
+		]
+	}
+	{
+		opcode : 170
+		name : "IEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 171
+		name : "INotEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 172
+		name : "UGreaterThan"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 173
+		name : "SGreaterThan"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 174
+		name : "UGreaterThanEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 175
+		name : "SGreaterThanEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 176
+		name : "ULessThan"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 177
+		name : "SLessThan"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 178
+		name : "ULessThanEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 179
+		name : "SLessThanEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 180
+		name : "FOrdEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 181
+		name : "FUnordEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 182
+		name : "FOrdNotEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 183
+		name : "FUnordNotEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 184
+		name : "FOrdLessThan"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 185
+		name : "FUnordLessThan"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 186
+		name : "FOrdGreaterThan"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 187
+		name : "FUnordGreaterThan"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 188
+		name : "FOrdLessThanEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 189
+		name : "FUnordLessThanEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 190
+		name : "FOrdGreaterThanEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 191
+		name : "FUnordGreaterThanEqual"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
+		]
+	}
+	{
+		opcode : 
+		name : ""
+		args : [
+			
 		]
 	}
 ]
