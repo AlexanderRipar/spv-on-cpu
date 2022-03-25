@@ -1,5 +1,5 @@
-#ifndef SPV_HELPERS_INCLUDE_GUARD
-#define SPV_HELPERS_INCLUDE_GUARD
+#ifndef SPV_HELPERS_HPP_INCLUDE_GUARD
+#define SPV_HELPERS_HPP_INCLUDE_GUARD
 
 #include "spv_defs.hpp"
 
@@ -116,4 +116,4 @@ reserved_fp_operation_mode_info get_reserved_fp_operation_mode_info(ReservedFpOp
 
 source_language_info get_source_language_info(SourceLanguage l) noexcept;
 
-#endif // SPV_HELPERS_INCLUDE_GUARD
+#endif // SPV_HELPERS_HPP_INCLUDE_GUARD
