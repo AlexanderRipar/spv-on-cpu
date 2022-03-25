@@ -687,8 +687,23 @@ int main(int argc, const char** argv)
 
 	create_hashtable(&hashtable_size, &hashtable);
 
+	struct 
+	{
+		uint32_t version;
+		uint32_t table_size;
+	} file_header{ 1, hashtable_size };
+
 	if (fopen_s(&output_file, argv[2], "wb") != 0)
 		panic("Could not open file %s for writing.\n", argv[2]);
+
+	if (fwrite(&file_header, 1, sizeof(file_header), output_file) != sizeof(file_header))
+		panic("Could not write to file %s.\n", argv[2]);
+
+	if (fwrite(hashtable, 1, hashtable_size * sizeof(instruction_index), output_file) != hashtable_size * sizeof(instruction_index))
+		panic("Could not write to file %s.\n", argv[2]);
+
+	if (fwrite(output.data(), 1, output.size(), output_file) != output.size())
+		panic("Could not write to file %s.\n", argv[2]);
 
 	fclose(output_file);
 
