@@ -10,8 +10,8 @@ instructions : [
 		opcode : 1
 		name : "Undef"
 		args : [
-				RTYPE
-				RST
+			RTYPE
+			RST
 		]
 	}
 	{
@@ -51,7 +51,7 @@ instructions : [
 		opcode : 3
 		name : "Source"
 		args : [
-			LANGID
+			SOURCELANGUAGE
 			U32 "Version"
 			OPT STR "File"
 			OPT STR "Source"
@@ -93,7 +93,7 @@ instructions : [
 		opcode : 8
 		name : "Line"
 		args : [
-			STRID "File"
+			ID "Filename"
 			U32 "Line"
 			U32 "Column"
 		]
@@ -116,8 +116,8 @@ instructions : [
 		name : "Decorate"
 		args : [
 			ID "Target"
-			DECO
-			OPT VAR DECOARG
+			DECORATION
+			OPT VAR ARG
 		]
 	}
 	{
@@ -126,8 +126,8 @@ instructions : [
 		args : [
 			TYPID
 			MEMBER
-			DECO
-			OPT VAR DECOARG
+			DECORATION
+			OPT VAR ARG
 		]
 	}
 	{
@@ -149,7 +149,7 @@ instructions : [
 		opcode : 75
 		name : "GroupMemberDecorate"
 		args : [
-			VAR U32 "TODO"
+			VAR LITERALIDPAIR
 		]
 	}
 	{
@@ -157,8 +157,8 @@ instructions : [
 		name : "DecorateId"
 		args : [
 			ID "Target"
-			DECO
-			OPT VAR DECOARGID
+			DECORATION
+			OPT VAR ARG
 		]
 	}
 	{
@@ -166,7 +166,7 @@ instructions : [
 		name : "DecorateString"
 		args : [
 			ID "Target"
-			DECO
+			DECORATION
 			VAR STR "Args"
 		]
 	}
@@ -176,7 +176,7 @@ instructions : [
 		args : [
 			TYPID
 			MEMBER
-			DECO
+			DECORATION
 			VAR STR "Args"
 		]
 	}
@@ -203,22 +203,22 @@ instructions : [
 			RST
 			ID "Set"
 			U32 "Instruction"
-			OPT VAR UNKNOWN
+			OPT VAR ARG
 		]
 	}
 	{
 		opcode : 14
 		name : "MemoryModel"
 		args : [
-			ADDRMODEL
-			MEMMODEL
+			ADDRESSINGMODEL
+			MEMORYMODEL
 		]
 	}
 	{
 		opcode : 15
 		name : "EntryPoint"
 		args : [
-			EXEMODEL
+			EXECUTIONMODEL
 			ID "EntryPoint"
 			STR "Name"
 			OPT VAR ID "Interface"
@@ -229,8 +229,8 @@ instructions : [
 		name : "ExecutionMode"
 		args : [
 			ID "EntryPoint"
-			EXEMODE
-			OPT VAR UNKNOWN "Args"
+			EXECUTIONMODE
+			OPT VAR LITERAL "Args"
 		]
 	}
 	{
@@ -245,7 +245,7 @@ instructions : [
 		name : "ExecutionModeId"
 		args : [
 			ID "EntryPoint"
-			EXEMODE
+			EXECUTIONMODE
 			VAR ID "Args"
 		]
 	}
@@ -304,13 +304,13 @@ instructions : [
 		args : [
 			RST
 			TYPID "SampledType"
-			DIMENSION
+			DIM
 			U32 "Depth"
 			U32 "Arrayed"
 			U32 "Multisampled"
 			U32 "Sampled"
-			IMGFORMAT
-			OPT ACCESSQUAL
+			IMAGEFORMAT
+			OPT ACCESSQUALIFIER
 		]
 	}
 	{
@@ -412,7 +412,7 @@ instructions : [
 		name : "TypePipe"
 		args : [
 			RST
-			ACCESSQUAL
+			ACCESSQUALIFIER
 		]
 	}
 	{
@@ -442,7 +442,7 @@ instructions : [
 		name : "TypeBufferSurfaceINTEL"
 		args : [
 			RST
-			ACCESSQUAL
+			ACCESSQUALIFIER
 		]
 	}
 	{
@@ -474,7 +474,7 @@ instructions : [
 		args : [
 			RTYPE
 			RST
-			UNKNOWN "Value"
+			LITERAL "Value"
 		]
 	}
 	{
@@ -492,9 +492,9 @@ instructions : [
 		args : [
 			RTYPE
 			RST
-			SAMPADDRMODE
+			SAMPLERADDRESSINGMODE
 			U32 "Param"
-			SAMPFILTMODE
+			SAMPLERFILTERMODE
 		]
 	}
 	{
@@ -527,7 +527,7 @@ instructions : [
 		args : [
 			RTYPE
 			RST
-			UNKNOWN "Value"
+			LITERAL "Value"
 		]
 	}
 	{
@@ -545,7 +545,7 @@ instructions : [
 		args : [
 			RTYPE
 			RST
-			OPCODE
+			U32 "Opcode"
 			OPT VAR ID "Operands"
 		]
 	}
@@ -591,7 +591,7 @@ instructions : [
 			RTYPE
 			RST
 			ID "Pointer"
-			OPT MEMOPERAND
+			OPT MEMORYOPERANDS
 		]
 	}
 	{
@@ -600,7 +600,7 @@ instructions : [
 		args : [
 			ID "Pointer"
 			ID "Object"
-			OPT MEMOPERAND
+			OPT MEMORYOPERANDS
 		]
 	}
 	{
@@ -609,8 +609,8 @@ instructions : [
 		args : [
 			ID "Target"
 			ID "Source"
-			OPT MEMOPERAND
-			OPT MEMOPERAND
+			OPT MEMORYOPERANDS
+			OPT MEMORYOPERANDS
 		]
 	}
 	{
@@ -620,8 +620,8 @@ instructions : [
 			ID "Target"
 			ID "Source"
 			ID "Size"
-			OPT MEMOPERAND
-			OPT MEMOPERAND
+			OPT MEMORYOPERANDS
+			OPT MEMORYOPERANDS
 		]
 	}
 	{
@@ -721,7 +721,7 @@ instructions : [
 		args : [
 			RTYPE
 			RST
-			FUNCCTRL
+			FUNCTIONCONTROL
 			TYPID "FunctionType"
 		]
 	}
@@ -767,7 +767,7 @@ instructions : [
 			RST
 			ID "SampledImage"
 			ID "Coordinate"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -779,7 +779,7 @@ instructions : [
 			RST
 			ID "SampledImage"
 			ID "Coordinate"
-			IMGOPERAND
+			IMAGEOPERANDS
 			VAR ID "Operands"
 		]
 	}
@@ -792,7 +792,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Dref"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -805,7 +805,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Dref"
-			IMGOPERAND
+			IMAGEOPERANDS
 			VAR ID "Operands"
 		]
 	}
@@ -817,7 +817,7 @@ instructions : [
 			RST
 			ID "SampledImage"
 			ID "Coordinate"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -829,7 +829,7 @@ instructions : [
 			RST
 			ID "SampledImage"
 			ID  "Coordinate"
-			IMGOPERAND
+			IMAGEOPERANDS
 			VAR ID "Operands"
 		]
 	}
@@ -842,7 +842,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Dref"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -855,7 +855,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Dref"
-			IMGOPERAND
+			IMAGEOPERANDS
 			VAR ID "Operands"
 		]
 	}
@@ -867,7 +867,7 @@ instructions : [
 			RST
 			ID "Image"
 			ID "Coordinate"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -880,7 +880,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Component"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -893,7 +893,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Dref"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -905,7 +905,7 @@ instructions : [
 			RST
 			ID "Image"
 			ID "Coordinate"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -916,7 +916,7 @@ instructions : [
 			ID "Image"
 			ID "Coordinate"
 			ID "Texel"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -1002,7 +1002,7 @@ instructions : [
 			RST
 			ID "SampledImage"
 			ID "Coordinate"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -1014,7 +1014,7 @@ instructions : [
 			RST
 			ID "SampledImage"
 			ID "Coordinate"
-			IMGOPERAND
+			IMAGEOPERANDS
 			VAR ID "Operands"
 		]
 	}
@@ -1027,7 +1027,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Dref"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -1040,7 +1040,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Dref"
-			IMGOPERAND
+			IMAGEOPERANDS
 			VAR ID "Operands"
 		]
 	}
@@ -1052,7 +1052,7 @@ instructions : [
 			RST
 			ID "SampledImage"
 			ID "Coordinate"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -1064,7 +1064,7 @@ instructions : [
 			RST
 			ID "SampledImage"
 			ID "Coordinate"
-			IMGOPERAND
+			IMAGEOPERANDS
 			VAR ID "Operands"
 		]
 	}
@@ -1077,7 +1077,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Dref"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -1090,7 +1090,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Dref"
-			IMGOPERAND
+			IMAGEOPERANDS
 			VAR ID "Operands"
 		]
 	}
@@ -1102,7 +1102,7 @@ instructions : [
 			RST
 			ID "Image"
 			ID "Coordinate"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -1115,7 +1115,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Component"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -1128,7 +1128,7 @@ instructions : [
 			ID "SampledImage"
 			ID "Coordinate"
 			ID "Dref"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -1149,7 +1149,7 @@ instructions : [
 			RST
 			ID "Image"
 			ID "Coordinate"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -1163,7 +1163,7 @@ instructions : [
 			ID "Coordinate"
 			ID "Granularity"
 			ID "Coarse"
-			OPT IMGOPERAND
+			OPT IMAGEOPERANDS
 			OPT VAR ID "Operands"
 		]
 	}
@@ -1677,7 +1677,7 @@ instructions : [
 			RST
 			ID "Vector1"
 			ID "Vector2"
-			OPT PACKEDVECFMT
+			OPT PACKEDVECTORFORMAT
 		]
 	}
 	{
@@ -1688,7 +1688,7 @@ instructions : [
 			RST
 			ID "Vector1"
 			ID "Vector2"
-			OPT PACKEDVECFMT
+			OPT PACKEDVECTORFORMAT
 		]
 	}
 	{
@@ -1699,7 +1699,7 @@ instructions : [
 			RST
 			ID "Vector1"
 			ID "Vector2"
-			OPT PACKEDVECFMT
+			OPT PACKEDVECTORFORMAT
 		]
 	}
 	{
@@ -1711,7 +1711,7 @@ instructions : [
 			ID "Vector1"
 			ID "Vector2"
 			ID "Accumulator"
-			OPT PACKEDVECFMT
+			OPT PACKEDVECTORFORMAT
 		]
 	}
 	{
@@ -1723,7 +1723,7 @@ instructions : [
 			ID "Vector1"
 			ID "Vector2"
 			ID "Accumulator"
-			OPT PACKEDVECFMT
+			OPT PACKEDVECTORFORMAT
 		]
 	}
 	{
@@ -1735,7 +1735,7 @@ instructions : [
 			ID "Vector1"
 			ID "Vector2"
 			ID "Accumulator"
-			OPT PACKEDVECFMT
+			OPT PACKEDVECTORFORMAT
 		]
 	}
 	{
@@ -2328,8 +2328,8 @@ instructions : [
 		args : [
 			ID "MergeBlock"
 			ID "ContinueTarget"
-			LOOPCTRL
-			OPT VAR LOOPCTRLARG
+			LOOPCONTROL
+			OPT VAR ARG
 		]
 	}
 	{
@@ -2337,7 +2337,7 @@ instructions : [
 		name : "SelectionMerge"
 		args : [
 			ID "MergeBlock"
-			SELECTIONCTRL
+			SELECTIONCONTROL
 		]
 	}
 	{
@@ -2371,7 +2371,7 @@ instructions : [
 		args : [
 			ID "Selector"
 			ID "Default"
-			OPT VAR UNKNOWN "TODO"
+			OPT VAR LITERALIDPAIR "Targets"
 		]
 	}
 	{
@@ -2435,7 +2435,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 		]
 	}
 	{
@@ -2444,7 +2444,7 @@ instructions : [
 		args : [
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2456,7 +2456,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2468,8 +2468,8 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID "Equal"
-			MEMSEMANTICID "Unequal"
+			MEMORYSEMANTICSID "Equal"
+			MEMORYSEMANTICSID "Unequal"
 			ID "Value"
 			ID "Comparator"
 		]
@@ -2482,8 +2482,8 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID "Equal"
-			MEMSEMANTICID "Unequal"
+			MEMORYSEMANTICSID "Equal"
+			MEMORYSEMANTICSID "Unequal"
 			ID "Value"
 			ID "Comparator"
 		]
@@ -2496,7 +2496,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 		]
 	}
 	{
@@ -2507,7 +2507,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 		]
 	}
 	{
@@ -2518,7 +2518,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2530,7 +2530,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2542,7 +2542,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2554,7 +2554,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2566,7 +2566,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2578,7 +2578,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2590,7 +2590,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2602,7 +2602,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2614,7 +2614,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2626,7 +2626,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 		]
 	}
 	{
@@ -2635,7 +2635,7 @@ instructions : [
 		args : [
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 		]
 	}
 	{
@@ -2646,7 +2646,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2658,7 +2658,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2670,7 +2670,7 @@ instructions : [
 			RST
 			ID "Pointer"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 			ID "Value"
 		]
 	}
@@ -2706,7 +2706,7 @@ instructions : [
 		args : [
 			SCOPEID "Execution"
 			SCOPEID "Memory"
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 		]
 	}
 	{
@@ -2714,7 +2714,7 @@ instructions : [
 		name : "MemoryBarrier"
 		args : [
 			SCOPEID "Memory"
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 		]
 	}
 	{
@@ -2732,7 +2732,7 @@ instructions : [
 		args : [
 			ID "NamedBarrier"
 			SCOPEID
-			MEMSEMANTICID
+			MEMORYSEMANTICSID
 		]
 	}
 	{
@@ -2796,7 +2796,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2807,7 +2807,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2818,7 +2818,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2829,7 +2829,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2840,7 +2840,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2851,7 +2851,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2862,7 +2862,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2873,7 +2873,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2939,7 +2939,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2950,7 +2950,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2961,7 +2961,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2972,7 +2972,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2983,7 +2983,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -2994,7 +2994,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -3005,7 +3005,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -3016,7 +3016,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -3607,7 +3607,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 		]
 	}
@@ -3682,7 +3682,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3694,7 +3694,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3706,7 +3706,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3718,7 +3718,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3730,7 +3730,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3742,7 +3742,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3754,7 +3754,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3766,7 +3766,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3778,7 +3778,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3790,7 +3790,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3802,7 +3802,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3814,7 +3814,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3826,7 +3826,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3838,7 +3838,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3850,7 +3850,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3862,7 +3862,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
@@ -3874,7 +3874,7 @@ instructions : [
 			RTYPE
 			RST
 			SCOPEID
-			GROUPOP
+			GROUPOPERATION
 			ID "Value"
 			OPT ID "ClusterSize"
 		]
