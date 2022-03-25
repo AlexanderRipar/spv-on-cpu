@@ -544,7 +544,15 @@ int main(int argc, const char** argv)
 					{
 						name_idx = i;
 
-						output.append(static_cast<spirv_insn_argtype>(i | (static_cast<uint8_t>(flag_optional) << 7) | (static_cast<uint8_t>(flag_variadic) << 6)));
+						uint8_t argument_type_and_flags = static_cast<uint8_t>(i);
+
+						if (flag_optional)
+							i |= spirv_insn_arg_optional_bit;
+
+						if (flag_variadic)
+							i |= spirv_insn_arg_variadic_bit;
+
+						output.append(static_cast<spirv_insn_argtype>(argument_type_and_flags));
 
 						break;
 					}

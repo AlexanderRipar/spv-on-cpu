@@ -52,3 +52,9 @@ enum class spirv_insn_argtype : uint8_t
 	MEMSEMANTICID = 35,
 	GROUPOP = 36,
 };
+
+static constexpr uint8_t spirv_insn_arg_optional_bit = 0x80;
+
+static constexpr uint8_t spirv_insn_arg_variadic_bit = 0x40;
+
+static constexpr uint8_t spirv_insn_argtype_mask = 0x3F;
