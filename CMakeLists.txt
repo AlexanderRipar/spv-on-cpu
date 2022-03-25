@@ -20,4 +20,4 @@ target_include_directories(tests PRIVATE ${Vulkan_INCLUDE_DIR})
 
 
 
-add_executable(spv-data-builder spv_data_builder_main.cpp spv_data_builder_strings.hpp)
+add_executable(spv-data-builder spv_data_builder_main.cpp spv_data_builder_strings.hpp spv_data_defs.hpp spv_data_hashing.cpp spv_data_hashing.hpp)
