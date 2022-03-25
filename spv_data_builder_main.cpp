@@ -191,6 +191,11 @@ public:
 	{
 		return m_used;
 	}
+
+	const uint8_t* data() const noexcept
+	{
+		return m_data;
+	}
 };
 
 uint32_t line_number = 1;
