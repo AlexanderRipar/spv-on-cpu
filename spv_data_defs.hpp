@@ -1,6 +1,6 @@
 #include <cstdint>
 
-struct instruction_index
+struct spirv_insn_index
 {
 	uint32_t opcode;
 	uint32_t byte_offset;

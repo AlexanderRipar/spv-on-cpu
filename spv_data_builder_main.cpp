@@ -82,7 +82,7 @@ enum class pstate
 
 static uint32_t instruction_index_count = 0;
 
-static instruction_index instruction_indices[65536];
+static spirv_insn_index instruction_indices[65536];
 
 struct output_data
 {
@@ -238,16 +238,16 @@ static uint32_t hash_knuth(uint32_t v, uint32_t table_size) noexcept
 	return hash;
 }
 
-static void create_hashtable(uint32_t* out_table_size, instruction_index** out_table) noexcept
+static void create_hashtable(uint32_t* out_table_size, spirv_insn_index** out_table) noexcept
 {
 	uint32_t table_size = (instruction_index_count * 3) >> 1;
 
-	instruction_index* table = static_cast<instruction_index*>(malloc(table_size * sizeof(instruction_index)));
+	spirv_insn_index* table = static_cast<spirv_insn_index*>(malloc(table_size * sizeof(spirv_insn_index)));
 
 	if (table == nullptr)
 		panic("malloc failed.\n");
 
-	memset(table, 0xFF, table_size * sizeof(instruction_index));
+	memset(table, 0xFF, table_size * sizeof(spirv_insn_index));
 
 	uint16_t* offsets = static_cast<uint16_t*>(malloc(table_size * sizeof(uint16_t)));
 
@@ -258,7 +258,7 @@ static void create_hashtable(uint32_t* out_table_size, instruction_index** out_t
 
 	for (uint32_t i = 0; i != instruction_index_count; ++i)
 	{
-		instruction_index elem = instruction_indices[i];
+		spirv_insn_index elem = instruction_indices[i];
 
 		uint32_t hash = hash_knuth(elem.opcode, table_size);
 
@@ -274,7 +274,7 @@ static void create_hashtable(uint32_t* out_table_size, instruction_index** out_t
 
 				offset = tmp_off;
 
-				instruction_index tmp_ind = table[hash];
+				spirv_insn_index tmp_ind = table[hash];
 
 				table[hash] = elem;
 
@@ -365,7 +365,7 @@ int main(int argc, const char** argv)
 
 	pstate state = pstate::seek_insn_open;
 
-	instruction_index curr_index;
+	spirv_insn_index curr_index;
 
 	uint8_t curr_argc;
 
@@ -637,7 +637,7 @@ int main(int argc, const char** argv)
 
 	uint32_t hashtable_size;
 
-	instruction_index* hashtable;
+	spirv_insn_index* hashtable;
 
 	create_hashtable(&hashtable_size, &hashtable);
 
@@ -649,7 +649,7 @@ int main(int argc, const char** argv)
 	if (fwrite(&file_header, 1, sizeof(file_header), output_file) != sizeof(file_header))
 		panic("Could not write to file %s.\n", argv[2]);
 
-	if (fwrite(hashtable, 1, hashtable_size * sizeof(instruction_index), output_file) != hashtable_size * sizeof(instruction_index))
+	if (fwrite(hashtable, 1, hashtable_size * sizeof(spirv_insn_index), output_file) != hashtable_size * sizeof(spirv_insn_index))
 		panic("Could not write to file %s.\n", argv[2]);
 
 	if (fwrite(output.data(), 1, output.size(), output_file) != output.size())
