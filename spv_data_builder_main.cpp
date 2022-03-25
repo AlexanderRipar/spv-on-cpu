@@ -267,6 +267,84 @@ static const char* skip_whitespace(const char* str) noexcept
 
 }
 
+static uint32_t hash_knuth(uint32_t v, uint32_t table_size) noexcept
+{
+	// Use Knuth's hash algorithm
+
+	// We don't really care that we are preserving divisibility. We just want _some_ hashing going on.
+
+	constexpr uint32_t shift = 16;
+
+	constexpr uint32_t knuth = 2654435769;
+
+	uint32_t hash = (v * knuth) >> shift;
+
+	hash = static_cast<uint32_t>((static_cast<uint64_t>(hash) * table_size) >> (32 - shift));
+
+	return hash;
+}
+
+static void create_hashtable(uint32_t* out_table_size, instruction_index** out_table) noexcept
+{
+	uint32_t table_size = (instruction_index_count * 3) >> 1;
+
+	instruction_index* table = static_cast<instruction_index*>(malloc(table_size * sizeof(instruction_index)));
+
+	if (table == nullptr)
+		panic("malloc failed.\n");
+
+	memset(table, 0xFF, table_size * sizeof(instruction_index));
+
+	uint16_t* offsets = static_cast<uint16_t*>(malloc(table_size * sizeof(uint16_t)));
+
+	if (offsets == nullptr)
+		panic("malloc failed.\n");
+
+	memset(offsets, 0x00, table_size * sizeof(uint16_t));
+
+	for (uint32_t i = 0; i != instruction_index_count; ++i)
+	{
+		instruction_index elem = instruction_indices[i];
+
+		uint32_t hash = hash_knuth(elem.opcode, table_size);
+
+		uint16_t offset = 0;
+
+		while (table[hash].opcode != ~0u)
+		{
+			if (offset > offsets[hash])
+			{
+				uint16_t tmp_off = offsets[hash];
+
+				offsets[hash] = offset;
+
+				offset = tmp_off;
+
+				instruction_index tmp_ind = table[hash];
+
+				table[hash] = elem;
+
+				elem = tmp_ind;
+			}
+
+			++hash;
+
+			if (hash == table_size)
+				hash = 0;
+
+			++offset;
+		}
+
+		table[hash] = elem;
+
+		offsets[hash] = offset;
+	}
+
+	*out_table_size = table_size;
+
+	*out_table = table;
+}
+
 int main(int argc, const char** argv)
 {
 	prog_name = argv[0];
@@ -602,6 +680,12 @@ int main(int argc, const char** argv)
 
 	if (curr != input + input_bytes)
 		parse_panic("End of file", curr);
+
+	uint32_t hashtable_size;
+
+	instruction_index* hashtable;
+
+	create_hashtable(&hashtable_size, &hashtable);
 
 	if (fopen_s(&output_file, argv[2], "wb") != 0)
 		panic("Could not open file %s for writing.\n", argv[2]);
