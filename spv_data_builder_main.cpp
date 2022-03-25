@@ -283,9 +283,6 @@ int main(int argc, const char** argv)
 	if (fopen_s(&input_file, argv[1], "rb") != 0)
 		panic("Could not open file %s for reading.\n", argv[1]);
 
-	if (fopen_s(&output_file, argv[2], "wb") != 0)
-		panic("Could not open file %s for writing.\n", argv[2]);
-
 	if (fseek(input_file, 0, SEEK_END) != 0)
 		panic("Could not seek to end of input file.\n");
 
@@ -303,6 +300,8 @@ int main(int argc, const char** argv)
 		panic("malloc failed\n");
 
 	size_t actual_bytes_read = fread(input, 1, input_bytes, input_file);
+
+	fclose(input_file);
 
 	if (actual_bytes_read != input_bytes)
 		panic("Failed to read from file %s.", argv[1]);
@@ -598,6 +597,11 @@ int main(int argc, const char** argv)
 
 	if (curr != input + input_bytes)
 		parse_panic("End of file", curr);
+
+	if (fopen_s(&output_file, argv[2], "wb") != 0)
+		panic("Could not open file %s for writing.\n", argv[2]);
+
+	fclose(output_file);
 
 	return 0;
 }
