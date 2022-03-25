@@ -477,7 +477,7 @@ builtin_info get_builtin_info(Builtin b) noexcept
 	}
 }
 
-function_param_attribute_info get_function_param_attribute_info(FunctionParamAttribute a) noexcept
+function_param_attribute_info get_function_param_attribute_info(FunctionParameterAttribute a) noexcept
 {
 	static constexpr const char* names[]{
 		"Zext",

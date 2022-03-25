@@ -102,7 +102,7 @@ decoration_info get_decoration_info(Decoration d) noexcept;
 
 builtin_info get_builtin_info(Builtin b) noexcept;
 
-function_param_attribute_info get_function_param_attribute_info(FunctionParamAttribute a) noexcept;
+function_param_attribute_info get_function_param_attribute_info(FunctionParameterAttribute a) noexcept;
 
 fp_rounding_mode_info get_fp_rounding_mode_info(FpRoundingMode m) noexcept;
 
