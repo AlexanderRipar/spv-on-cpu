@@ -6,6 +6,12 @@ struct instruction_index
 	uint32_t byte_offset;
 };
 
+struct spirv_data_header
+{
+	uint32_t version;
+	uint32_t table_size;
+};
+
 enum class spirv_insn_argtype : uint8_t
 {
 	ID = 0,
