@@ -56,7 +56,7 @@ The format (in pseudo-c) is:
 
 struct argument
 {
-	uint8_t argument_type;
+	uint8_t spirv_insn_argtype;
 	char argument_name[];
 };
 

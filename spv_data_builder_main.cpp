@@ -28,7 +28,7 @@ __declspec(noreturn) static void panic(const char* msg, ...) noexcept
 	exit(1);
 }
 
-enum class argument_type : uint8_t
+enum class spirv_insn_argtype : uint8_t
 {
 	ID = 0,
 	STR = 1,
@@ -166,7 +166,7 @@ public:
 		m_data[m_used - 1] = '\0';
 	}
 
-	void append(argument_type type) noexcept
+	void append(spirv_insn_argtype type) noexcept
 	{
 		grow(1);
 
@@ -606,7 +606,7 @@ int main(int argc, const char** argv)
 					{
 						name_idx = i;
 
-						output.append(static_cast<argument_type>(i | (static_cast<uint8_t>(flag_optional) << 7) | (static_cast<uint8_t>(flag_variadic) << 6)));
+						output.append(static_cast<spirv_insn_argtype>(i | (static_cast<uint8_t>(flag_optional) << 7) | (static_cast<uint8_t>(flag_variadic) << 6)));
 
 						break;
 					}
