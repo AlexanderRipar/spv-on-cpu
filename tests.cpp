@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <cstdlib>
 
-#include "spvcpu.hpp"
+#include "spv_viewer.hpp"
 #include "spv_data_accessor.hpp"
 
 static constexpr const char* argument_type_names[]{
