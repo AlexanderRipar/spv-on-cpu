@@ -1,3 +1,6 @@
+#ifndef SPV_DATA_BUILDER_STRINGS_HPP_INCLUDE_GUARD
+#define SPV_DATA_BUILDER_STRINGS_HPP_INCLUDE_GUARD
+
 constexpr const char* const extended_help_string =
 R"(
 Utility for assembling SPIR-V instruction information from JSON into a format that "
@@ -110,3 +113,5 @@ constexpr const char* const argument_type_string = "type";
 constexpr const char* const argument_optional_string = "OPT";
 
 constexpr const char* const argument_variadic_string = "VAR";
+
+#endif // SPV_DATA_BUILDER_STRINGS_HPP_INCLUDE_GUARD

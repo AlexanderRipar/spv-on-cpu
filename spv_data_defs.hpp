@@ -1,3 +1,6 @@
+#ifndef SPV_DATA_DEFS_HPP_INCLUDE_GUARD
+#define SPV_DATA_DEFS_HPP_INCLUDE_GUARD
+
 #include <cstdint>
 
 struct spirv_insn_index
@@ -58,3 +61,5 @@ static constexpr uint8_t spirv_insn_arg_optional_bit = 0x80;
 static constexpr uint8_t spirv_insn_arg_variadic_bit = 0x40;
 
 static constexpr uint8_t spirv_insn_argtype_mask = 0x3F;
+
+#endif // SPV_DATA_DEFS_HPP_INCLUDE_GUARD

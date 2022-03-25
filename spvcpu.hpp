@@ -1,3 +1,6 @@
+#ifndef SPVCPU_HPP_INCLUDE_GUARD
+#define SPVCPU_HPP_INCLUDE_GUARD
+
 #include <vulkan/vulkan.h>
 
 namespace spvcpu
@@ -45,3 +48,5 @@ namespace spvcpu
 		char** out_disassembly
 	) noexcept;
 }
+
+#endif // SPVCPU_HPP_INCLUDE_GUARD
