@@ -14,7 +14,7 @@ target_include_directories(spv-on-cpu PRIVATE ${Vulkan_INCLUDE_DIR})
 
 add_executable(tests tests.cpp spv_viewer.hpp spv_data_defs.hpp spv_data_accessor.cpp spv_data_accessor.hpp spv_data_hashing.cpp spv_data_hashing.hpp)
 
-target_link_libraries(tests PRIVATE spvcpu ${Vulkan_LIBRARY})
+target_link_libraries(tests PRIVATE spv-on-cpu ${Vulkan_LIBRARY})
 
 target_include_directories(tests PRIVATE ${Vulkan_INCLUDE_DIR})
 
