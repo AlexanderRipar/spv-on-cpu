@@ -31,6 +31,7 @@ __declspec(noreturn) static void panic(const char* msg, ...) noexcept
 }
 
 static constexpr const char* argument_type_names[]{
+	"INSTRUCTION",
 	"SOURCELANGUAGE",
 	"EXECUTIONMODEL",
 	"ADDRESSINGMODEL",
@@ -81,12 +82,15 @@ static constexpr const char* argument_type_names[]{
 	"STR",
 	"ARG",
 	"MEMBER",
-	"OPCODE",
-	"LITERALIDPAIR",
+	"U32IDPAIR",
+	"IDMEMBERPAIR",
+	"IDIDPAIR",
+	"IDU32PAIR",
 };
 
 enum class pstate
 {
+	seek_enum_open,
 	seek_insn_open,
 	seek_insn_name,
 	seek_insn_opcode,
@@ -94,11 +98,23 @@ enum class pstate
 	seek_args_name,
 	seek_args_type,
 	seek_insn_close,
+	handle_enum_end,
 };
+
+
 
 static uint32_t instruction_index_count = 0;
 
 static spirv_insn_index instruction_indices[65536];
+
+static spirv_data_table_header table_headers[256];
+
+static spirv_insn_index* hashtables[256];
+
+static void* enum_data[256];
+
+static uint32_t enum_data_sizes[256];
+
 
 struct output_data
 {
@@ -124,6 +140,24 @@ private:
 public:
 
 	output_data() noexcept : m_data{ static_cast<uint8_t*>(malloc(4096)) }, m_used{ 0 }, m_capacity{ 4096 } { if (m_data == nullptr) panic("malloc failed.\n"); }
+
+	void* steal(uint32_t* bytes) noexcept
+	{
+		uint8_t* prev = m_data;
+
+		m_data = static_cast<uint8_t*>(malloc(4096));
+
+		*bytes = m_used;
+
+		m_used = 0;
+
+		m_capacity = 4096;
+
+		if (m_data == nullptr)
+			panic("malloc failed.\n");
+
+		return prev;
+	}
 
 	void append(const char* str, uint32_t len) noexcept
 	{
@@ -344,25 +378,10 @@ int main(int argc, const char** argv)
 
 	input[input_bytes] = '\0';
 
-	// Find start of instructions array
+	// Find start of data
 	const char* curr = skip_whitespace(input);
 
-	if (strncmp(curr, instruction_array_string, strlen(instruction_array_string)) != 0)
-		parse_panic(instruction_array_string, curr);
-
-	curr = skip_whitespace(curr + strlen(instruction_array_string));
-
-	if (*curr != ':')
-		parse_panic(":", curr);
-
-	curr = skip_whitespace(curr + 1);
-
-	if (*curr != '[')
-		parse_panic("[", curr);
-
-	curr = skip_whitespace(curr + 1);
-
-	pstate state = pstate::seek_insn_open;
+	pstate state = pstate::seek_enum_open;
 
 	spirv_insn_index curr_index;
 
@@ -374,12 +393,61 @@ int main(int argc, const char** argv)
 
 	bool prev_arg_was_variadic;
 
+	uint32_t curr_enum_type;
+
 	bool done = false;
 
 	while (!done)
 	{
 		switch (state)
 		{
+		case pstate::seek_enum_open:
+		{
+			if (*curr == '\0')
+			{
+				done = true;
+
+				break;
+			}
+
+			uint32_t enum_len = 0;
+
+			while (!is_whitespace(curr[enum_len]))
+				++enum_len;
+
+			uint32_t table_index = ~0u;
+
+			for (uint32_t i = 0; i != _countof(enum_name_strings); ++i)
+			{
+				if (strncmp(curr, enum_name_strings[i], enum_len) == 0)
+				{
+					table_index = i;
+
+					break;
+				}
+			}
+
+			curr_enum_type = table_index;
+
+			if (table_index == ~0u)
+				parse_panic("enum-name", curr);
+
+			curr = skip_whitespace(curr + enum_len);
+
+			if (*curr != ':')
+				parse_panic(":", curr);
+
+			curr = skip_whitespace(curr + 1);
+
+			if (*curr != '[')
+				parse_panic("[", curr);
+
+			curr = skip_whitespace(curr + 1);
+
+			state = pstate::seek_insn_open;
+
+			break;
+		}
 		case pstate::seek_insn_open:
 		{
 			if (*curr == '{')
@@ -391,7 +459,7 @@ int main(int argc, const char** argv)
 			}
 			else if (*curr == ']')
 			{
-				done = true;
+				state = pstate::handle_enum_end;
 			}
 			else
 			{
@@ -414,16 +482,35 @@ int main(int argc, const char** argv)
 
 			curr = skip_whitespace(curr + 1);
 
+			uint32_t opcode = 0;
+
 			if (*curr < '0' || *curr > '9')
 				parse_panic("[0-9]", curr);
 
-			uint32_t opcode = 0;
+			if (curr[1] == 'x')
+			{
+				curr += 2;
 
-			while (*curr >= '0' && *curr <= '9')
-				opcode = opcode * 10 + *(curr++) - '0';
+				while (true)
+				{
+					if (*curr >= '0' && *curr <= '9')
+						opcode = opcode * 16 + *curr - '0';
+					else if (*curr >= 'a' && *curr <= 'f')
+						opcode = opcode * 16 + *curr - 'a';
+					else if (*curr >= 'A' && *curr <= 'F')
+						opcode = opcode * 16 + *curr - 'A';
+					else
+						break;
 
-			if (opcode > 65535)
-				panic("Line %d: Opcode %d exeeds the maximum of 65535.\n", line_number, opcode);
+					++curr;
+				}
+			}
+			else
+			{
+				while (*curr >= '0' && *curr <= '9')
+					opcode = opcode * 10 + *(curr++) - '0';
+
+			}
 
 			curr_index.opcode = opcode;
 
@@ -470,28 +557,32 @@ int main(int argc, const char** argv)
 		}
 		case pstate::seek_insn_args:
 		{
-			if (strncmp(curr, instruction_args_string, strlen(instruction_args_string)) != 0)
-				parse_panic(instruction_args_string, curr);
+			if (strncmp(curr, instruction_args_string, strlen(instruction_args_string)) == 0)
+			{
+				curr = skip_whitespace(curr + strlen(instruction_args_string));
 
-			curr = skip_whitespace(curr + strlen(instruction_args_string));
+				if (*curr != ':')
+					parse_panic(":", curr);
 
-			if (*curr != ':')
-				parse_panic(":", curr);
+				curr = skip_whitespace(curr + 1);
 
-			curr = skip_whitespace(curr + 1);
+				if (*curr != '[')
+					parse_panic("[", curr);
 
-			if (*curr != '[')
-				parse_panic("[", curr);
+				curr_argc = 0;
 
-			curr_argc = 0;
+				prev_arg_was_optional = false;
 
-			prev_arg_was_optional = false;
+				prev_arg_was_variadic = false;
+				
+				curr = skip_whitespace(curr + 1);
 
-			prev_arg_was_variadic = false;
-
-			curr = skip_whitespace(curr + 1);
-
-			state = pstate::seek_args_type;
+				state = pstate::seek_args_type;
+			}
+			else
+			{
+				state = pstate::seek_insn_close;
+			}
 
 			break;
 		}
@@ -636,31 +727,84 @@ int main(int argc, const char** argv)
 
 			break;
 		}
+		case pstate::handle_enum_end:
+		{
+			if (instruction_index_count != 0)
+			{
+				create_hashtable(&table_headers[curr_enum_type].table_size, &hashtables[curr_enum_type]);
+
+				enum_data[curr_enum_type] = output.steal(&enum_data_sizes[curr_enum_type]);
+
+				instruction_index_count = 0;
+			}
+
+			state = pstate::seek_enum_open;
+
+			break;
+		}
 		}
 	}
-
-	if (curr != input + input_bytes)
-		parse_panic("End of file", curr);
-
-	uint32_t hashtable_size;
-
-	spirv_insn_index* hashtable;
-
-	create_hashtable(&hashtable_size, &hashtable);
-
-	spirv_data_header file_header{ 1, hashtable_size };
 
 	if (fopen_s(&output_file, argv[2], "wb") != 0)
 		panic("Could not open file %s for writing.\n", argv[2]);
 
+	uint32_t enum_count = 0;
+
+	for (uint32_t i = _countof(table_headers); i != 0; --i)
+		if (table_headers[i - 1].table_size != 0)
+		{
+			enum_count = i;
+
+			break;
+		}
+
+	spirv_data_header file_header;
+	file_header.version = 2;
+	file_header.table_count = enum_count;
+
 	if (fwrite(&file_header, 1, sizeof(file_header), output_file) != sizeof(file_header))
 		panic("Could not write to file %s.\n", argv[2]);
 
-	if (fwrite(hashtable, 1, hashtable_size * sizeof(spirv_insn_index), output_file) != hashtable_size * sizeof(spirv_insn_index))
+	uint32_t table_offset = sizeof(file_header) + sizeof(table_headers[0]) * enum_count;
+
+	for (uint32_t i = 0; i != enum_count; ++i)
+	{
+		if (table_headers[i].table_size == 0)
+			continue;
+
+		table_headers[i].table_offset = table_offset;
+
+		table_offset += table_headers[i].table_size * sizeof(spirv_insn_index);
+	}
+
+	if (fwrite(table_headers, 1, enum_count * sizeof(table_headers[0]), output_file) != enum_count * sizeof(table_headers[0]))
 		panic("Could not write to file %s.\n", argv[2]);
 
-	if (fwrite(output.data(), 1, output.size(), output_file) != output.size())
-		panic("Could not write to file %s.\n", argv[2]);
+	uint32_t enum_offset = table_offset;
+
+	for (uint32_t i = 0; i != enum_count; ++i)
+	{
+		if (hashtables[i] == nullptr)
+			continue;
+
+		for (uint32_t j = 0; j != table_headers[i].table_size; ++j)
+			if (hashtables[i][j].opcode != ~0u)
+				hashtables[i][j].byte_offset += enum_offset;
+
+		enum_offset += enum_data_sizes[i];
+
+		if (fwrite(hashtables[i], 1, table_headers[i].table_size * sizeof(spirv_insn_index), output_file) != table_headers[i].table_size * sizeof(spirv_insn_index))
+			panic("Could not write to file %s.\n", argv[2]);
+	}
+
+	for (uint32_t i = 0; i != enum_count; ++i)
+	{
+		if (enum_data[i] == nullptr)
+			continue;
+
+		if (fwrite(enum_data[i], 1, enum_data_sizes[i], output_file) != enum_data_sizes[i])
+			panic("Could not write to file %s.\n", argv[2]);
+	}
 
 	fclose(output_file);
 

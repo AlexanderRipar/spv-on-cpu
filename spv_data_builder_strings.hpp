@@ -98,11 +98,9 @@ outputfile: Name of the file that receives the built SPIR-V instruction data.
 See --help for further information.
 )";
 
-constexpr const char* const instruction_array_string = "instructions";
-
 constexpr const char* const instruction_name_string = "name";
 
-constexpr const char* const instruction_opcode_string = "opcode";
+constexpr const char* const instruction_opcode_string = "id";
 
 constexpr const char* const instruction_args_string = "args";
 
@@ -113,5 +111,50 @@ constexpr const char* const argument_type_string = "type";
 constexpr const char* const argument_optional_string = "OPT";
 
 constexpr const char* const argument_variadic_string = "VAR";
+
+constexpr const char* const enum_name_strings[]
+{
+	"Instruction",
+	"SourceLanguage",
+	"ExecutionModel",
+	"AddressingModel",
+	"MemoryModel",
+	"ExecutionMode",
+	"StorageClass",
+	"Dim",
+	"SamplerAddressingMode",
+	"SamplerFilterMode",
+	"ImageFormat",
+	"ImageChannelOrder",
+	"ImageChannelDataType",
+	"ImageOperands",
+	"FpFastMathMode",
+	"FpRoundingMode",
+	"LinkageType",
+	"AccessQualifier",
+	"FunctionParameterAttribute",
+	"Decoration",
+	"Builtin",
+	"SelectionControl",
+	"LoopControl",
+	"FunctionControl",
+	"MemorySemantics",
+	"MemoryOperands",
+	"Scope",
+	"GroupOperation",
+	"KernelEnqueueFlags",
+	"KernelProfilingInfo",
+	"Capability",
+	"ReservedRayFlags",
+	"ReservedRayQueryIntersection",
+	"ReservedRayQueryCommittedType",
+	"ReservedRayQueryCandidateType",
+	"ReservedFragmentShadingRate",
+	"ReservedFpDenormMode",
+	"ReservedFpOperationMode",
+	"QuantizationMode",
+	"OverflowMode",
+	"PackedVectorFormat",
+};
 
 #endif // SPV_DATA_BUILDER_STRINGS_HPP_INCLUDE_GUARD
