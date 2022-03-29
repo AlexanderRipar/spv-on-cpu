@@ -2,47 +2,66 @@
 #include <cstdint>
 #include <cstdlib>
 
-#include "spv_viewer.hpp"
 #include "spv_data_accessor.hpp"
 
-static constexpr const char* argument_type_names[]{
-	"ID",
-	"STR",
-	"U32",
-	"I32",
-	"F32",
+static constexpr const char* argument_type_names[]
+{
+	"INSTRUCTION",
+	"SOURCELANGUAGE",
+	"EXECUTIONMODEL",
+	"ADDRESSINGMODEL",
+	"MEMORYMODEL",
+	"EXECUTIONMODE",
+	"STORAGECLASS",
+	"DIM",
+	"SAMPLERADDRESSINGMODE",
+	"SAMPLERFILTERMODE",
+	"IMAGEFORMAT",
+	"IMAGECHANNELORDER",
+	"IMAGECHANNELDATATYPE",
+	"IMAGEOPERANDS",
+	"FPFASTMATHMODE",
+	"FPROUNDINGMODE",
+	"LINKAGETYPE",
+	"ACCESSQUALIFIER",
+	"FUNCTIONPARAMETERATTRIBUTE",
+	"DECORATION",
+	"BUILTIN",
+	"SELECTIONCONTROL",
+	"LOOPCONTROL",
+	"FUNCTIONCONTROL",
+	"MEMORYSEMANTICSID",
+	"MEMORYOPERANDS",
+	"SCOPEID",
+	"GROUPOPERATION",
+	"KERNELENQUEUEFLAGS",
+	"KERNELPROFILINGINFO",
+	"CAPABILITY",
+	"RESERVEDRAYFLAGS",
+	"RESERVEDRAYQUERYINTERSECTION",
+	"RESERVEDRAYQUERYCOMMITTEDTYPE",
+	"RESERVEDRAYQUERYCANDIDATETYPE",
+	"RESERVEDFRAGMENTSHADINGRATE",
+	"RESERVEDFPDENORMMODE",
+	"RESERVEDFPOPERATIONMODE",
+	"QUANTIZATIONMODE",
+	"OVERFLOWMODE",
+	"PACKEDVECTORFORMAT",
+
 	"RST",
 	"RTYPE",
-	"DECO",
-	"LANGID",
+	"LITERAL",
+	"ID",
 	"TYPID",
+	"U32",
+	"STR",
+	"ARG",
 	"MEMBER",
-	"STRID",
-	"DECOARG",
-	"DECOARGID",
-	"UNKNOWN",
-	"ADDRMODEL",
-	"MEMMODEL",
-	"EXEMODEL",
-	"EXEMODE",
-	"CAPABILITY",
-	"DIMENSION",
-	"IMGFORMAT",
-	"ACCESSQUAL",
-	"STORAGECLASS",
-	"SAMPADDRMODE",
-	"SAMPFILTMODE",
-	"OPCODE",
-	"MEMOPERAND",
-	"IMGOPERAND",
-	"FUNCCTRL",
-	"SELECTIONCTRL",
-	"LOOPCTRL",
-	"LOOPCTRLARG",
-	"PACKEDVECFMT",
-	"SCOPEID",
-	"MEMSEMANTICID",
-	"GROUPOP",
+	"U32IDPAIR",
+	"IDMEMBERPAIR",
+	"IDIDPAIR",
+	"IDU32PAIR",
+	"I64",
 };
 
 int main(int argc, const char** argv)
@@ -58,7 +77,7 @@ int main(int argc, const char** argv)
 
 	if (fopen_s(&input_file, argv[1], "rb") != 0)
 	{
-			printf("Could not open file %s for reading.\n", argv[1]);
+		printf("Could not open file %s for reading.\n", argv[1]);
 
 		return 1;
 	}
@@ -105,9 +124,9 @@ int main(int argc, const char** argv)
 		}
 	}
 
-	uint32_t table_entry_cnt = reinterpret_cast<const spirv_data_table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spirv_data_header))->table_size;
+	uint32_t table_entry_cnt = reinterpret_cast<const spirv_data_table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spirv_data_header))->size();
 
-	fprintf(output_file, "instructions : [\r\n");
+	fprintf(output_file, "instructions : [\n");
 
 	const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
 
@@ -117,8 +136,8 @@ int main(int argc, const char** argv)
 
 	for (uint32_t i = 0; i != table_entry_cnt; ++i)
 	{
-		uint32_t opcode = indices[i].opcode; 
-		
+		uint32_t opcode = indices[i].opcode;
+
 		if (opcode == ~0u)
 			continue;
 
@@ -131,7 +150,7 @@ int main(int argc, const char** argv)
 			return 1;
 		}
 
-		fprintf(output_file, "\t{\r\n\t\topcode : %d\r\n\t\tname : \"%s\"\r\n\t\targs : [\n", opcode, op_data.name);
+		fprintf(output_file, "\t{\n\t\topcode : %d\n\t\tname : \"%s\"\n\t\targs : [\n", opcode, op_data.name == nullptr ? "<Unknown>" : op_data.name);
 
 		for (uint32_t i = 0; i != op_data.argc; ++i)
 		{
@@ -151,19 +170,21 @@ int main(int argc, const char** argv)
 
 			const char* argtypename = "<Invalid>";
 
-			if(argtype < _countof(argument_type_names))
+			if (argtype < _countof(argument_type_names))
 				argtypename = argument_type_names[argtype];
 
 			fprintf(output_file, "\t\t\t%s%s%s", optstr, varstr, argtypename);
 
-			if (op_data.arg_names[i][0] == '\0')
-				fprintf(output_file, "\r\n");
+			if (op_data.arg_names[i] == nullptr)
+				fprintf(output_file, "\n");
 			else
 				fprintf(output_file, " \"%s\"\n", op_data.arg_names[i]);
 		}
 
-		fprintf(output_file, "\t\t]\r\n\t}\n");
+		fprintf(output_file, "\t\t]\n\t}\n");
 	}
 
-	fprintf(output_file, "]\r\n");
+	fprintf(output_file, "]\n");
+
+	return 0;
 }
