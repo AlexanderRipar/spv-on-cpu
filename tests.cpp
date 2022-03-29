@@ -578,7 +578,7 @@ int main(int argc, const char** argv)
 
 		const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
 
-		const spird::insn_index* indices = reinterpret_cast<const spird::insn_index*>(raw_data + header->offset);
+		const spird::elem_index* indices = reinterpret_cast<const spird::elem_index*>(raw_data + header->offset);
 
 		for (uint32_t i = 0; i != header->size; ++i)
 		{

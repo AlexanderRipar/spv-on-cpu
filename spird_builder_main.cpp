@@ -108,11 +108,11 @@ enum class pstate
 
 static uint32_t instruction_index_count = 0;
 
-static spird::insn_index instruction_indices[65536];
+static spird::elem_index instruction_indices[65536];
 
 static spird::table_header table_headers[256];
 
-static spird::insn_index* hashtables[256];
+static spird::elem_index* hashtables[256];
 
 static void* enum_data[256];
 
@@ -283,19 +283,19 @@ static const char* skip_whitespace(const char* str) noexcept
 
 }
 
-static void create_hashtable(uint32_t* out_table_size, spird::insn_index** out_table) noexcept
+static void create_hashtable(uint32_t* out_table_size, spird::elem_index** out_table) noexcept
 {
 	uint32_t table_size = (instruction_index_count * 3) >> 1;
 
 	if (table_size > 0xFF'FF'FF)
 		panic("Size of table is greater than maximum of 0xFFFFFF.\n");
 
-	spird::insn_index* table = static_cast<spird::insn_index*>(malloc(table_size * sizeof(spird::insn_index)));
+	spird::elem_index* table = static_cast<spird::elem_index*>(malloc(table_size * sizeof(spird::elem_index)));
 
 	if (table == nullptr)
 		panic("malloc failed.\n");
 
-	memset(table, 0xFF, table_size * sizeof(spird::insn_index));
+	memset(table, 0xFF, table_size * sizeof(spird::elem_index));
 
 	uint16_t* offsets = static_cast<uint16_t*>(malloc(table_size * sizeof(uint16_t)));
 
@@ -306,7 +306,7 @@ static void create_hashtable(uint32_t* out_table_size, spird::insn_index** out_t
 
 	for (uint32_t i = 0; i != instruction_index_count; ++i)
 	{
-		spird::insn_index elem = instruction_indices[i];
+		spird::elem_index elem = instruction_indices[i];
 
 		uint32_t hash = hash_knuth(elem.opcode, table_size);
 
@@ -322,7 +322,7 @@ static void create_hashtable(uint32_t* out_table_size, spird::insn_index** out_t
 
 				offset = tmp_off;
 
-				spird::insn_index tmp_ind = table[hash];
+				spird::elem_index tmp_ind = table[hash];
 
 				table[hash] = elem;
 
@@ -529,7 +529,7 @@ int main(int argc, const char** argv)
 
 	pstate state = pstate::enum_open;
 
-	spird::insn_index curr_index;
+	spird::elem_index curr_index;
 
 	uint8_t curr_argc;
 
@@ -1045,7 +1045,7 @@ int main(int argc, const char** argv)
 
 		table_headers[i].offset = table_offset;
 
-		table_offset += table_headers[i].size * sizeof(spird::insn_index);
+		table_offset += table_headers[i].size * sizeof(spird::elem_index);
 	}
 
 	if (fwrite(table_headers, 1, enum_count * sizeof(table_headers[0]), output_file) != enum_count * sizeof(table_headers[0]))
@@ -1064,7 +1064,7 @@ int main(int argc, const char** argv)
 
 		enum_offset += enum_data_sizes[i];
 
-		if (fwrite(hashtables[i], 1, table_headers[i].size * sizeof(spird::insn_index), output_file) != table_headers[i].size * sizeof(spird::insn_index))
+		if (fwrite(hashtables[i], 1, table_headers[i].size * sizeof(spird::elem_index), output_file) != table_headers[i].size * sizeof(spird::elem_index))
 			panic("Could not write to file %s.\n", argv[2]);
 	}
 

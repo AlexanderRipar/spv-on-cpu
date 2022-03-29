@@ -26,7 +26,7 @@ spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uin
 
 	const spird::table_header* instruction_table_header = reinterpret_cast<const spird::table_header*>(raw_data + sizeof(spird::file_header)) + enum_id_uint;
 
-	const spird::insn_index* instruction_table = reinterpret_cast<const spird::insn_index*>(raw_data + instruction_table_header->offset);
+	const spird::elem_index* instruction_table = reinterpret_cast<const spird::elem_index*>(raw_data + instruction_table_header->offset);
 
 	uint32_t hash = hash_knuth(id, instruction_table_header->size);
 

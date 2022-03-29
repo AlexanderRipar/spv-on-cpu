@@ -5,7 +5,7 @@
 
 namespace spird
 {
-	struct insn_index
+	struct elem_index
 	{
 		uint32_t opcode;
 		uint32_t byte_offset;
