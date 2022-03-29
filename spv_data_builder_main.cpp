@@ -86,6 +86,7 @@ static constexpr const char* argument_type_names[]{
 	"IDMEMBERPAIR",
 	"IDIDPAIR",
 	"IDU32PAIR",
+	"I64",
 };
 
 enum class pstate
