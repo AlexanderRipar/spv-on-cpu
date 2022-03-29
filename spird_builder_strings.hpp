@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-constexpr const char* const extended_help_string =
+static constexpr const char* const extended_help_string =
 R"(
 Utility for assembling SPIR-V instruction information from JSON into a format that "
 
@@ -92,7 +92,7 @@ beginning of the next field.
 )";
 
 
-constexpr const char* const basic_help_string =
+static constexpr const char* const basic_help_string =
 R"(
 inputfile: Name of the file that contains the textual input which is used to build SPIR-V instruction
 data.
@@ -100,27 +100,27 @@ outputfile: Name of the file that receives the built SPIR-V instruction data.
 See --help for further information.
 )";
 
-constexpr const char* const elem_id_string           = "id";
+static constexpr const char* const elem_id_string           = "id";
 
-constexpr const char* const elem_name_string         = "name";
+static constexpr const char* const elem_name_string         = "name";
 
-constexpr const char* const elem_args_string         = "args";
+static constexpr const char* const elem_args_string         = "args";
 
-constexpr const char* const elem_depends_string      = "depends";
+static constexpr const char* const elem_depends_string      = "depends";
 
-constexpr const char* const elem_implies_string      = "implies";
+static constexpr const char* const elem_implies_string      = "implies";
 
-constexpr const char* const args_name_string         = "name";
+static constexpr const char* const args_name_string         = "name";
 
-constexpr const char* const args_type_string         = "type";
+static constexpr const char* const args_type_string         = "type";
 
-constexpr const char* const argument_optional_string = "OPT";
+static constexpr const char* const argument_optional_string = "OPT";
 
-constexpr const char* const argument_variadic_string = "VAR";
+static constexpr const char* const argument_variadic_string = "VAR";
 
 
 
-constexpr const char* const enum_name_strings[]
+static constexpr const char* const enum_name_strings[]
 {
 	"Instruction",
 	"SourceLanguage",
@@ -165,9 +165,8 @@ constexpr const char* const enum_name_strings[]
 	"PackedVectorFormat",
 };
 
-constexpr const char* const capability_name_strings[]
+static constexpr const char* const capability_name_strings[]
 {
-
 	"Matrix",
 	"Shader",
 	"Geometry",
@@ -364,7 +363,7 @@ constexpr const char* const capability_name_strings[]
 	"DebugInfoModuleINTEL",
 };
 
-constexpr uint16_t capability_ids[]
+static constexpr uint16_t capability_ids[]
 {
 	0,
 	1,
@@ -562,13 +561,13 @@ constexpr uint16_t capability_ids[]
 	6114,
 };
 
-constexpr static const char* const data_type_strings[]
+static constexpr const char* const data_type_strings[]
 {
 	"--for-all",
 	"--for-disassembly",
 	"--for-debugging",
 };
 
-constexpr static const char* const data_type_no_implies_and_depends_string = "--no-implies-and-depends";
+static constexpr const char* const data_type_no_implies_and_depends_string = "--no-implies-and-depends";
 
 #endif // SPV_DATA_BUILDER_STRINGS_HPP_INCLUDE_GUARD
