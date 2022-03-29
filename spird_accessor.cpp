@@ -30,11 +30,16 @@ spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uin
 
 	uint32_t hash = hash_knuth(id, instruction_table_header->size);
 
+	const uint32_t initial_hash = hash;
+
 	while (instruction_table[hash].opcode != id)
 	{
 		++hash;
 
 		if (hash >= instruction_table_header->size)
+			hash -= instruction_table_header->size;
+
+		if (hash == initial_hash)
 			return spvcpu::result::unknown_opcode;
 	}
 
