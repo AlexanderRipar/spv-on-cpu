@@ -572,7 +572,7 @@ int main(int argc, const char** argv)
 	{
 		const spird::table_header* header = reinterpret_cast<const spird::table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spird::file_header)) + t;
 
-		fprintf(output_file, "\n%s : [\n", enum_name_strings[t]);
+		fprintf(output_file, "\n%s%s : [\n", enum_name_strings[t], (header->flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask ? "@BITMASK" : "");
 
 		const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
 
@@ -596,7 +596,12 @@ int main(int argc, const char** argv)
 				return 1;
 			}
 
-			fprintf(output_file, "\t{\n\t\tid : %d\n\t\tname : \"%s\"\n", id, elem_data.name == nullptr ? "<Unknown>" : elem_data.name);
+			if ((elem_data.enum_flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask)
+				fprintf(output_file, "\t{\n\t\tid : 0x%x", id);
+			else
+				fprintf(output_file, "\t{\n\t\tid : %d", id);
+
+			fprintf(output_file, "\n\t\tname : \"%s\"\n", elem_data.name == nullptr ? "<Unknown>" : elem_data.name);
 
 			if (elem_data.argc > 0)
 				fprintf(output_file, "\t\targs : [\n");
