@@ -24,26 +24,26 @@ spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uin
 	if (enum_id_uint > file_header->table_count)
 		return spvcpu::result::spirv_data_enumeration_not_found;
 
-	const spird::table_header* instruction_table_header = reinterpret_cast<const spird::table_header*>(raw_data + sizeof(spird::file_header)) + enum_id_uint;
+	const spird::table_header* table_header = reinterpret_cast<const spird::table_header*>(raw_data + sizeof(spird::file_header)) + enum_id_uint;
 
-	const spird::elem_index* instruction_table = reinterpret_cast<const spird::elem_index*>(raw_data + instruction_table_header->offset);
+	const spird::elem_index* table = reinterpret_cast<const spird::elem_index*>(raw_data + table_header->offset);
 
-	uint32_t hash = hash_knuth(id, instruction_table_header->size);
+	uint32_t hash = hash_knuth(id, table_header->size);
 
 	const uint32_t initial_hash = hash;
 
-	while (instruction_table[hash].id != id)
+	while (table[hash].id != id)
 	{
 		++hash;
 
-		if (hash >= instruction_table_header->size)
-			hash -= instruction_table_header->size;
+		if (hash >= table_header->size)
+			hash -= table_header->size;
 
 		if (hash == initial_hash)
 			return spvcpu::result::unknown_opcode;
 	}
 
-	uint32_t offset = instruction_table[hash].byte_offset;
+	uint32_t offset = table[hash].byte_offset;
 
 	const char* entry = reinterpret_cast<const char*>(raw_data + offset);
 
