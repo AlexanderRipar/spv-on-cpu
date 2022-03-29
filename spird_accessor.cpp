@@ -12,10 +12,14 @@ spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uin
 
 	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
 
-	if (file_header->version < 4 || file_header->version > 6)
+	if (file_header->version < 4 || file_header->version > 9)
 		return spvcpu::result::spirv_data_unknown_version;
 
-	const spird::data_mode mode = static_cast<spird::data_mode>(file_header->version - 4);
+	const uint32_t mode_bits = file_header->version - 4;
+
+	const spird::data_mode mode = static_cast<spird::data_mode>(mode_bits >= 3 ? mode_bits - 3 : mode_bits);
+
+	const bool has_implies_and_depends = mode_bits > 6;
 
 	if (enum_id_uint > file_header->table_count)
 		return spvcpu::result::spirv_data_enumeration_not_found;
@@ -70,6 +74,30 @@ spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uin
 		{
 			out_data->arg_names[i] = nullptr;
 		}
+	}
+
+	if (has_implies_and_depends)
+	{
+		uint8_t cnt = *entry++;
+
+		out_data->implies_or_depends = cnt & 0x80 ? implies_or_depends_mode::implies : implies_or_depends_mode::depends;
+
+		cnt &= 0x7F;
+
+		out_data->capability_cnt = cnt;
+
+		for (uint8_t i = 0; i != cnt; ++i)
+		{
+			uint8_t lo = *entry++;
+
+			uint8_t hi = *entry++;
+
+			out_data->capabilities[i] = lo | (hi << 8);
+		}
+	}
+	else
+	{
+		out_data->implies_or_depends = implies_or_depends_mode::none;
 	}
 
 	return spvcpu::result::success;

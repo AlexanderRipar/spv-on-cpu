@@ -91,15 +91,17 @@ static constexpr const char* argument_type_names[]{
 
 enum class pstate
 {
-	seek_enum_open,
-	seek_insn_open,
-	seek_insn_name,
-	seek_insn_opcode,
-	seek_insn_args,
-	seek_args_name,
-	seek_args_type,
-	seek_insn_close,
-	handle_enum_end,
+	enum_open,
+	elem_open,
+	elem_id,
+	elem_name,
+	args_open,
+	args_type,
+	args_name,
+	elem_depends,
+	elem_implies,
+	elem_close,
+	enum_close,
 };
 
 
@@ -176,6 +178,15 @@ public:
 		grow(1);
 
 		m_data[m_used++] = static_cast<uint8_t>(type);
+	}
+
+	void append(uint16_t capability_id) noexcept
+	{
+		grow(2);
+
+		m_data[m_used++] = static_cast<uint8_t>(capability_id);
+
+		m_data[m_used++] = static_cast<uint8_t>(capability_id >> 8);
 	}
 
 	void overwrite(uint32_t index, uint8_t data) noexcept
@@ -341,11 +352,20 @@ static void print_usage() noexcept
 	fprintf(stderr, "Usage: %s [--ignore=info[;info...]] inputfile outputfile\n", prog_name);
 }
 
-static bool parse_args(int argc, const char** argv, const char** out_input_filename, const char** out_output_filename, spird::data_mode* out_mode)
+static bool parse_args(
+	int argc, 
+	const char** argv, 
+	const char** out_input_filename, 
+	const char** out_output_filename, 
+	spird::data_mode* out_mode, 
+	bool* out_no_implies_and_depends
+)
 {
 	*out_input_filename = *out_output_filename = nullptr;
 
 	*out_mode = spird::data_mode::all;
+
+	*out_no_implies_and_depends = false;
 
 	const char* input_filename = nullptr, * output_filename = nullptr;
 
@@ -364,6 +384,8 @@ static bool parse_args(int argc, const char** argv, const char** out_input_filen
 	}
 
 	uint32_t mode_index = ~0u;
+
+	bool no_implies_and_depends = false;
 
 	for (uint32_t i = 1; i != argc; ++i)
 	{
@@ -386,7 +408,21 @@ static bool parse_args(int argc, const char** argv, const char** out_input_filen
 				}
 			}
 
-			if (mode_index == ~0u)
+			if (mode_index != ~0)
+				continue;
+
+			if (strcmp(argv[i], data_type_no_implies_and_depends_string))
+			{
+				if (no_implies_and_depends)
+				{
+					fprintf(stderr, "%s specified more than once.\n", data_type_no_implies_and_depends_string);
+
+					return false;
+				}
+
+				no_implies_and_depends = true;
+			}
+			else
 			{
 				fprintf(stderr, "Unknown option '%s'.\n", argv[i]);
 
@@ -417,7 +453,30 @@ static bool parse_args(int argc, const char** argv, const char** out_input_filen
 
 	*out_output_filename = output_filename;
 
-	*out_mode = mode_index == ~0u ? spird::data_mode::all : static_cast<spird::data_mode>(mode_index);
+	uint8_t mode = mode_index == ~0u ? static_cast<uint8_t>(spird::data_mode::all) : mode_index;
+
+	if (no_implies_and_depends)
+		*out_no_implies_and_depends = true;
+
+	*out_mode = static_cast<spird::data_mode>(mode);
+
+	return true;
+}
+
+static bool token_equal(const char*& curr, const char* token) noexcept
+{
+	uint32_t len = 0;
+
+	while (!is_whitespace(curr[len]) && curr[len] != '\0' && curr[len] != ':')
+		++len;
+
+	if (token[len] != '\0')
+		return false;
+
+	if (strncmp(curr, token, len) != 0)
+		return false;
+
+	curr = skip_whitespace(curr + len);
 
 	return true;
 }
@@ -430,7 +489,9 @@ int main(int argc, const char** argv)
 
 	spird::data_mode mode;
 
-	if (!parse_args(argc, argv, &input_filename, &output_filename, &mode))
+	bool no_implies_and_depends;
+
+	if (!parse_args(argc, argv, &input_filename, &output_filename, &mode, &no_implies_and_depends))
 		return 1;
 
 	FILE* input_file;
@@ -466,7 +527,7 @@ int main(int argc, const char** argv)
 	// Find start array
 	const char* curr = skip_whitespace(input);
 
-	pstate state = pstate::seek_enum_open;
+	pstate state = pstate::enum_open;
 
 	spird::insn_index curr_index;
 
@@ -486,7 +547,7 @@ int main(int argc, const char** argv)
 	{
 		switch (state)
 		{
-		case pstate::seek_enum_open:
+		case pstate::enum_open:
 		{
 			if (*curr == '\0')
 			{
@@ -503,21 +564,17 @@ int main(int argc, const char** argv)
 			uint32_t table_index = ~0u;
 
 			for (uint32_t i = 0; i != _countof(enum_name_strings); ++i)
-			{
-				if (strncmp(curr, enum_name_strings[i], enum_len) == 0 && strlen(enum_name_strings[i]) == enum_len)
+				if (token_equal(curr, enum_name_strings[i]))
 				{
 					table_index = i;
 
 					break;
 				}
-			}
 
 			curr_enum_type = table_index;
 
 			if (table_index == ~0u)
 				parse_panic("enum-name", curr);
-
-			curr = skip_whitespace(curr + enum_len);
 
 			if (*curr != ':')
 				parse_panic(":", curr);
@@ -529,21 +586,21 @@ int main(int argc, const char** argv)
 
 			curr = skip_whitespace(curr + 1);
 
-			state = pstate::seek_insn_open;
+			state = pstate::elem_open;
 
 			break;
 		}
-		case pstate::seek_insn_open:
+		case pstate::elem_open:
 		{
 			if (*curr == '{')
 			{
 				curr_index.byte_offset = output.reserve_byte();
 
-				state = pstate::seek_insn_opcode;
+				state = pstate::elem_id;
 			}
 			else if (*curr == ']')
 			{
-				state = pstate::handle_enum_end;
+				state = pstate::enum_close;
 			}
 			else
 			{
@@ -554,12 +611,10 @@ int main(int argc, const char** argv)
 
 			break;
 		}
-		case pstate::seek_insn_opcode:
+		case pstate::elem_id:
 		{
-			if (strncmp(curr, instruction_opcode_string, strlen(instruction_opcode_string)) != 0)
-				parse_panic(instruction_opcode_string, curr);
-
-			curr = skip_whitespace(curr + strlen(instruction_opcode_string));
+			if (!token_equal(curr, elem_id_string))
+				parse_panic(elem_id_string, curr);
 
 			if (*curr != ':')
 				parse_panic(":", curr);
@@ -600,16 +655,14 @@ int main(int argc, const char** argv)
 
 			curr = skip_whitespace(curr);
 
-			state = pstate::seek_insn_name;
+			state = pstate::elem_name;
 
 			break;
 		}
-		case pstate::seek_insn_name:
+		case pstate::elem_name:
 		{
-			if (strncmp(curr, instruction_name_string, strlen(instruction_name_string)) != 0)
-				parse_panic(instruction_name_string, curr);
-
-			curr = skip_whitespace(curr + strlen(instruction_name_string));
+			if (!token_equal(curr, elem_name_string))
+				parse_panic(elem_name_string, curr);
 
 			if (*curr != ':')
 				parse_panic(":", curr);
@@ -636,16 +689,14 @@ int main(int argc, const char** argv)
 
 			curr = skip_whitespace(curr + i + 1);
 
-			state = pstate::seek_insn_args;
+			state = pstate::args_open;
 
 			break;
 		}
-		case pstate::seek_insn_args:
+		case pstate::args_open:
 		{
-			if (strncmp(curr, instruction_args_string, strlen(instruction_args_string)) == 0)
+			if (token_equal(curr, elem_args_string))
 			{
-				curr = skip_whitespace(curr + strlen(instruction_args_string));
-
 				if (*curr != ':')
 					parse_panic(":", curr);
 
@@ -662,16 +713,16 @@ int main(int argc, const char** argv)
 
 				curr = skip_whitespace(curr + 1);
 
-				state = pstate::seek_args_type;
+				state = pstate::args_type;
 			}
 			else
 			{
-				state = pstate::seek_insn_close;
+				state = pstate::elem_depends;
 			}
 
 			break;
 		}
-		case pstate::seek_args_type:
+		case pstate::args_type:
 		{
 			if (*curr != ']')
 			{
@@ -693,10 +744,8 @@ int main(int argc, const char** argv)
 					while (!is_whitespace(curr[name_len]))
 						++name_len;
 
-					if (strncmp(curr, argument_optional_string, name_len) == 0 && argument_optional_string[name_len] == '\0')
+					if (token_equal(curr, argument_optional_string))
 					{
-						curr = skip_whitespace(curr + name_len);
-
 						prev_arg_was_optional = true;
 
 						if (flag_optional)
@@ -706,10 +755,8 @@ int main(int argc, const char** argv)
 
 						is_flag = true;
 					}
-					else if (strncmp(curr, argument_variadic_string, name_len) == 0 && argument_variadic_string[name_len] == '\0')
+					else if (token_equal(curr, argument_variadic_string))
 					{
-						curr = skip_whitespace(curr + name_len);
-
 						prev_arg_was_variadic = true;
 
 						if (flag_variadic)
@@ -731,7 +778,7 @@ int main(int argc, const char** argv)
 				uint32_t name_idx = ~0u;
 
 				for (uint32_t i = 0; i != _countof(argument_type_names); ++i)
-					if (strncmp(curr, argument_type_names[i], name_len) == 0 && argument_type_names[i][name_len] == '\0')
+					if (token_equal(curr, argument_type_names[i]))
 					{
 						name_idx = i;
 
@@ -753,20 +800,18 @@ int main(int argc, const char** argv)
 				if (name_idx == ~0u)
 					parse_panic("argument-type", curr);
 
-				curr = skip_whitespace(curr + name_len);
-
-				state = pstate::seek_args_name;
+				state = pstate::args_name;
 			}
 			else
 			{
 				curr = skip_whitespace(curr + 1);
 
-				state = pstate::seek_insn_close;
+				state = pstate::elem_depends;
 			}
 
 			break;
 		}
-		case pstate::seek_args_name:
+		case pstate::args_name:
 		{
 			if (*curr == '"')
 			{
@@ -795,11 +840,148 @@ int main(int argc, const char** argv)
 					output.append(&c, 0);
 			}
 
-			state = pstate::seek_args_type;
+			state = pstate::args_type;
 
 			break;
 		}
-		case pstate::seek_insn_close:
+		case pstate::elem_depends:
+		{
+			if (token_equal(curr, elem_depends_string))
+			{
+				if (*curr != ':')
+					parse_panic(":", curr);
+
+				curr = skip_whitespace(curr + 1);
+
+				bool has_multiple_elems = false;
+
+				if (*curr == '[')
+				{
+					has_multiple_elems = true;
+
+					curr = skip_whitespace(curr + 1);
+				}
+
+				uint32_t dependency_count_idx = ~0u;
+
+				if (!no_implies_and_depends)
+					dependency_count_idx = output.reserve_byte();
+
+				uint32_t dependency_count = 0;
+
+				do {
+					uint32_t capability_id = ~0u;
+
+					for (uint32_t i = 0; i != _countof(capability_name_strings); ++i)
+					{
+						if (token_equal(curr, capability_name_strings[i]))
+						{
+							capability_id = capability_ids[i];
+
+							break;
+						}
+					}
+
+					if (capability_id == ~0u)
+						parse_panic("capability-name", curr);
+
+					if (!no_implies_and_depends)
+						output.append(static_cast<uint16_t>(capability_id));
+
+					++dependency_count;
+				}
+				while(has_multiple_elems && *curr != ']');
+
+				if (has_multiple_elems)
+					curr = skip_whitespace(curr + 1);
+
+				if (dependency_count > 127)
+					panic("More than 127 elements in 'depends' array (%d elements).\n", dependency_count);
+				
+				if (!no_implies_and_depends)
+					output.overwrite(dependency_count_idx, dependency_count);
+
+				state = pstate::elem_close;
+			}
+			else
+			{
+				state = pstate::elem_implies;
+			}
+
+			break;
+		}
+		case pstate::elem_implies:
+		{
+			if (token_equal(curr, elem_implies_string))
+			{
+				if (*curr != ':')
+					parse_panic(":", curr);
+
+				curr = skip_whitespace(curr + 1);
+
+				bool has_multiple_elems = false;
+
+				if (*curr == '[')
+				{
+					has_multiple_elems = true;
+
+					curr = skip_whitespace(curr + 1);
+				}
+
+				uint32_t dependency_count_idx = ~0u;
+
+				if (!no_implies_and_depends)
+					dependency_count_idx = output.reserve_byte();
+
+				uint32_t dependency_count = 0;
+
+				do {
+					uint32_t capability_id = ~0u;
+
+					for (uint32_t i = 0; i != _countof(capability_name_strings); ++i)
+					{
+						if (token_equal(curr, capability_name_strings[i]))
+						{
+							capability_id = capability_ids[i];
+
+							break;
+						}
+					}
+
+					if (capability_id == ~0u)
+						parse_panic("capability-name", curr);
+
+					if (!no_implies_and_depends)
+						output.append(static_cast<uint16_t>(capability_id));
+
+					++dependency_count;
+				}
+				while(has_multiple_elems && *curr != ']');
+
+				if (has_multiple_elems)
+					curr = skip_whitespace(curr + 1);
+
+				if (dependency_count > 127)
+					panic("More than 127 elements in 'depends' array (%d elements).\n", dependency_count);
+
+				if (!no_implies_and_depends)
+					output.overwrite(dependency_count_idx, dependency_count | 0x80);
+			}
+			else
+			{
+				if (!no_implies_and_depends)
+				{
+					uint32_t idx = output.reserve_byte();
+
+					output.overwrite(idx, 0);
+				}
+			}
+
+			state = pstate::elem_close;
+
+			break;
+		}
+		case pstate::elem_close:
 		{
 			if (*curr != '}')
 				parse_panic("}", curr);
@@ -810,11 +992,11 @@ int main(int argc, const char** argv)
 
 			curr = skip_whitespace(curr + 1);
 
-			state = pstate::seek_insn_open;
+			state = pstate::elem_open;
 
 			break;
 		}
-		case pstate::handle_enum_end:
+		case pstate::enum_close:
 		{
 			if (instruction_index_count != 0)
 			{
@@ -825,7 +1007,7 @@ int main(int argc, const char** argv)
 				instruction_index_count = 0;
 			}
 
-			state = pstate::seek_enum_open;
+			state = pstate::enum_open;
 
 			break;
 		}
@@ -848,7 +1030,7 @@ int main(int argc, const char** argv)
 		}
 
 	spird::file_header file_header;
-	file_header.version = 4 + static_cast<uint32_t>(mode);
+	file_header.version = 4 + static_cast<uint32_t>(mode) + (no_implies_and_depends ? 0 : 3);
 	file_header.table_count = enum_count;
 
 	if (fwrite(&file_header, 1, sizeof(file_header), output_file) != sizeof(file_header))

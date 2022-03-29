@@ -143,6 +143,9 @@ namespace spird
 		all,
 		disassembly,
 		debugging,
+		all_no_implies_and_depends,
+		disassembly_no_implies_and_depends,
+		debugging_no_implies_and_depends,
 	};
 }
 
