@@ -5,8 +5,8 @@
 #include <memory>
 
 #include "spv_defs.hpp"
-#include "spv_data_defs.hpp"
-#include "spv_data_accessor.hpp"
+#include "spird_defs.hpp"
+#include "spird_accessor.hpp"
 
 struct output_buffer
 {

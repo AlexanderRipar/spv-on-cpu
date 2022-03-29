@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "spv_data_defs.hpp"
+#include "spird_defs.hpp"
 #include "spv_result.hpp"
 
 struct spirv_data_info
