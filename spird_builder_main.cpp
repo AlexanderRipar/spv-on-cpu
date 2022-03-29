@@ -558,7 +558,7 @@ int main(int argc, const char** argv)
 
 			uint32_t enum_len = 0;
 
-			while (!is_whitespace(curr[enum_len]))
+			while (!is_whitespace(curr[enum_len]) && curr[enum_len] != ':')
 				++enum_len;
 
 			uint32_t table_index = ~0u;
