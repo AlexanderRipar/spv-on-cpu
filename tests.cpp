@@ -105,37 +105,37 @@ int main(int argc, const char** argv)
 		}
 	}
 
-	uint32_t opcode_cnt = static_cast<const uint32_t*>(spv_data)[1];
+	uint32_t table_entry_cnt = reinterpret_cast<const spirv_data_table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spirv_data_header))->table_size;
 
 	fprintf(output_file, "instructions : [\r\n");
 
-	for (uint32_t i = 0; i != opcode_cnt; ++i)
+	const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
+
+	const spirv_data_header* file_header = static_cast<const spirv_data_header*>(spv_data);
+
+	const spirv_insn_index* indices = reinterpret_cast<const spirv_insn_index*>(raw_data + sizeof(spirv_data_header) + sizeof(spirv_data_table_header) * file_header->table_count);
+
+	for (uint32_t i = 0; i != table_entry_cnt; ++i)
 	{
-		uint32_t opcode = static_cast<const uint32_t*>(spv_data)[2 + 2 * i]; 
+		uint32_t opcode = indices[i].opcode; 
 		
 		if (opcode == ~0u)
 			continue;
 
-		spirv_insn_argtype oparg_types[256];
+		spirv_data_info op_data;
 
-		const char* oparg_names[256];
-
-		const char* op_name;
-
-		uint32_t opargc = get_operation_data(spv_data, opcode, &op_name, _countof(oparg_types), oparg_types, oparg_names);
-
-		if (opargc == ~0u)
+		if (spvcpu::result rst = get_spirv_data(spv_data, spirv_enum_id::Instruction, opcode, &op_data); rst != spvcpu::result::success)
 		{
-			printf("Could not get operation data.\n");
+			printf("Could not get operation data for opcode %d. (Error %d)\n", opcode, rst);
 
 			return 1;
 		}
 
-		fprintf(output_file, "\t{\r\n\t\topcode : %d\r\n\t\tname : \"%s\"\r\n\t\targs : [\n", opcode, op_name);
+		fprintf(output_file, "\t{\r\n\t\topcode : %d\r\n\t\tname : \"%s\"\r\n\t\targs : [\n", opcode, op_data.name);
 
-		for (uint32_t i = 0; i != opargc; ++i)
+		for (uint32_t i = 0; i != op_data.argc; ++i)
 		{
-			uint8_t argtype = static_cast<uint8_t>(oparg_types[i]);
+			uint8_t argtype = static_cast<uint8_t>(op_data.arg_types[i]);
 
 			const char* optstr = "";
 
@@ -156,10 +156,10 @@ int main(int argc, const char** argv)
 
 			fprintf(output_file, "\t\t\t%s%s%s", optstr, varstr, argtypename);
 
-			if (oparg_names[i][0] == '\0')
+			if (op_data.arg_names[i][0] == '\0')
 				fprintf(output_file, "\r\n");
 			else
-				fprintf(output_file, " \"%s\"\n", oparg_names[i]);
+				fprintf(output_file, " \"%s\"\n", op_data.arg_names[i]);
 		}
 
 		fprintf(output_file, "\t\t]\r\n\t}\n");
