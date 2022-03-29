@@ -582,21 +582,21 @@ int main(int argc, const char** argv)
 
 		for (uint32_t i = 0; i != header->size; ++i)
 		{
-			uint32_t opcode = indices[i].id;
+			uint32_t id = indices[i].id;
 
-			if (opcode == ~0u)
+			if (id == ~0u)
 				continue;
 
 			spird::data_info op_data;
 
-			if (spvcpu::result rst = spird::get_data(spv_data, static_cast<spird::enum_id>(t), opcode, &op_data); rst != spvcpu::result::success)
+			if (spvcpu::result rst = spird::get_data(spv_data, static_cast<spird::enum_id>(t), id, &op_data); rst != spvcpu::result::success)
 			{
-				printf("Could not get operation data for opcode %d. (Error %d in table '%s')\n", opcode, rst, enum_name_strings[t]);
+				printf("Could not get operation data for id %d. (Error %d in table '%s')\n", id, rst, enum_name_strings[t]);
 
 				return 1;
 			}
 
-			fprintf(output_file, "\t{\n\t\tid : %d\n\t\tname : \"%s\"\n", opcode, op_data.name == nullptr ? "<Unknown>" : op_data.name);
+			fprintf(output_file, "\t{\n\t\tid : %d\n\t\tname : \"%s\"\n", id, op_data.name == nullptr ? "<Unknown>" : op_data.name);
 
 			if (op_data.argc > 0)
 				fprintf(output_file, "\t\targs : [\n");
