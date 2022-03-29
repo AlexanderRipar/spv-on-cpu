@@ -11,7 +11,7 @@ namespace spird
 		uint32_t byte_offset;
 	};
 
-	struct header
+	struct file_header
 	{
 		uint32_t version;
 		uint32_t table_count;

@@ -917,7 +917,7 @@ int main(int argc, const char** argv)
 			break;
 		}
 
-	spird::header file_header;
+	spird::file_header file_header;
 	file_header.version = 3;
 	file_header.table_count = enum_count;
 

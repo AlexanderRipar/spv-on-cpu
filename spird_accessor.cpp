@@ -10,15 +10,15 @@ spvcpu::result get_spirv_data(const void* spv_data, spird::enum_id enum_id, uint
 
 	const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
 
-	const spird::header* file_header = static_cast<const spird::header*>(spv_data);
+	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
 
-	if (file_header->version != 2)
+	if (file_header->version != 3)
 		return spvcpu::result::spirv_data_unknown_version;
 
 	if (enum_id_uint > file_header->table_count)
 		return spvcpu::result::spirv_data_enumeration_not_found;
 
-	const spird::table_header* instruction_table_header = reinterpret_cast<const spird::table_header*>(raw_data + sizeof(spird::header)) + enum_id_uint;
+	const spird::table_header* instruction_table_header = reinterpret_cast<const spird::table_header*>(raw_data + sizeof(spird::file_header)) + enum_id_uint;
 
 	const spird::insn_index* instruction_table = reinterpret_cast<const spird::insn_index*>(raw_data + instruction_table_header->table_offset);
 
