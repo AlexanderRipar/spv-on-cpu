@@ -157,4 +157,15 @@ constexpr const char* const enum_name_strings[]
 	"PackedVectorFormat",
 };
 
+constexpr static const char* ignore_type_string = "--ignore:";
+
+constexpr static const char* ignore_type_name_strings[]
+{
+	"name",
+	"arg_type",
+	"arg_name",
+	"depends",
+	"implies",
+};
+
 #endif // SPV_DATA_BUILDER_STRINGS_HPP_INCLUDE_GUARD

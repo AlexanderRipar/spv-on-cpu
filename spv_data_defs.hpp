@@ -15,10 +15,54 @@ struct spirv_data_header
 	uint32_t table_count;
 };
 
+enum class info_type_mask : uint8_t
+{
+	none = 0x0,
+	name = 0x1,
+	arg_type = 0x2,
+	arg_name = 0x4,
+	depends = 0x8,
+	implies = 0x10,
+
+	arg_all_ = 0x6,
+};
+
+inline info_type_mask operator&(const info_type_mask& lhs, const info_type_mask& rhs) noexcept
+{
+	return static_cast<info_type_mask>(static_cast<uint8_t>(lhs) & static_cast<uint8_t>(rhs));
+}
+
+inline info_type_mask operator|(const info_type_mask& lhs, const info_type_mask& rhs) noexcept
+{
+	return static_cast<info_type_mask>(static_cast<uint8_t>(lhs) | static_cast<uint8_t>(rhs));
+}
+
+inline info_type_mask& operator|=(info_type_mask& lhs, const info_type_mask& rhs) noexcept
+{
+	lhs = lhs | rhs;
+
+	return lhs;
+}
+
 struct spirv_data_table_header
 {
-	uint32_t table_size;
+	uint32_t table_size_and_types;
 	uint32_t table_offset;
+
+	uint32_t size() const noexcept
+	{
+		return table_size_and_types & 0xFFFFFF;
+	}
+
+	info_type_mask types() const noexcept
+	{
+		return static_cast<info_type_mask>(table_size_and_types >> 24);
+	}
+
+	uint32_t offset() const noexcept
+	{
+		return table_offset;
+	}
 };
 
 enum class spirv_insn_argtype : uint8_t
@@ -79,6 +123,7 @@ enum class spirv_insn_argtype : uint8_t
 	IDIDPAIR                      = 52,
 	IDU32PAIR                     = 53,
 	I64                           = 54,
+	UNKNOWN                       = 255,
 };
 
 static constexpr uint8_t spirv_insn_arg_optional_bit = 0x80;

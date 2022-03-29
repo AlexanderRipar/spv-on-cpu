@@ -272,9 +272,12 @@ static const char* skip_whitespace(const char* str) noexcept
 
 }
 
-static void create_hashtable(uint32_t* out_table_size, spirv_insn_index** out_table) noexcept
+static void create_hashtable(uint32_t* out_table_size, spirv_insn_index** out_table, info_type_mask curr_info_mask) noexcept
 {
 	uint32_t table_size = (instruction_index_count * 3) >> 1;
+
+	if (table_size > 0xFF'FF'FF)
+		panic("Size of table is greater than maximum of 0xFFFFFF.\n");
 
 	spirv_insn_index* table = static_cast<spirv_insn_index*>(malloc(table_size * sizeof(spirv_insn_index)));
 
@@ -328,28 +331,134 @@ static void create_hashtable(uint32_t* out_table_size, spirv_insn_index** out_ta
 		offsets[hash] = offset;
 	}
 
-	*out_table_size = table_size;
+	*out_table_size = table_size | (static_cast<uint32_t>(curr_info_mask) << 24);
 
 	*out_table = table;
 }
 
-int main(int argc, const char** argv)
+static void print_usage() noexcept
 {
-	prog_name = argv[0];
+	fprintf(stderr, "Usage: %s [--ignore=info[;info...]] inputfile outputfile\n", prog_name);
+}
 
-	if (argc != 3)
+static bool parse_args(int argc, const char** argv, const char** out_input_filename, const char** out_output_filename, info_type_mask* out_ignored_info_types)
+{
+	*out_input_filename = *out_output_filename = nullptr;
+
+	*out_ignored_info_types = info_type_mask::none;
+
+	const char* input_filename = nullptr, * output_filename = nullptr;
+
+	uint8_t ignore_mask = 0;
+
+	if (argc < 3)
 	{
-		fprintf(stderr, "Usage: %s inputfile outputfile\n", argv[0]);
+		print_usage();
 
 		if (argc == 2 && strcmp(argv[1], "--help") == 0)
 			fputs(extended_help_string, stderr);
 		else if (argc == 2 && strcmp(argv[1], "-h") == 0)
 			fputs(basic_help_string, stderr);
 
-		return 0;
+		return false;
 	}
 
-	FILE* output_file, * input_file;
+	for (uint32_t i = 1; i != argc; ++i)
+	{
+		if (strncmp(argv[i], ignore_type_string, strlen(ignore_type_string)) == 0)
+		{
+			const char* str = argv[i] + strlen(ignore_type_string);
+
+			while (*str != '\0')
+			{
+				uint32_t arg_len = 0;
+
+				while (str[arg_len] != ':' && str[arg_len] != '\0')
+					++arg_len;
+
+				uint32_t ignore_idx = ~0u;
+
+				for (uint32_t j = 0; j != _countof(ignore_type_name_strings); ++j)
+					if (strncmp(str, ignore_type_name_strings[j], arg_len) == 0)
+					{
+						ignore_idx = j;
+
+						break;
+					}
+
+				if (ignore_idx == ~0u)
+				{
+					fprintf(stderr, "Unexpected ignore type '%.*s'. Valid ignore types are:\n\t", arg_len, str);
+
+					for (uint32_t j = 0; j != _countof(ignore_type_name_strings); ++j)
+					{
+						fprintf(stderr, "'%s'%s", ignore_type_name_strings[j], j == _countof(ignore_type_name_strings) - 1 ? "\n" : ", ");
+					}
+
+					fprintf(stderr, "More than one ignore type can be specified by separating types with ';'.\n");
+
+					return false;
+				}
+
+				if (ignore_mask & (1 << ignore_idx))
+				{
+					fprintf(stderr, "ignore type '%s' specified more than once.\n", ignore_type_name_strings[ignore_idx]);
+
+					return false;
+				}
+
+				ignore_mask |= 1 << ignore_idx;
+
+				str += arg_len + (str[arg_len] == ':');
+			}
+		}
+		else if (argv[i][0] == '-')
+		{
+			fprintf(stderr, "Unknown option '%s'.\n", argv[i]);
+
+			print_usage();
+
+			return false;
+		}
+		else if (input_filename == nullptr)
+		{
+			input_filename = argv[i];
+		}
+		else if (output_filename == nullptr)
+		{
+			output_filename = argv[i];
+		}
+		else
+		{
+			fprintf(stderr, "Too many arguments specified (Did not expect '%s').\n", argv[i]);
+
+			print_usage();
+
+			return false;
+		}
+	}
+
+	*out_input_filename = input_filename;
+
+	*out_output_filename = output_filename;
+
+	*out_ignored_info_types = static_cast<info_type_mask>(ignore_mask);
+
+	return true;
+}
+
+int main(int argc, const char** argv)
+{
+	prog_name = argv[0];
+
+	const char* input_filename, * output_filename;
+
+	info_type_mask ignored_info_types;
+
+	if (!parse_args(argc, argv, &input_filename, &output_filename, &ignored_info_types))
+		return 1;
+
+	FILE* input_file;
 
 	if (fopen_s(&input_file, argv[1], "rb") != 0)
 		panic("Could not open file %s for reading.\n", argv[1]);
@@ -379,7 +488,7 @@ int main(int argc, const char** argv)
 
 	input[input_bytes] = '\0';
 
-	// Find start of data
+	// Find start array
 	const char* curr = skip_whitespace(input);
 
 	pstate state = pstate::seek_enum_open;
@@ -395,6 +504,8 @@ int main(int argc, const char** argv)
 	bool prev_arg_was_variadic;
 
 	uint32_t curr_enum_type;
+
+	info_type_mask curr_info_mask;
 
 	bool done = false;
 
@@ -420,7 +531,7 @@ int main(int argc, const char** argv)
 
 			for (uint32_t i = 0; i != _countof(enum_name_strings); ++i)
 			{
-				if (strncmp(curr, enum_name_strings[i], enum_len) == 0)
+				if (strncmp(curr, enum_name_strings[i], enum_len) == 0 && strlen(enum_name_strings[i]) == enum_len)
 				{
 					table_index = i;
 
@@ -429,6 +540,8 @@ int main(int argc, const char** argv)
 			}
 
 			curr_enum_type = table_index;
+
+			curr_info_mask = info_type_mask::none;
 
 			if (table_index == ~0u)
 				parse_panic("enum-name", curr);
@@ -453,10 +566,12 @@ int main(int argc, const char** argv)
 		{
 			if (*curr == '{')
 			{
-				curr_index.byte_offset = output.reserve_byte();
+				if ((ignored_info_types & info_type_mask::arg_all_) != info_type_mask::arg_all_)
+					curr_index.byte_offset = output.reserve_byte();
+				else
+					curr_index.byte_offset = output.size();
 
 				state = pstate::seek_insn_opcode;
-
 			}
 			else if (*curr == ']')
 			{
@@ -548,7 +663,12 @@ int main(int argc, const char** argv)
 				++i;
 			}
 
-			output.append(curr, i);
+			if ((ignored_info_types & info_type_mask::name) == info_type_mask::none)
+			{
+				output.append(curr, i);
+
+				curr_info_mask |= info_type_mask::name;
+			}
 
 			curr = skip_whitespace(curr + i + 1);
 
@@ -575,7 +695,7 @@ int main(int argc, const char** argv)
 				prev_arg_was_optional = false;
 
 				prev_arg_was_variadic = false;
-				
+
 				curr = skip_whitespace(curr + 1);
 
 				state = pstate::seek_args_type;
@@ -659,7 +779,12 @@ int main(int argc, const char** argv)
 						if (flag_variadic)
 							i |= spirv_insn_arg_variadic_bit;
 
-						output.append(static_cast<spirv_insn_argtype>(argument_type_and_flags));
+						if ((ignored_info_types & info_type_mask::arg_type) != info_type_mask::arg_type)
+						{
+							output.append(static_cast<spirv_insn_argtype>(argument_type_and_flags));
+
+							curr_info_mask |= info_type_mask::arg_type;
+						}
 
 						break;
 					}
@@ -698,7 +823,8 @@ int main(int argc, const char** argv)
 					++i;
 				}
 
-				output.append(curr, i);
+				if ((ignored_info_types & info_type_mask::arg_name) == info_type_mask::none)
+					output.append(curr, i);
 
 				curr = skip_whitespace(curr + i + 1);
 			}
@@ -706,7 +832,12 @@ int main(int argc, const char** argv)
 			{
 				char c = '\0';
 
-				output.append(&c, 0);
+				if ((ignored_info_types & info_type_mask::arg_name) != info_type_mask::arg_name)
+				{
+					output.append(&c, 0);
+
+					curr_info_mask |= info_type_mask::arg_name;
+				}
 			}
 
 			state = pstate::seek_args_type;
@@ -718,7 +849,8 @@ int main(int argc, const char** argv)
 			if (*curr != '}')
 				parse_panic("}", curr);
 
-			output.overwrite(curr_index.byte_offset, curr_argc);
+			if ((ignored_info_types & info_type_mask::arg_all_) != info_type_mask::arg_all_)
+				output.overwrite(curr_index.byte_offset, curr_argc);
 
 			instruction_indices[instruction_index_count++] = curr_index;
 
@@ -732,9 +864,33 @@ int main(int argc, const char** argv)
 		{
 			if (instruction_index_count != 0)
 			{
-				create_hashtable(&table_headers[curr_enum_type].table_size, &hashtables[curr_enum_type]);
+				create_hashtable(&table_headers[curr_enum_type].table_size_and_types, &hashtables[curr_enum_type], curr_info_mask);
 
-				enum_data[curr_enum_type] = output.steal(&enum_data_sizes[curr_enum_type]);
+				uint32_t data_bytes;
+
+				char* data = static_cast<char*>(output.steal(&data_bytes));
+
+				// Remove argc if enum has no arguments and argc has not already been removed due to ignored types
+				if ((curr_info_mask & info_type_mask::arg_all_) == info_type_mask::none && (ignored_info_types & info_type_mask::arg_all_) != info_type_mask::arg_all_)
+				{
+					for (uint32_t i = 0; i != instruction_index_count; ++i)
+					{
+						uint32_t beg = instruction_indices[i].byte_offset;
+
+						uint32_t end = i == instruction_index_count - 1 ? beg + output.size() : instruction_indices[i + 1].byte_offset;
+
+						for (uint32_t j = beg; j != end; ++j)
+							data[j - i] = data[j];
+
+						instruction_indices[i].byte_offset -= i;
+					}
+
+					data_bytes -= instruction_index_count;
+				}
+
+				enum_data[curr_enum_type] = data;
+
+				enum_data_sizes[curr_enum_type] = data_bytes;
 
 				instruction_index_count = 0;
 			}
@@ -746,13 +902,15 @@ int main(int argc, const char** argv)
 		}
 	}
 
+	FILE* output_file;
+
 	if (fopen_s(&output_file, argv[2], "wb") != 0)
 		panic("Could not open file %s for writing.\n", argv[2]);
 
 	uint32_t enum_count = 0;
 
 	for (uint32_t i = _countof(table_headers); i != 0; --i)
-		if (table_headers[i - 1].table_size != 0)
+		if (table_headers[i - 1].size() != 0)
 		{
 			enum_count = i;
 
@@ -770,12 +928,12 @@ int main(int argc, const char** argv)
 
 	for (uint32_t i = 0; i != enum_count; ++i)
 	{
-		if (table_headers[i].table_size == 0)
+		if (table_headers[i].size() == 0)
 			continue;
 
 		table_headers[i].table_offset = table_offset;
 
-		table_offset += table_headers[i].table_size * sizeof(spirv_insn_index);
+		table_offset += table_headers[i].size() * sizeof(spirv_insn_index);
 	}
 
 	if (fwrite(table_headers, 1, enum_count * sizeof(table_headers[0]), output_file) != enum_count * sizeof(table_headers[0]))
@@ -788,13 +946,13 @@ int main(int argc, const char** argv)
 		if (hashtables[i] == nullptr)
 			continue;
 
-		for (uint32_t j = 0; j != table_headers[i].table_size; ++j)
+		for (uint32_t j = 0; j != table_headers[i].size(); ++j)
 			if (hashtables[i][j].opcode != ~0u)
 				hashtables[i][j].byte_offset += enum_offset;
 
 		enum_offset += enum_data_sizes[i];
 
-		if (fwrite(hashtables[i], 1, table_headers[i].table_size * sizeof(spirv_insn_index), output_file) != table_headers[i].table_size * sizeof(spirv_insn_index))
+		if (fwrite(hashtables[i], 1, table_headers[i].size() * sizeof(spirv_insn_index), output_file) != table_headers[i].size() * sizeof(spirv_insn_index))
 			panic("Could not write to file %s.\n", argv[2]);
 	}
 
