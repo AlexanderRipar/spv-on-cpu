@@ -627,7 +627,7 @@ int main(int argc, const char** argv)
 
 			curr = skip_whitespace(curr + 1);
 
-			uint32_t opcode = 0;
+			uint32_t id = 0;
 
 			if (*curr < '0' || *curr > '9')
 				parse_panic("[0-9]", curr);
@@ -639,11 +639,11 @@ int main(int argc, const char** argv)
 				while (true)
 				{
 					if (*curr >= '0' && *curr <= '9')
-						opcode = opcode * 16 + *curr - '0';
+						id = id * 16 + *curr - '0';
 					else if (*curr >= 'a' && *curr <= 'f')
-						opcode = opcode * 16 + *curr - 'a';
+						id = id * 16 + *curr - 'a';
 					else if (*curr >= 'A' && *curr <= 'F')
-						opcode = opcode * 16 + *curr - 'A';
+						id = id * 16 + *curr - 'A';
 					else
 						break;
 
@@ -653,11 +653,11 @@ int main(int argc, const char** argv)
 			else
 			{
 				while (*curr >= '0' && *curr <= '9')
-					opcode = opcode * 10 + *(curr++) - '0';
+					id = id * 10 + *(curr++) - '0';
 
 			}
 
-			curr_index.id = opcode;
+			curr_index.id = id;
 
 			curr = skip_whitespace(curr);
 
