@@ -143,7 +143,7 @@ int main(int argc, const char** argv)
 
 		spird::data_info op_data;
 
-		if (spvcpu::result rst = get_spirv_data(spv_data, spird::enum_id::Instruction, opcode, &op_data); rst != spvcpu::result::success)
+		if (spvcpu::result rst = spird::get_data(spv_data, spird::enum_id::Instruction, opcode, &op_data); rst != spvcpu::result::success)
 		{
 			printf("Could not get operation data for opcode %d. (Error %d)\n", opcode, rst);
 

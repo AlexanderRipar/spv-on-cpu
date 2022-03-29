@@ -265,7 +265,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 		spird::data_info op_data;
 
-		if (result op_result = get_spirv_data(instruction_data, spird::enum_id::Instruction, opcode, &op_data); op_result != result::success)
+		if (result op_result = spird::get_data(instruction_data, spird::enum_id::Instruction, opcode, &op_data); op_result != result::success)
 			return op_result;
 
 		uint16_t arg_inds[256];
@@ -401,7 +401,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 				uint32_t value = static_cast<const uint32_t*>(arg_ptr)[0];
 
-				if (result rst = get_spirv_data(instruction_data, static_cast<spird::enum_id>(argtype_raw), value, &arg_data); rst != result::success)
+				if (result rst = spird::get_data(instruction_data, static_cast<spird::enum_id>(argtype_raw), value, &arg_data); rst != result::success)
 					return rst;
 
 				if (result rst = output.append_enum(arg_data.name, static_cast<spird::enum_id>(argtype_raw), value); rst != result::success)
@@ -413,7 +413,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 					{
 						uint32_t var_value = static_cast<const uint32_t*>(arg_ptr)[i];
 
-						if (result rst = get_spirv_data(instruction_data, static_cast<spird::enum_id>(argtype_raw), var_value, &arg_data); rst != result::success)
+						if (result rst = spird::get_data(instruction_data, static_cast<spird::enum_id>(argtype_raw), var_value, &arg_data); rst != result::success)
 							return rst;
 
 						if (result rst = output.append_enum(arg_data.name, static_cast<spird::enum_id>(argtype_raw), var_value); rst != result::success)

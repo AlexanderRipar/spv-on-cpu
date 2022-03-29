@@ -4,7 +4,7 @@
 
 #include <cstring>
 
-spvcpu::result get_spirv_data(const void* spv_data, spird::enum_id enum_id, uint32_t id, spird::data_info* out_data) noexcept
+spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uint32_t id, spird::data_info* out_data) noexcept
 {
 	const uint32_t enum_id_uint = static_cast<uint32_t>(enum_id);
 
