@@ -587,23 +587,23 @@ int main(int argc, const char** argv)
 			if (id == ~0u)
 				continue;
 
-			spird::data_info op_data;
+			spird::data_info elem_data;
 
-			if (spvcpu::result rst = spird::get_data(spv_data, static_cast<spird::enum_id>(t), id, &op_data); rst != spvcpu::result::success)
+			if (spvcpu::result rst = spird::get_data(spv_data, static_cast<spird::enum_id>(t), id, &elem_data); rst != spvcpu::result::success)
 			{
 				printf("Could not get operation data for id %d. (Error %d in table '%s')\n", id, rst, enum_name_strings[t]);
 
 				return 1;
 			}
 
-			fprintf(output_file, "\t{\n\t\tid : %d\n\t\tname : \"%s\"\n", id, op_data.name == nullptr ? "<Unknown>" : op_data.name);
+			fprintf(output_file, "\t{\n\t\tid : %d\n\t\tname : \"%s\"\n", id, elem_data.name == nullptr ? "<Unknown>" : elem_data.name);
 
-			if (op_data.argc > 0)
+			if (elem_data.argc > 0)
 				fprintf(output_file, "\t\targs : [\n");
 
-			for (uint32_t i = 0; i != op_data.argc; ++i)
+			for (uint32_t i = 0; i != elem_data.argc; ++i)
 			{
-				uint8_t argtype = static_cast<uint8_t>(op_data.arg_types[i]);
+				uint8_t argtype = static_cast<uint8_t>(elem_data.arg_types[i]);
 
 				const char* optstr = "";
 
@@ -624,29 +624,29 @@ int main(int argc, const char** argv)
 
 				fprintf(output_file, "\t\t\t%s%s%s", optstr, varstr, argtypename);
 
-				if (op_data.arg_names[i] == nullptr)
+				if (elem_data.arg_names[i] == nullptr)
 					fprintf(output_file, "\n");
 				else
-					fprintf(output_file, " \"%s\"\n", op_data.arg_names[i]);
+					fprintf(output_file, " \"%s\"\n", elem_data.arg_names[i]);
 			}
 
-			if (op_data.argc > 0)
+			if (elem_data.argc > 0)
 				fprintf(output_file, "\t\t]\n");
 
-			if (op_data.implies_or_depends != spird::implies_or_depends_mode::none)
+			if (elem_data.implies_or_depends != spird::implies_or_depends_mode::none)
 			{
-				fprintf(output_file, op_data.implies_or_depends == spird::implies_or_depends_mode::depends ? "\t\tdepends : " : "\t\timplies : ");
+				fprintf(output_file, elem_data.implies_or_depends == spird::implies_or_depends_mode::depends ? "\t\tdepends : " : "\t\timplies : ");
 
-				if (op_data.capability_cnt > 1)
+				if (elem_data.capability_cnt > 1)
 				{
 					fprintf(output_file, "[\n");
 
-					for (uint8_t i = 0; i != op_data.capability_cnt; ++i)
+					for (uint8_t i = 0; i != elem_data.capability_cnt; ++i)
 					{
 						const char* str = nullptr;
 
 						for (uint32_t j = 0; j != _countof(capability_ids); ++j)
-							if (op_data.capabilities[i] == capability_ids[j])
+							if (elem_data.capabilities[i] == capability_ids[j])
 							{
 								str = capability_name_strings[j];
 
@@ -663,7 +663,7 @@ int main(int argc, const char** argv)
 					const char* str = nullptr;
 
 					for (uint32_t j = 0; j != _countof(capability_ids); ++j)
-						if (op_data.capabilities[0] == capability_ids[j])
+						if (elem_data.capabilities[0] == capability_ids[j])
 						{
 							str = capability_name_strings[j];
 
