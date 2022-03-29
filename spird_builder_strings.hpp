@@ -570,4 +570,8 @@ static constexpr const char* const data_type_strings[]
 
 static constexpr const char* const data_type_no_implies_and_depends_string = "--no-implies-and-depends";
 
+static constexpr const char enum_flag_char = '@';
+
+static constexpr const char* enum_flag_bitmask_string = "BITMASK";
+
 #endif // SPV_DATA_BUILDER_STRINGS_HPP_INCLUDE_GUARD

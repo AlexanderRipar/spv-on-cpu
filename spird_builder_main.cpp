@@ -118,6 +118,7 @@ static void* enum_data[256];
 
 static uint32_t enum_data_sizes[256];
 
+static uint64_t is_bitmask_enum[4];
 
 struct output_data
 {
@@ -283,11 +284,11 @@ static const char* skip_whitespace(const char* str) noexcept
 
 }
 
-static void create_hashtable(uint32_t* out_table_size, spird::elem_index** out_table) noexcept
+static void create_hashtable(uint16_t* out_table_size, spird::elem_index** out_table) noexcept
 {
 	uint32_t table_size = (instruction_index_count * 3) >> 1;
 
-	if (table_size > 0xFF'FF'FF)
+	if (table_size > 0xFFFF)
 		panic("Size of table is greater than maximum of 0xFFFFFF.\n");
 
 	spird::elem_index* table = static_cast<spird::elem_index*>(malloc(table_size * sizeof(spird::elem_index)));
@@ -467,7 +468,7 @@ static bool token_equal(const char*& curr, const char* token) noexcept
 {
 	uint32_t len = 0;
 
-	while (!is_whitespace(curr[len]) && curr[len] != '\0' && curr[len] != ':')
+	while (!is_whitespace(curr[len]) && curr[len] != '\0' && curr[len] != ':' && curr[len] != enum_flag_char)
 		++len;
 
 	if (token[len] != '\0')
@@ -556,11 +557,6 @@ int main(int argc, const char** argv)
 				break;
 			}
 
-			uint32_t enum_len = 0;
-
-			while (!is_whitespace(curr[enum_len]) && curr[enum_len] != ':')
-				++enum_len;
-
 			uint32_t table_index = ~0u;
 
 			for (uint32_t i = 0; i != _countof(enum_name_strings); ++i)
@@ -571,10 +567,20 @@ int main(int argc, const char** argv)
 					break;
 				}
 
-			curr_enum_type = table_index;
-
 			if (table_index == ~0u)
 				parse_panic("enum-name", curr);
+
+			curr_enum_type = table_index;
+
+			if (*curr == enum_flag_char)
+			{
+				++curr;
+
+				if (!token_equal(curr, enum_flag_bitmask_string))
+					parse_panic("BITMASK", curr);
+
+				is_bitmask_enum[curr_enum_type >> 6] |= 1ui64 << (curr_enum_type & 63);
+			}
 
 			if (*curr != ':')
 				parse_panic(":", curr);
@@ -1042,6 +1048,9 @@ int main(int argc, const char** argv)
 	{
 		if (table_headers[i].size == 0)
 			continue;
+
+		if (is_bitmask_enum[i >> 6] & (1ui64 << (i & 63)))
+			table_headers[i].flags |= spird::enum_flags::bitmask;
 
 		table_headers[i].offset = table_offset;
 
