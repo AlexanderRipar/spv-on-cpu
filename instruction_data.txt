@@ -1,13 +1,13 @@
 	
-instructions : [
+Instruction : [
 	{
-		opcode : 0
+		id : 0
 		name : "Nop"
 		args : [
 		]
 	}
 	{
-		opcode : 1
+		id : 1
 		name : "Undef"
 		args : [
 			RTYPE
@@ -15,7 +15,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 321
+		id : 321
 		name : "Sizeof"
 		args : [
 			RTYPE
@@ -24,14 +24,14 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5630
+		id : 5630
 		name : "AssumeTrueKHR"
 		args : [
 			ID "Condition"
 		]
 	}
 	{
-		opcode : 5631
+		id : 5631
 		name : "ExpectKHR"
 		args : [
 			RTYPE
@@ -41,14 +41,14 @@ instructions : [
 		]
 	}
 	{
-		opcode : 2
+		id : 2
 		name : "SourceContinued"
 		args : [
 			STR "Source"
 		]
 	}
 	{
-		opcode : 3
+		id : 3
 		name : "Source"
 		args : [
 			SOURCELANGUAGE
@@ -58,14 +58,14 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4
+		id : 4
 		name : "SourceExtension"
 		args : [
 			STR "Extension"
 		]
 	}
 	{
-		opcode : 5
+		id : 5
 		name : "Name"
 		args : [
 			ID "Target"
@@ -73,7 +73,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 6
+		id : 6
 		name : "MemberName"
 		args : [
 			TYPID "Type"
@@ -82,7 +82,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 7
+		id : 7
 		name : "String"
 		args : [
 			RST
@@ -90,7 +90,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 8
+		id : 8
 		name : "Line"
 		args : [
 			ID "Filename"
@@ -99,20 +99,20 @@ instructions : [
 		]
 	}
 	{
-		opcode : 317
+		id : 317
 		name : "NoLine"
 		args : [
 		]
 	}
 	{
-		opcode : 330
+		id : 330
 		name : "ModuleProcessed"
 		args : [
 			STR "Process"
 		]
 	}
 	{
-		opcode : 71
+		id : 71
 		name : "Decorate"
 		args : [
 			ID "Target"
@@ -121,7 +121,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 72
+		id : 72
 		name : "MemberDecorate"
 		args : [
 			TYPID
@@ -131,14 +131,14 @@ instructions : [
 		]
 	}
 	{
-		opcode : 73
+		id : 73
 		name : "DecorationGroup"
 		args : [
 			RST
 		]
 	}
 	{
-		opcode : 74
+		id : 74
 		name : "GroupDecorate"
 		args : [
 			ID "Group"
@@ -146,14 +146,14 @@ instructions : [
 		]
 	}
 	{
-		opcode : 75
+		id : 75
 		name : "GroupMemberDecorate"
 		args : [
-			VAR LITERALIDPAIR
+			VAR IDMEMBERPAIR
 		]
 	}
 	{
-		opcode : 332
+		id : 332
 		name : "DecorateId"
 		args : [
 			ID "Target"
@@ -162,7 +162,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5632
+		id : 5632
 		name : "DecorateString"
 		args : [
 			ID "Target"
@@ -171,7 +171,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5633
+		id : 5633
 		name : "MemberDecorateString"
 		args : [
 			TYPID
@@ -181,14 +181,14 @@ instructions : [
 		]
 	}
 	{
-		opcode : 10
+		id : 10
 		name : "Extension"
 		args : [
 			STR "Name"
 		]
 	}
 	{
-		opcode : 11
+		id : 11
 		name : "ExtInstImport"
 		args : [
 			RST
@@ -196,18 +196,18 @@ instructions : [
 		]
 	}
 	{
-		opcode : 12
+		id : 12
 		name : "ExtInst"
 		args : [
 			RTYPE
 			RST
 			ID "Set"
-			U32 "Instruction"
+			INSTRUCTION
 			OPT VAR ARG
 		]
 	}
 	{
-		opcode : 14
+		id : 14
 		name : "MemoryModel"
 		args : [
 			ADDRESSINGMODEL
@@ -215,7 +215,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 15
+		id : 15
 		name : "EntryPoint"
 		args : [
 			EXECUTIONMODEL
@@ -225,23 +225,23 @@ instructions : [
 		]
 	}
 	{
-		opcode : 16
+		id : 16
 		name : "ExecutionMode"
 		args : [
 			ID "EntryPoint"
 			EXECUTIONMODE
-			OPT VAR LITERAL "Args"
+			OPT VAR ARG
 		]
 	}
 	{
-		opcode : 17
+		id : 17
 		name : "Capability"
 		args : [
 			CAPABILITY
 		]
 	}
 	{
-		opcode : 331
+		id : 331
 		name : "ExecutionModeId"
 		args : [
 			ID "EntryPoint"
@@ -250,21 +250,21 @@ instructions : [
 		]
 	}
 	{
-		opcode : 19
+		id : 19
 		name : "TypeVoid"
 		args : [
 			RST
 		]
 	}
 	{
-		opcode : 20
+		id : 20
 		name : "TypeBool"
 		args : [
 			RST
 		]
 	}
 	{
-		opcode : 21
+		id : 21
 		name : "TypeInt"
 		args : [
 			RST
@@ -273,7 +273,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 22
+		id : 22
 		name : "TypeFloat"
 		args : [
 			RST
@@ -281,7 +281,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 23
+		id : 23
 		name : "TypeVector"
 		args : [
 			RST
@@ -290,7 +290,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 24
+		id : 24
 		name : "TypeMatrix"
 		args : [
 			RST
@@ -299,7 +299,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 25
+		id : 25
 		name : "TypeImage"
 		args : [
 			RST
@@ -314,14 +314,14 @@ instructions : [
 		]
 	}
 	{
-		opcode : 26
+		id : 26
 		name : "TypeSampler"
 		args : [
 			RST
 		]
 	}
 	{
-		opcode : 27
+		id : 27
 		name : "TypeSampledImage"
 		args : [
 			RST
@@ -329,7 +329,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 28
+		id : 28
 		name : "TypeArray"
 		args : [
 			RST
@@ -338,7 +338,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 29
+		id : 29
 		name : "TypeRuntimeArray"
 		args : [
 			RST
@@ -346,7 +346,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 30
+		id : 30
 		name : "TypeStruct"
 		args : [
 			RST
@@ -354,7 +354,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 31
+		id : 31
 		name : "TypeOpaque"
 		args : [
 			RST
@@ -362,7 +362,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 32
+		id : 32
 		name : "TypePointer"
 		args : [
 			RST
@@ -371,7 +371,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 33
+		id : 33
 		name : "TypeFunction"
 		args : [
 			RST
@@ -380,35 +380,35 @@ instructions : [
 		]
 	}
 	{
-		opcode : 34
+		id : 34
 		name : "TypeEvent"
 		args : [
 			RST
 		]
 	}
 	{
-		opcode : 35
+		id : 35
 		name : "TypeDeviceEvent"
 		args : [
 			RST
 		]
 	}
 	{
-		opcode : 36
+		id : 36
 		name : "TypeReserveId"
 		args : [
 			RST
 		]
 	}
 	{
-		opcode : 37
+		id : 37
 		name : "TypeQueue"
 		args : [
 			RST
 		]
 	}
 	{
-		opcode : 38
+		id : 38
 		name : "TypePipe"
 		args : [
 			RST
@@ -416,7 +416,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 39
+		id : 39
 		name : "TypeForwardPointer"
 		args : [
 			TYPID "PointerType"
@@ -424,21 +424,21 @@ instructions : [
 		]
 	}
 	{
-		opcode : 322
+		id : 322
 		name : "TypePipeStorage"
 		args : [
 			RST
 		]
 	}
 	{
-		opcode : 327
+		id : 327
 		name : "TypeNamedBarrier"
 		args : [
 			RST
 		]
 	}
 	{
-		opcode : 6086
+		id : 6086
 		name : "TypeBufferSurfaceINTEL"
 		args : [
 			RST
@@ -446,14 +446,14 @@ instructions : [
 		]
 	}
 	{
-		opcode : 6090
+		id : 6090
 		name : "TypeStructContinuedINTEL"
 		args : [
 			VAR TYPID "MemberTypes"
 		]
 	}
 	{
-		opcode : 41
+		id : 41
 		name : "ConstantTrue"
 		args : [
 			RTYPE
@@ -461,7 +461,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 42
+		id : 42
 		name : "ConstantFalse"
 		args : [
 			RTYPE
@@ -469,7 +469,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 43
+		id : 43
 		name : "Constant"
 		args : [
 			RTYPE
@@ -478,7 +478,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 44
+		id : 44
 		name : "ConstantComposite"
 		args : [
 			RTYPE
@@ -487,7 +487,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 45
+		id : 45
 		name : "ConstantSampler"
 		args : [
 			RTYPE
@@ -498,7 +498,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 46
+		id : 46
 		name : "ConstantNull"
 		args : [
 			RTYPE
@@ -506,7 +506,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 48
+		id : 48
 		name : "SpecConstantTrue"
 		args : [
 			RTYPE
@@ -514,7 +514,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 49
+		id : 49
 		name : "SpecConstantFalse"
 		args : [
 			RTYPE
@@ -522,7 +522,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 50
+		id : 50
 		name : "SpecConstant"
 		args : [
 			RTYPE
@@ -531,7 +531,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 51
+		id : 51
 		name : "SpecConstantComposite"
 		args : [
 			RTYPE
@@ -540,7 +540,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 52
+		id : 52
 		name : "SpecConstantOp"
 		args : [
 			RTYPE
@@ -550,21 +550,21 @@ instructions : [
 		]
 	}
 	{
-		opcode : 6091
+		id : 6091
 		name : "ConstantCompositeContinuedINTEL"
 		args : [
 			VAR ID "Constituents"
 		]
 	}
 	{
-		opcode : 6092
+		id : 6092
 		name : "SpecConstantCompositeContinuedINTEL"
 		args : [
 			VAR ID "Constituents"
 		]
 	}
 	{
-		opcode : 59
+		id : 59
 		name : "Variable"
 		args : [
 			RTYPE
@@ -574,7 +574,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 60
+		id : 60
 		name : "ImageTexelPointer"
 		args : [
 			RTYPE
@@ -585,7 +585,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 61
+		id : 61
 		name : "Load"
 		args : [
 			RTYPE
@@ -595,7 +595,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 62
+		id : 62
 		name : "Store"
 		args : [
 			ID "Pointer"
@@ -604,7 +604,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 63
+		id : 63
 		name : "CopyMemory"
 		args : [
 			ID "Target"
@@ -614,7 +614,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 64
+		id : 64
 		name : "CopyMemorySized"
 		args : [
 			ID "Target"
@@ -625,7 +625,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 65
+		id : 65
 		name : "AcessChain"
 		args : [
 			RTYPE
@@ -635,7 +635,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 66
+		id : 66
 		name : "InBoundsAccessChain"
 		args : [
 			RTYPE
@@ -645,7 +645,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 67
+		id : 67
 		name : "OpPtrAcessChain"
 		args : [
 			RTYPE
@@ -656,7 +656,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 68
+		id : 68
 		name : "ArrayLength"
 		args : [
 			RTYPE
@@ -666,7 +666,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 69
+		id : 69
 		name : "GenericPtrMemSemantics"
 		args : [
 			RTYPE
@@ -675,7 +675,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 70
+		id : 70
 		name : "InBoundsPtrAccessChain"
 		args : [
 			RTYPE
@@ -686,7 +686,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 401
+		id : 401
 		name : "PtrEqual"
 		args : [
 			RTYPE
@@ -696,7 +696,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 402
+		id : 402
 		name : "PtrNotEqual"
 		args : [
 			RTYPE
@@ -706,7 +706,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 403
+		id : 403
 		name : "PtrDiff"
 		args : [
 			RTYPE
@@ -716,7 +716,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 54
+		id : 54
 		name : "Function"
 		args : [
 			RTYPE
@@ -726,7 +726,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 55
+		id : 55
 		name : "FunctionParameter"
 		args : [
 			RTYPE
@@ -734,13 +734,13 @@ instructions : [
 		]
 	}
 	{
-		opcode : 56
+		id : 56
 		name : "FunctionEnd"
 		args : [
 		]
 	}
 	{
-		opcode : 57 
+		id : 57 
 		name : "FunctionCall"
 		args : [
 			RTYPE
@@ -750,7 +750,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 86
+		id : 86
 		name : "SampledImage"
 		args : [
 			RTYPE
@@ -760,7 +760,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 87
+		id : 87
 		name : "ImageSampleImplicitLod"
 		args : [
 			RTYPE
@@ -772,7 +772,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 88
+		id : 88
 		name : "ImageSampleExplicitLod"
 		args : [
 			RTYPE
@@ -784,7 +784,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 89
+		id : 89
 		name : "ImageSampleDrefImplicitLod"
 		args : [
 			RTYPE
@@ -797,7 +797,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 90
+		id : 90
 		name : "ImageSampleDrefExplicitLod"
 		args : [
 			RTYPE
@@ -810,7 +810,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 91
+		id : 91
 		name : "ImageSampleProjImplicitLod"
 		args : [
 			RTYPE
@@ -822,7 +822,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 92
+		id : 92
 		name : "ImageSampleProjExplicitLod"
 		args : [
 			RTYPE
@@ -834,7 +834,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 93
+		id : 93
 		name : "ImageSampleProjDrefImplicitLod"
 		args : [
 			RTYPE
@@ -847,7 +847,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 94
+		id : 94
 		name : "ImageSampleProjDrefExplicitLod"
 		args : [
 			RTYPE
@@ -860,7 +860,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 95
+		id : 95
 		name : "ImageFetch"
 		args : [
 			RTYPE
@@ -872,7 +872,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 96
+		id : 96
 		name : "ImageGather"
 		args : [
 			RTYPE
@@ -885,7 +885,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 97
+		id : 97
 		name : "ImageDrefGather"
 		args : [
 			RTYPE
@@ -898,7 +898,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 98
+		id : 98
 		name : "ImageRead"
 		args : [
 			RTYPE
@@ -910,7 +910,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 99
+		id : 99
 		name : "ImageWrite"
 		args : [
 			ID "Image"
@@ -921,7 +921,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 100
+		id : 100
 		name : "Image"
 		args : [
 			RTYPE
@@ -930,7 +930,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 101
+		id : 101
 		name : "ImageQueryFormat"
 		args : [
 			RTYPE
@@ -939,7 +939,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 102
+		id : 102
 		name : "ImageQueryOrder"
 		args : [
 			RTYPE
@@ -948,7 +948,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 103
+		id : 103
 		name : "ImageQuerySizeLod"
 		args : [
 			RTYPE
@@ -958,7 +958,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 104
+		id : 104
 		name : "ImageQuerySize"
 		args : [
 			RTYPE
@@ -967,7 +967,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 105
+		id : 105
 		name : "ImageQueryLod"
 		args : [
 			RTYPE
@@ -977,7 +977,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 106
+		id : 106
 		name : "ImageQueryLevels"
 		args : [
 			RTYPE
@@ -986,7 +986,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 107
+		id : 107
 		name : "ImageQuerySamples"
 		args : [
 			RTYPE
@@ -995,7 +995,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 305
+		id : 305
 		name : "ImageSparseSampleImplicitLod"
 		args : [
 			RTYPE
@@ -1007,7 +1007,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 306
+		id : 306
 		name : "ImageSparseSampleImplicitLod"
 		args : [
 			RTYPE
@@ -1019,7 +1019,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 307
+		id : 307
 		name : "ImageSparseSampleDrefImplicitLod"
 		args : [
 			RTYPE
@@ -1032,7 +1032,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 308
+		id : 308
 		name : "ImageSparseSampleDrefExplicitLod"
 		args : [
 			RTYPE
@@ -1045,7 +1045,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 309
+		id : 309
 		name : "ImageSparseSampleProjImplicitLod"
 		args : [
 			RTYPE
@@ -1057,7 +1057,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 310
+		id : 310
 		name : "ImageSparseSampleProjExplicitLod"
 		args : [
 			RTYPE
@@ -1069,7 +1069,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 311
+		id : 311
 		name : "ImageSparseSampleProjDrefImplicitLod"
 		args : [
 			RTYPE
@@ -1082,7 +1082,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 312
+		id : 312
 		name : "ImageSparseSampleProjDrefExplicitLod"
 		args : [
 			RTYPE
@@ -1095,7 +1095,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 313
+		id : 313
 		name : "ImageSparseFetch"
 		args : [
 			RTYPE
@@ -1107,7 +1107,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 314
+		id : 314
 		name : "ImageSparseGather"
 		args : [
 			RTYPE
@@ -1120,7 +1120,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 315
+		id : 315
 		name : "ImageSparseDrefGather"
 		args : [
 			RTYPE
@@ -1133,7 +1133,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 316
+		id : 316
 		name : "ImageSparseTexelResident"
 		args : [
 			RTYPE
@@ -1142,7 +1142,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 320
+		id : 320
 		name : "ImageSparseRead"
 		args : [
 			RTYPE
@@ -1154,7 +1154,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5283
+		id : 5283
 		name : "ImageSampleFootprintNV"
 		args : [
 			RTYPE
@@ -1168,7 +1168,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 109
+		id : 109
 		name : "ConvertFToU"
 		args : [
 			RTYPE
@@ -1177,7 +1177,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 110
+		id : 110
 		name : "ConvertFToS"
 		args : [
 			RTYPE
@@ -1186,7 +1186,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 111
+		id : 111
 		name : "ConvertSToF"
 		args : [
 			RTYPE
@@ -1195,7 +1195,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 112
+		id : 112
 		name : "ConvertUToF"
 		args : [
 			RTYPE
@@ -1204,7 +1204,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 113
+		id : 113
 		name : "UConvert"
 		args : [
 			RTYPE
@@ -1213,7 +1213,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 114
+		id : 114
 		name : "SConvert"
 		args : [
 			RTYPE
@@ -1222,7 +1222,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 115
+		id : 115
 		name : "FConvert"
 		args : [
 			RTYPE
@@ -1231,7 +1231,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 116
+		id : 116
 		name : "QuantizeToF16"
 		args : [
 			RTYPE
@@ -1240,7 +1240,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 117
+		id : 117
 		name : "ConvertPtrToU"
 		args : [
 			RTYPE
@@ -1249,7 +1249,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 118
+		id : 118
 		name : "SatConvertSToU"
 		args : [
 			RTYPE
@@ -1258,7 +1258,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 119
+		id : 119
 		name : "SatConvertUToS"
 		args : [
 			RTYPE
@@ -1267,7 +1267,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 120
+		id : 120
 		name : "ConvertUToPtr"
 		args : [
 			RTYPE
@@ -1276,7 +1276,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 121
+		id : 121
 		name : "PtrCastToGeneric"
 		args : [
 			RTYPE
@@ -1285,7 +1285,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 122
+		id : 122
 		name : "GenericCastToPtr"
 		args : [
 			RTYPE
@@ -1294,7 +1294,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 123
+		id : 123
 		name : "GenericCastToPtrExplicit"
 		args : [
 			RTYPE
@@ -1304,7 +1304,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 124
+		id : 124
 		name : "Bitcast"
 		args : [
 			RTYPE
@@ -1313,7 +1313,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 77
+		id : 77
 		name : "VectorExtractDynamic"
 		args : [
 			RTYPE
@@ -1323,7 +1323,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 78
+		id : 78
 		name : "VectorInsertDynamic"
 		args : [
 			RTYPE
@@ -1334,7 +1334,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 79
+		id : 79
 		name : "VectorShuffle"
 		args : [
 			RTYPE
@@ -1345,7 +1345,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 80
+		id : 80
 		name : "CompositeConstruct"
 		args : [
 			RTYPE
@@ -1354,7 +1354,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 81
+		id : 81
 		name : "CompositeExtract"
 		args : [
 			RTYPE
@@ -1364,7 +1364,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 82
+		id : 82
 		name : "CompositeInsert"
 		args : [
 			RTYPE
@@ -1375,7 +1375,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 83
+		id : 83
 		name : "CpoyObject"
 		args : [
 			RTYPE
@@ -1384,7 +1384,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 84
+		id : 84
 		name : "Transpose"
 		args : [
 			RTYPE
@@ -1393,7 +1393,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 400
+		id : 400
 		name : "CopyLogical"
 		args : [
 			RTYPE
@@ -1402,7 +1402,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 126
+		id : 126
 		name : "SNegate"
 		args : [
 			RTYPE
@@ -1411,7 +1411,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 127
+		id : 127
 		name : "FNegate"
 		args : [
 			RTYPE
@@ -1420,7 +1420,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 128
+		id : 128
 		name : "IAdd"
 		args : [
 			RTYPE
@@ -1430,7 +1430,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 129
+		id : 129
 		name : "FAdd"
 		args : [
 			RTYPE
@@ -1440,7 +1440,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 130
+		id : 130
 		name : "ISub"
 		args : [
 			RTYPE
@@ -1450,7 +1450,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 131
+		id : 131
 		name : "FSub"
 		args : [
 			RTYPE
@@ -1460,7 +1460,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 132
+		id : 132
 		name : "IMul"
 		args : [
 			RTYPE
@@ -1470,7 +1470,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 133
+		id : 133
 		name : "FMul"
 		args : [
 			RTYPE
@@ -1480,7 +1480,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 134
+		id : 134
 		name : "UDiv"
 		args : [
 			RTYPE
@@ -1490,7 +1490,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 135
+		id : 135
 		name : "SDiv"
 		args : [
 			RTYPE
@@ -1500,7 +1500,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 136
+		id : 136
 		name : "FDiv"
 		args : [
 			RTYPE
@@ -1510,7 +1510,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 137
+		id : 137
 		name : "UMod"
 		args : [
 			RTYPE
@@ -1520,7 +1520,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 138
+		id : 138
 		name : "SRem"
 		args : [
 			RTYPE
@@ -1530,7 +1530,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 139
+		id : 139
 		name : "SMod"
 		args : [
 			RTYPE
@@ -1540,7 +1540,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 140
+		id : 140
 		name : "FRem"
 		args : [
 			RTYPE
@@ -1550,7 +1550,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 141
+		id : 141
 		name : "FMod"
 		args : [
 			RTYPE
@@ -1560,7 +1560,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 142
+		id : 142
 		name : "VectorTimesScalar"
 		args : [
 			RTYPE
@@ -1570,7 +1570,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 143
+		id : 143
 		name : "MatrixTimesScalar"
 		args : [
 			RTYPE
@@ -1580,7 +1580,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 144
+		id : 144
 		name : "VectorTimesMatrix"
 		args : [
 			RTYPE
@@ -1590,7 +1590,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 145
+		id : 145
 		name : "MatrixTimesVector"
 		args : [
 			RTYPE
@@ -1600,7 +1600,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 146
+		id : 146
 		name : "MatrixTimesMatrix"
 		args : [
 			RTYPE
@@ -1610,7 +1610,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 147
+		id : 147
 		name : "OuterProduct"
 		args : [
 			RTYPE
@@ -1620,7 +1620,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 148
+		id : 148
 		name : "Dot"
 		args : [
 			RTYPE
@@ -1630,7 +1630,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 149
+		id : 149
 		name : "IAddCarry"
 		args : [
 			RTYPE
@@ -1640,7 +1640,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 150
+		id : 150
 		name : "ISubBorrow"
 		args : [
 			RTYPE
@@ -1650,7 +1650,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 151
+		id : 151
 		name : "UMulExtended"
 		args : [
 			RTYPE
@@ -1660,7 +1660,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 152
+		id : 152
 		name : "SMulExtended"
 		args : [
 			RTYPE
@@ -1670,7 +1670,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4450
+		id : 4450
 		name : "SDot"
 		args : [
 			RTYPE
@@ -1681,7 +1681,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4451
+		id : 4451
 		name : "UDot"
 		args : [
 			RTYPE
@@ -1692,7 +1692,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4452
+		id : 4452
 		name : "SUDot"
 		args : [
 			RTYPE
@@ -1703,7 +1703,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4453
+		id : 4453
 		name : "SDotAccSat"
 		args : [
 			RTYPE
@@ -1715,7 +1715,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4454
+		id : 4454
 		name : "UDotAccSat"
 		args : [
 			RTYPE
@@ -1727,7 +1727,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4455
+		id : 4455
 		name : "SUDotAccSat"
 		args : [
 			RTYPE
@@ -1739,7 +1739,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 194
+		id : 194
 		name : "ShiftRightLogical"
 		args : [
 			RTYPE
@@ -1749,7 +1749,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 195
+		id : 195
 		name : "ShiftRightArithmetic"
 		args : [
 			RTYPE
@@ -1759,7 +1759,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 196
+		id : 196
 		name : "ShiftLeftLogical"
 		args : [
 			RTYPE
@@ -1769,7 +1769,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 197
+		id : 197
 		name : "BitwiseOr"
 		args : [
 			RTYPE
@@ -1779,7 +1779,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 198
+		id : 198
 		name : "BitwiseXor"
 		args : [
 			RTYPE
@@ -1789,7 +1789,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 199
+		id : 199
 		name : "BitwiseAnd"
 		args : [
 			RTYPE
@@ -1799,7 +1799,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 200
+		id : 200
 		name : "Not"
 		args : [
 			RTYPE
@@ -1808,7 +1808,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 201
+		id : 201
 		name : "BitFieldInsert"
 		args : [
 			RTYPE
@@ -1820,7 +1820,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 202
+		id : 202
 		name : "BitFieldSExtract"
 		args : [
 			RTYPE
@@ -1831,7 +1831,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 203
+		id : 203
 		name : "BitFieldUExtract"
 		args : [
 			RTYPE
@@ -1842,7 +1842,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 204
+		id : 204
 		name : "BitReverse"
 		args : [
 			RTYPE
@@ -1851,7 +1851,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 205
+		id : 205
 		name : "BitCount"
 		args : [
 			RTYPE
@@ -1860,7 +1860,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 154
+		id : 154
 		name : "Any"
 		args : [
 			RTYPE
@@ -1869,7 +1869,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 155
+		id : 155
 		name : "All"
 		args : [
 			RTYPE
@@ -1878,7 +1878,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 156
+		id : 156
 		name : "IsNan"
 		args : [
 			RTYPE
@@ -1887,7 +1887,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 157
+		id : 157
 		name : "IsInf"
 		args : [
 			RTYPE
@@ -1896,7 +1896,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 158
+		id : 158
 		name : "IsFinite"
 		args : [
 			RTYPE
@@ -1905,7 +1905,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 159
+		id : 159
 		name : "IsNormal"
 		args : [
 			RTYPE
@@ -1914,7 +1914,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 160
+		id : 160
 		name : "SignBitSet"
 		args : [
 			RTYPE
@@ -1923,7 +1923,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 161
+		id : 161
 		name : "LessOrGreater"
 		args : [
 			RTYPE
@@ -1933,7 +1933,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 162
+		id : 162
 		name : "Ordered"
 		args : [
 			RTYPE
@@ -1943,7 +1943,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 163
+		id : 163
 		name : "Unordered"
 		args : [
 			RTYPE
@@ -1953,7 +1953,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 164
+		id : 164
 		name : "LogicalEqual"
 		args : [
 			RTYPE
@@ -1963,7 +1963,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 165
+		id : 165
 		name : "LogicalNotEqual"
 		args : [
 			RTYPE
@@ -1973,7 +1973,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 166
+		id : 166
 		name : "LogicalOr"
 		args : [
 			RTYPE
@@ -1983,7 +1983,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 167
+		id : 167
 		name : "LogicalAnd"
 		args : [
 			RTYPE
@@ -1993,7 +1993,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 168
+		id : 168
 		name : "LogicalNot"
 		args : [
 			RTYPE
@@ -2002,7 +2002,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 169
+		id : 169
 		name : "Select"
 		args : [
 			RTYPE
@@ -2013,7 +2013,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 170
+		id : 170
 		name : "IEqual"
 		args : [
 			RTYPE
@@ -2023,7 +2023,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 171
+		id : 171
 		name : "INotEqual"
 		args : [
 			RTYPE
@@ -2033,7 +2033,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 172
+		id : 172
 		name : "UGreaterThan"
 		args : [
 			RTYPE
@@ -2043,7 +2043,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 173
+		id : 173
 		name : "SGreaterThan"
 		args : [
 			RTYPE
@@ -2053,7 +2053,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 174
+		id : 174
 		name : "UGreaterThanEqual"
 		args : [
 			RTYPE
@@ -2063,7 +2063,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 175
+		id : 175
 		name : "SGreaterThanEqual"
 		args : [
 			RTYPE
@@ -2073,7 +2073,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 176
+		id : 176
 		name : "ULessThan"
 		args : [
 			RTYPE
@@ -2083,7 +2083,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 177
+		id : 177
 		name : "SLessThan"
 		args : [
 			RTYPE
@@ -2093,7 +2093,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 178
+		id : 178
 		name : "ULessThanEqual"
 		args : [
 			RTYPE
@@ -2103,7 +2103,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 179
+		id : 179
 		name : "SLessThanEqual"
 		args : [
 			RTYPE
@@ -2113,7 +2113,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 180
+		id : 180
 		name : "FOrdEqual"
 		args : [
 			RTYPE
@@ -2123,7 +2123,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 181
+		id : 181
 		name : "FUnordEqual"
 		args : [
 			RTYPE
@@ -2133,7 +2133,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 182
+		id : 182
 		name : "FOrdNotEqual"
 		args : [
 			RTYPE
@@ -2143,7 +2143,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 183
+		id : 183
 		name : "FUnordNotEqual"
 		args : [
 			RTYPE
@@ -2153,7 +2153,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 184
+		id : 184
 		name : "FOrdLessThan"
 		args : [
 			RTYPE
@@ -2163,7 +2163,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 185
+		id : 185
 		name : "FUnordLessThan"
 		args : [
 			RTYPE
@@ -2173,7 +2173,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 186
+		id : 186
 		name : "FOrdGreaterThan"
 		args : [
 			RTYPE
@@ -2183,7 +2183,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 187
+		id : 187
 		name : "FUnordGreaterThan"
 		args : [
 			RTYPE
@@ -2193,7 +2193,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 188
+		id : 188
 		name : "FOrdLessThanEqual"
 		args : [
 			RTYPE
@@ -2203,7 +2203,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 189
+		id : 189
 		name : "FUnordLessThanEqual"
 		args : [
 			RTYPE
@@ -2213,7 +2213,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 190
+		id : 190
 		name : "FOrdGreaterThanEqual"
 		args : [
 			RTYPE
@@ -2223,7 +2223,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 191
+		id : 191
 		name : "FUnordGreaterThanEqual"
 		args : [
 			RTYPE
@@ -2233,7 +2233,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 207
+		id : 207
 		name : "DPdx"
 		args : [
 			RTYPE
@@ -2242,7 +2242,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 208
+		id : 208
 		name : "DPdy"
 		args : [
 			RTYPE
@@ -2251,7 +2251,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 209
+		id : 209
 		name : "Fwidth"
 		args : [
 			RTYPE
@@ -2260,7 +2260,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 210
+		id : 210
 		name : "DPdxFine"
 		args : [
 			RTYPE
@@ -2269,7 +2269,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 211
+		id : 211
 		name : "DPdyFine"
 		args : [
 			RTYPE
@@ -2278,7 +2278,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 212
+		id : 212
 		name : "FwidthFine"
 		args : [
 			RTYPE
@@ -2287,7 +2287,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 213
+		id : 213
 		name : "DPdxCoarse"
 		args : [
 			RTYPE
@@ -2296,7 +2296,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 214
+		id : 214
 		name : "DPdyCoarse"
 		args : [
 			RTYPE
@@ -2305,7 +2305,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 215
+		id : 215
 		name : "FwidthCoarse"
 		args : [
 			RTYPE
@@ -2314,16 +2314,16 @@ instructions : [
 		]
 	}
 	{
-		opcode : 245
+		id : 245
 		name : "Phi"
 		args : [
 			RTYPE
 			RST
-			VAR ID "TODO"
+			VAR IDIDPAIR
 		]
 	}
 	{
-		opcode : 246
+		id : 246
 		name : "LoopMerge"
 		args : [
 			ID "MergeBlock"
@@ -2333,7 +2333,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 247
+		id : 247
 		name : "SelectionMerge"
 		args : [
 			ID "MergeBlock"
@@ -2341,21 +2341,21 @@ instructions : [
 		]
 	}
 	{
-		opcode : 248
+		id : 248
 		name : "Label"
 		args : [
 			RST
 		]
 	}
 	{
-		opcode : 249
+		id : 249
 		name : "Branch"
 		args : [
 			ID "TargetLabel"
 		]
 	}
 	{
-		opcode : 250
+		id : 250
 		name : "BranchConditional"
 		args : [
 			ID "Condition"
@@ -2366,41 +2366,41 @@ instructions : [
 		]
 	}
 	{
-		opcode : 251
+		id : 251
 		name : "Switch"
 		args : [
 			ID "Selector"
 			ID "Default"
-			OPT VAR LITERALIDPAIR "Targets"
+			OPT VAR U32IDPAIR "Targets"
 		]
 	}
 	{
-		opcode : 252
+		id : 252
 		name : "Kill"
 		args : [
 		]
 	}
 	{
-		opcode : 253 
+		id : 253 
 		name : "Return"
 		args : [
 		]
 	}
 	{
-		opcode : 254
+		id : 254
 		name : "ReturnValue"
 		args : [
 			ID "Value"
 		]
 	}
 	{
-		opcode : 255
+		id : 255
 		name : "Unreachable"
 		args : [
 		]
 	}
 	{
-		opcode : 256
+		id : 256
 		name : "LifetimeStart"
 		args : [
 			ID "Pointer"
@@ -2408,7 +2408,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 257
+		id : 257
 		name : "LifetimeStop"
 		args : [
 			ID "Pointer"
@@ -2416,19 +2416,19 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4416
+		id : 4416
 		name : "TerminateInvocation"
 		args : [
 		]
 	}
 	{
-		opcode : 5380
+		id : 5380
 		name : "DemoteToHelperInvocation"
 		args : [
 		]
 	}
 	{
-		opcode : 227
+		id : 227
 		name : "AtomicLoad"
 		args : [
 			RTYPE
@@ -2439,7 +2439,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 228
+		id : 228
 		name : "AtomicStore"
 		args : [
 			ID "Pointer"
@@ -2449,7 +2449,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 229
+		id : 229
 		name : "AtomicExchange"
 		args : [
 			RTYPE
@@ -2461,7 +2461,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 230
+		id : 230
 		name : "AtomicCompareExchange"
 		args : [
 			RTYPE
@@ -2475,7 +2475,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 231
+		id : 231
 		name : "AtomicCompareExchangeWeak"
 		args : [
 			RTYPE
@@ -2489,7 +2489,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 232
+		id : 232
 		name : "AtomicIncrement"
 		args : [
 			RTYPE
@@ -2500,7 +2500,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 233
+		id : 233
 		name : "AtomicDecrement"
 		args : [
 			RTYPE
@@ -2511,7 +2511,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 234
+		id : 234
 		name : "AtomicIAdd"
 		args : [
 			RTYPE
@@ -2523,7 +2523,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 235
+		id : 235
 		name : "AtomicISub"
 		args : [
 			RTYPE
@@ -2535,7 +2535,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 236
+		id : 236
 		name : "AtomicSMin"
 		args : [
 			RTYPE
@@ -2547,7 +2547,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 237
+		id : 237
 		name : "AtomicUMin"
 		args : [
 			RTYPE
@@ -2559,7 +2559,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 238
+		id : 238
 		name : "AtomicSMax"
 		args : [
 			RTYPE
@@ -2571,7 +2571,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 239
+		id : 239
 		name : "AtomicUMax"
 		args : [
 			RTYPE
@@ -2583,7 +2583,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 240
+		id : 240
 		name : "AtomicAnd"
 		args : [
 			RTYPE
@@ -2595,7 +2595,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 241
+		id : 241
 		name : "AtomicOr"
 		args : [
 			RTYPE
@@ -2607,7 +2607,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 242
+		id : 242
 		name : "AtomicXor"
 		args : [
 			RTYPE
@@ -2619,7 +2619,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 318
+		id : 318
 		name : "AtomicFlagTestAndSet"
 		args : [
 			RTYPE
@@ -2630,7 +2630,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 319
+		id : 319
 		name : "AtomicFlagClear"
 		args : [
 			ID "Pointer"
@@ -2639,7 +2639,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5614
+		id : 5614
 		name : "AtomicFMinEXT"
 		args : [
 			RTYPE
@@ -2651,7 +2651,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5615
+		id : 5615
 		name : "AtomicFMaxEXT"
 		args : [
 			RTYPE
@@ -2663,7 +2663,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 6035
+		id : 6035
 		name : "AtomicFAddEXT"
 		args : [
 			RTYPE
@@ -2675,33 +2675,33 @@ instructions : [
 		]
 	}
 	{
-		opcode : 218
+		id : 218
 		name : "EmitVertex"
 		args : [
 		]
 	}
 	{
-		opcode : 219 
+		id : 219 
 		name : "EndPrimitive"
 		args : [
 		]
 	}
 	{
-		opcode : 220
+		id : 220
 		name : "EmitStreamVertex"
 		args : [
 			ID "Stream"
 		]
 	}
 	{
-		opcode : 221
+		id : 221
 		name : "EndStreamPrimitive"
 		args : [
 			ID "Stream"
 		]
 	}
 	{
-		opcode : 224
+		id : 224
 		name : "ControlBarrier"
 		args : [
 			SCOPEID "Execution"
@@ -2710,7 +2710,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 225
+		id : 225
 		name : "MemoryBarrier"
 		args : [
 			SCOPEID "Memory"
@@ -2718,7 +2718,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 328
+		id : 328
 		name : "NamedBarrierInitialize"
 		args : [
 			RTYPE
@@ -2727,7 +2727,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 329
+		id : 329
 		name : "MemoryNamedBarrier"
 		args : [
 			ID "NamedBarrier"
@@ -2736,7 +2736,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 259
+		id : 259
 		name : "GroupAsyncCopy"
 		args : [
 			RTYPE
@@ -2750,7 +2750,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 260
+		id : 260
 		name : "GroupWaitEvents"
 		args : [
 			SCOPEID
@@ -2759,7 +2759,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 261
+		id : 261
 		name : "GroupAll"
 		args : [
 			RTYPE
@@ -2769,7 +2769,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 262
+		id : 262
 		name : "GroupAny"
 		args : [
 			RTYPE
@@ -2779,7 +2779,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 263
+		id : 263
 		name : "GroupBroadcast"
 		args : [
 			RTYPE
@@ -2790,7 +2790,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 264
+		id : 264
 		name : "GroupIAdd"
 		args : [
 			RTYPE
@@ -2801,7 +2801,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 265
+		id : 265
 		name : "GroupFAdd"
 		args : [
 			RTYPE
@@ -2812,7 +2812,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 266
+		id : 266
 		name : "GroupFMin"
 		args : [
 			RTYPE
@@ -2823,7 +2823,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 267
+		id : 267
 		name : "GroupUMin"
 		args : [
 			RTYPE
@@ -2834,7 +2834,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 268
+		id : 268
 		name : "GroupSMin"
 		args : [
 			RTYPE
@@ -2845,7 +2845,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 269
+		id : 269
 		name : "GroupFMax"
 		args : [
 			RTYPE
@@ -2856,7 +2856,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 270
+		id : 270
 		name : "GroupUMax"
 		args : [
 			RTYPE
@@ -2867,7 +2867,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 271
+		id : 271
 		name : "GroupSMax"
 		args : [
 			RTYPE
@@ -2878,7 +2878,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4421
+		id : 4421
 		name : "SubgroupBallotKHR"
 		args : [
 			RTYPE
@@ -2887,7 +2887,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4422
+		id : 4422
 		name : "SubgroupFirstInvocationKHR"
 		args : [
 			RTYPE
@@ -2896,7 +2896,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4428
+		id : 4428
 		name : "SubgroupAllKHR"
 		args : [
 			RTYPE
@@ -2905,7 +2905,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4429
+		id : 4429
 		name : "SubgroupAnyKHR"
 		args : [
 			RTYPE
@@ -2914,7 +2914,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4430
+		id : 4430
 		name : "SubgroupAllEqualKHR"
 		args : [
 			RTYPE
@@ -2923,7 +2923,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 4432
+		id : 4432
 		name : "SubgroupReadInvocationKHR"
 		args : [
 			RTYPE
@@ -2933,7 +2933,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5000
+		id : 5000
 		name : "GroupIAddNonUniformAMD"
 		args : [
 			RTYPE
@@ -2944,7 +2944,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5001
+		id : 5001
 		name : "GroupFAddNonUniformAMD"
 		args : [
 			RTYPE
@@ -2955,7 +2955,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5002
+		id : 5002
 		name : "GroupFMinNonUniformAMD"
 		args : [
 			RTYPE
@@ -2966,7 +2966,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5003
+		id : 5003
 		name : "GroupUMinNonUniformAMD"
 		args : [
 			RTYPE
@@ -2977,7 +2977,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5004
+		id : 5004
 		name : "GroupSMinNonUniformAMD"
 		args : [
 			RTYPE
@@ -2988,7 +2988,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5005
+		id : 5005
 		name : "GroupFMaxNonUniformAMD"
 		args : [
 			RTYPE
@@ -2999,7 +2999,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5006
+		id : 5006
 		name : "GroupUMaxNonUniformAMD"
 		args : [
 			RTYPE
@@ -3010,7 +3010,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5007
+		id : 5007
 		name : "GroupSMaxNonUniformAMD"
 		args : [
 			RTYPE
@@ -3021,7 +3021,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5571
+		id : 5571
 		name : "SubgroupShuffleINTEL"
 		args : [
 			RTYPE
@@ -3031,7 +3031,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5572
+		id : 5572
 		name : "SubgroupShuffleDownINTEL"
 		args : [
 			RTYPE
@@ -3042,7 +3042,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5573
+		id : 5573
 		name : "SubgroupShuffleUpINTEL"
 		args : [
 			RTYPE
@@ -3053,7 +3053,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5574
+		id : 5574
 		name : "SubgroupShuffleXorINTEL"
 		args : [
 			RTYPE
@@ -3063,7 +3063,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5575
+		id : 5575
 		name : "SubgroupBlockReadINTEL"
 		args : [
 			RTYPE
@@ -3072,7 +3072,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5576
+		id : 5576
 		name : "SubgroupBlockWriteINTEL"
 		args : [
 			ID "Pointer"
@@ -3080,7 +3080,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5577
+		id : 5577
 		name : "SubgroupImageBlockReadINTEL"
 		args : [
 			RTYPE
@@ -3090,7 +3090,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5578
+		id : 5578
 		name : "SubgroupImageBlockWriteINTEL"
 		args : [
 			ID "Image"
@@ -3099,7 +3099,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5580
+		id : 5580
 		name : "SubgroupImageMediaBlockReadINTEL"
 		args : [
 			RTYPE
@@ -3111,7 +3111,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5581
+		id : 5581
 		name : "SubgroupImageMediaBlockWriteINTEL"
 		args : [
 			ID "Image"
@@ -3122,7 +3122,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 291
+		id : 291
 		name : "EnqueueMarker"
 		args : [
 			RTYPE
@@ -3134,7 +3134,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 292
+		id : 292
 		name : "EnqueueKernel"
 		args : [
 			RTYPE
@@ -3153,7 +3153,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 293
+		id : 293
 		name : "GetKernelNDrangeSubGroupCount"
 		args : [
 			RTYPE
@@ -3166,7 +3166,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 294
+		id : 294
 		name : "GetKerlenNDrangeMaxSubGroupSize"
 		args : [
 			RTYPE
@@ -3179,7 +3179,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 295
+		id : 295
 		name : "GetKernelWorkGroupSize"
 		args : [
 			RTYPE
@@ -3191,7 +3191,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 296
+		id : 296
 		name : "GetKernelPreferredWorkGroupSizeMultiple"
 		args : [
 			RTYPE
@@ -3203,21 +3203,21 @@ instructions : [
 		]
 	}
 	{
-		opcode : 297
+		id : 297
 		name : "RetainEvent"
 		args : [
 			ID "Event"
 		]
 	}
 	{
-		opcode : 298
+		id : 298
 		name : "ReleaseEvent"
 		args : [
 			ID "Event"
 		]
 	}
 	{
-		opcode : 299
+		id : 299
 		name : "CreateUserEvent"
 		args : [
 			RTYPE
@@ -3225,7 +3225,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 300
+		id : 300
 		name : "IsValidEvent"
 		args : [
 			RTYPE
@@ -3234,7 +3234,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 301
+		id : 301
 		name : "SetUserEventStatus"
 		args : [
 			ID "Event"
@@ -3242,7 +3242,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 302
+		id : 302
 		name : "CaptureEventProfilingInfo"
 		args : [
 			ID "Event"
@@ -3251,7 +3251,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 303
+		id : 303
 		name : "GetDefaultQueue"
 		args : [
 			RTYPE
@@ -3259,7 +3259,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 304
+		id : 304
 		name : "BuildNDRange"
 		args : [
 			RTYPE
@@ -3270,7 +3270,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 325
+		id : 325
 		name : "GetKernelLocalSizeForSubgroupCount"
 		args : [
 			RTYPE
@@ -3283,7 +3283,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 326
+		id : 326
 		name : "GetKernelMaxNumSubgroups"
 		args : [
 			RTYPE
@@ -3295,7 +3295,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 274
+		id : 274
 		name : "ReadPipe"
 		args : [
 			RTYPE
@@ -3307,7 +3307,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 275
+		id : 275
 		name : "WritePipe"
 		args : [
 			RTYPE
@@ -3319,7 +3319,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 276
+		id : 276
 		name : "ReservedReadPipe"
 		args : [
 			RTYPE
@@ -3333,7 +3333,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 277
+		id : 277
 		name : "ReservedWritePipe"
 		args : [
 			RTYPE
@@ -3347,7 +3347,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 278
+		id : 278
 		name : "ReserveReadPipePackets"
 		args : [
 			RTYPE
@@ -3359,7 +3359,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 279
+		id : 279
 		name : "ReserveWritePipePackets"
 		args : [
 			RTYPE
@@ -3371,7 +3371,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 280
+		id : 280
 		name : "CommitReadPipe"
 		args : [
 			ID "Pipe"
@@ -3381,7 +3381,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 281
+		id : 281
 		name : "CommitWritePipe"
 		args : [
 			ID "Pipe"
@@ -3391,7 +3391,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 282
+		id : 282
 		name : "IsValidReserveId"
 		args : [
 			RTYPE
@@ -3400,7 +3400,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 283
+		id : 283
 		name : "GetNumPipePackets"
 		args : [
 			RTYPE
@@ -3411,7 +3411,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 284
+		id : 284
 		name : "GetMaxPipePackets"
 		args : [
 			RTYPE
@@ -3422,7 +3422,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 285
+		id : 285
 		name : "GroupReserveReadPipePackets"
 		args : [
 			RTYPE
@@ -3435,7 +3435,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 286
+		id : 286
 		name : "GroupReserveWritePipePackets"
 		args : [
 			RTYPE
@@ -3448,7 +3448,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 287
+		id : 287
 		name : "GroupCommitReadPipe"
 		args : [
 			SCOPEID
@@ -3459,7 +3459,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 288
+		id : 288
 		name : "GroupCommitWritePipe"
 		args : [
 			SCOPEID
@@ -3470,7 +3470,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 323
+		id : 323
 		name : "ConstantPipeStorage"
 		args : [
 			RTYPE
@@ -3481,7 +3481,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 324
+		id : 324
 		name : "CreatePipeFromPipeStorage"
 		args : [
 			RTYPE
@@ -3490,7 +3490,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5946
+		id : 5946
 		name : "ReadPipeBlockingINTEL"
 		args : [
 			RTYPE
@@ -3500,7 +3500,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5947
+		id : 5947
 		name : "WritePipeBlockingINTEL"
 		args : [
 			RTYPE
@@ -3510,7 +3510,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 333
+		id : 333
 		name : "GroupNonUniformElect"
 		args : [
 			RTYPE
@@ -3519,7 +3519,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 334
+		id : 334
 		name : "GroupNonUniformAll"
 		args : [
 			RTYPE
@@ -3529,7 +3529,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 335
+		id : 335
 		name : "GroupNonUniformAny"
 		args : [
 			RTYPE
@@ -3539,7 +3539,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 336
+		id : 336
 		name : "GroupNonUniformAllEqual"
 		args : [
 			RTYPE
@@ -3549,7 +3549,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 337
+		id : 337
 		name : "GroupNonUniformBroadcast"
 		args : [
 			RTYPE
@@ -3560,7 +3560,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 338
+		id : 338
 		name : "GroupNonUniformBroadcastFirst"
 		args : [
 			RTYPE
@@ -3570,7 +3570,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 339
+		id : 339
 		name : "GroupNonUniformBallot"
 		args : [
 			RTYPE
@@ -3580,7 +3580,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 340
+		id : 340
 		name : "GroupNonUniformInverseBallot"
 		args : [
 			RTYPE
@@ -3590,7 +3590,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 341
+		id : 341
 		name : "GroupNonUniformBallotBitExtract"
 		args : [
 			RTYPE
@@ -3601,7 +3601,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 342
+		id : 342
 		name : "GroupNonUniformBallotBitCount"
 		args : [
 			RTYPE
@@ -3612,7 +3612,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 343
+		id : 343
 		name : "GroupNonUniformBallotFindLSB"
 		args : [
 			RTYPE
@@ -3622,7 +3622,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 344
+		id : 344
 		name : "GroupNonUniformBallotFindMSB"
 		args : [
 			RTYPE
@@ -3632,7 +3632,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 345
+		id : 345
 		name : "GroupNonUniformShuffle"
 		args : [
 			RTYPE
@@ -3643,7 +3643,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 346
+		id : 346
 		name : "GroupNonUniformShuffleXor"
 		args : [
 			RTYPE
@@ -3654,7 +3654,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 347
+		id : 347
 		name : "GroupNonUniformShuffleUp"
 		args : [
 			RTYPE
@@ -3665,7 +3665,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 348
+		id : 348
 		name : "GroupNonUniformShuffleDown"
 		args : [
 			RTYPE
@@ -3676,7 +3676,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 349
+		id : 349
 		name : "GroupNonUniformIAdd"
 		args : [
 			RTYPE
@@ -3688,7 +3688,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 350
+		id : 350
 		name : "GroupNonUniformFAdd"
 		args : [
 			RTYPE
@@ -3700,7 +3700,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 351
+		id : 351
 		name : "GroupNonUniformIMul"
 		args : [
 			RTYPE
@@ -3712,7 +3712,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 352
+		id : 352
 		name : "GroupNonUniformFMul"
 		args : [
 			RTYPE
@@ -3724,7 +3724,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 353
+		id : 353
 		name : "GroupNonUniformSMin"
 		args : [
 			RTYPE
@@ -3736,7 +3736,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 354
+		id : 354
 		name : "GroupNonUniformUMin"
 		args : [
 			RTYPE
@@ -3748,7 +3748,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 355
+		id : 355
 		name : "GroupNonUniformFMin"
 		args : [
 			RTYPE
@@ -3760,7 +3760,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 356
+		id : 356
 		name : "GroupNonUniformSMax"
 		args : [
 			RTYPE
@@ -3772,7 +3772,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 357
+		id : 357
 		name : "GroupNonUniformUMax"
 		args : [
 			RTYPE
@@ -3784,7 +3784,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 358
+		id : 358
 		name : "GroupNonUniformFMax"
 		args : [
 			RTYPE
@@ -3796,7 +3796,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 359
+		id : 359
 		name : "GroupNonUniformBitwiseAnd"
 		args : [
 			RTYPE
@@ -3808,7 +3808,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 360
+		id : 360
 		name : "GroupNonUniformBitwiseOr"
 		args : [
 			RTYPE
@@ -3820,7 +3820,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 361
+		id : 361
 		name : "GroupNonUniformBitwiseXor"
 		args : [
 			RTYPE
@@ -3832,7 +3832,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 362
+		id : 362
 		name : "GroupNonUniformLogicalAnd"
 		args : [
 			RTYPE
@@ -3844,7 +3844,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 363
+		id : 363
 		name : "GroupNonUniformLogicalOr"
 		args : [
 			RTYPE
@@ -3856,7 +3856,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 364
+		id : 364
 		name : "GroupNonUniformLogicalXor"
 		args : [
 			RTYPE
@@ -3868,7 +3868,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 365
+		id : 365
 		name : "GroupNonUniformQuadBroadcast"
 		args : [
 			RTYPE
@@ -3880,7 +3880,7 @@ instructions : [
 		]
 	}
 	{
-		opcode : 366
+		id : 366
 		name : "GroupNonUniformQuadSwap"
 		args : [
 			RTYPE
@@ -3891,12 +3891,4179 @@ instructions : [
 		]
 	}
 	{
-		opcode : 5296
+		id : 5296
 		name : "GroupNonUniformPartitionNV"
 		args : [
 			RTYPE
 			RST
 			ID "Value"
 		]
+	}
+
+	#########################################################################
+	##################### 3.42.25 Reserved instructions #####################
+	#########################################################################
+
+	{
+		id : 4445
+		name : "TraceRayKHR"
+		args : [
+			ID "Accel"
+			ID "RayFlags"
+			ID "CullMask"
+			ID "SBTOffset"
+			ID "SBTStride"
+			ID "MissIndex"
+			ID "RayOrigin"
+			ID "RayTmin"
+			ID "RayDirection"
+			ID "RayTmax"
+			ID "Payload"
+		]
+	}
+	{
+		id : 4446
+		name : "ExecuteCallableKHR"
+		args : [
+			ID "SBTIndex"
+			ID "CallableData"
+		]
+	}
+	{
+		id : 4447
+		name : "ConvertUToAccelerationStructureKHR"
+		args : [
+			RTYPE
+			RST
+			ID "Accel"
+		]
+	}
+	{
+		id : 4448
+		name : "IgnoreIntersectionKHR"
+		args : [
+		]
+	}
+	{
+		id : 4449
+		name : "TerminateRayKHR"
+		args : [
+		]
+	}
+	{
+		id : 4472
+		name : "TypeRayQueryKHR"
+		args : [
+			RST
+		]
+	}
+	{
+		id : 4473
+		name : "RayQueryInitializeKHR"
+		args : [
+			ID "RayQuery"
+			ID "Accel"
+			ID "RayFlags"
+			ID "CullMask"
+			ID "RayOrigin"
+			ID "RayTmin"
+			ID "RayDirection"
+			ID "RayTmax"
+		]
+	}
+	{
+		id : 4474
+		name : "RayQueryTerminateKHR"
+		args : [
+			ID "RayQuery"
+		]
+	}
+	{
+		id : 4475
+		name : "RayQueryGenerateIntersectionKHR"
+		args : [
+			ID "RayQuery"
+			ID "HitT"
+		]
+	}
+	{
+		id : 4476
+		name : "RayQueryConfirmIntersectionKHR"
+		args : [
+			ID "RayQuery"
+		]
+	}
+	{
+		id : 4477
+		name : "RayQueryProceedKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+		]
+	}
+	{
+		id : 4479
+		name : "RayQueryGetIntersectionTypeKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 5011
+		name : "FragmentMaskFetchAMD"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+			ID "Coordinate"
+		]
+	}
+	{
+		id : 5012
+		name : "FragmentFetchAMD"
+		args : [
+			RTYPE
+			RST
+			ID "Image"
+			ID "Coordinate"
+			ID "FragmentIndex"
+		]
+	}
+	{
+		id : 5056
+		name : "ReadClockKHR"
+		args : [
+			RTYPE
+			RST
+			SCOPEID
+		]
+	}
+	{
+		id : 5299
+		name : "WritePackedPrimitiveIndices4x8NV"
+		args : [
+			ID "IndexOffset"
+			ID "PackedIndices"
+		]
+	}
+	{
+		id : 5334
+		name : "ReportIntersectionKHR"
+		args : [
+			RTYPE
+			RST
+			ID "Hit"
+			ID "HitKind"
+		]
+	}
+	{
+		id : 5335
+		name : "IgnoreIntersectionNV"
+		args : [
+		]
+	}
+	{
+		id : 5336
+		name : "TerminateRayNV"
+		args : [
+		]
+	}
+	{
+		id : 5337
+		name : "TraceNV"
+		args : [
+			ID "Accel"
+			ID "RayFlags"
+			ID "CullMask"
+			ID "SBTOffset"
+			ID "SBTStride"
+			ID "MissIndex"
+			ID "RayOrigin"
+			ID "RayTmin"
+			ID "RayDirection"
+			ID "RayTmax"
+			ID "Payload"
+		]
+	}
+	{
+		id : 5338
+		name : "TraceMotionNV"
+		args : [
+			ID "Accel"
+			ID "RayFlags"
+			ID "CullMask"
+			ID "SBTOffset"
+			ID "SBTStride"
+			ID "MissIndex"
+			ID "RayOrigin"
+			ID "RayTmin"
+			ID "RayDirection"
+			ID "RayTmax"
+			ID "Time"
+			ID "Payload"
+		]
+	}
+	{
+		id : 5339
+		name : "TraceRayMotionNV"
+		args : [
+			ID "Accel"
+			ID "RayFlags"
+			ID "CullMask"
+			ID "SBTOffset"
+			ID "SBTStride"
+			ID "MissIndex"
+			ID "RayOrigin"
+			ID "RayTmin"
+			ID "RayDirection"
+			ID "RayTmax"
+			ID "Time"
+			ID "Payload"
+		]
+	}
+	{
+		id : 5341
+		name : "TypeAccelerationStructureKHR"
+		args : [
+			RST
+		]
+	}
+	{
+		id : 5344
+		name : "ExecuteCallableNV"
+		args : [
+			ID "SBTIndex"
+			ID "CallableData"
+		]
+	}
+	{
+		id : 5358
+		name : "TypeCooperativeMatrixNV"
+		args : [
+			RST
+			ID "ComponentType"
+			SCOPEID
+			ID "Rows"
+			ID "Columns"
+		]
+	}
+	{
+		id : 5359
+		name : "CooperativeMatrixLoadNV"
+		args : [
+			RTYPE
+			RST
+			ID "Pointer"
+			ID "Stride"
+			ID "ColumnMajor"
+			OPT MEMORYOPERANDS
+		]
+	}
+	{
+		id : 5360
+		name : "CooperativeMatrixStoreNV"
+		args : [
+			ID "Pointer"
+			ID "Object"
+			ID "Stride"
+			ID "ColumnMajor"
+			OPT MEMORYOPERANDS
+		]
+	}
+	{
+		id : 5361
+		name : "CooperativeMatrixMulAddNV"
+		args : [
+			RTYPE
+			RST
+			ID "A"
+			ID "B"
+			ID "C"
+		]
+	}
+	{
+		id : 5362
+		name : "CooperativeMatrixLengthNV"
+		args : [
+			RTYPE
+			RST
+			ID "Type"
+		]
+	}
+	{
+		id : 5364
+		name : "BeginInvocationInterlockEXT"
+		args : [
+		]
+	}
+	{
+		id : 5365
+		name : "EndInvocationInterlockEXT"
+		args : [
+		]
+	}
+	{
+		id : 5381
+		name : "IsHelperInvocationEXT"
+		args : [
+			RTYPE
+			RST
+		]
+	}
+	{
+		id : 5391
+		name : "ConvertUToImageNV"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		id : 5392
+		name : "ConvertUToSamplerNV"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		id : 5393
+		name : "ConvertImageToUNV"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		id : 5394
+		name : "ConvertSamplerToUNV"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		id : 5395
+		name : "ConvertUToSampledImageNV"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		id : 5396
+		name : "ConvertSampledImageToUNV"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		id : 5397
+		name : "SamplerImageAddressingModeNV"
+		args : [
+			U32 "BitWidth"
+		]
+	}
+	{
+		id : 5585
+		name : "UCountLeadingZerosINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		id : 5586
+		name : "UCountTrailingZerosINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand"
+		]
+	}
+	{
+		id : 5587
+		name : "AbsISubINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5588
+		name : "AbsUSubINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5589
+		name : "IAddSatINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5590
+		name : "UAddSatINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5591
+		name : "IAverageINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5592
+		name : "UAverageINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5593
+		name : "IAverageRoundedINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5594
+		name : "UAverageRoundedINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5595
+		name : "ISubSatINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5596
+		name : "USubSatINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5597
+		name : "IMul32x16INTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5598
+		name : "UMul32x16INTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Operand1"
+			ID "Operand2"
+		]
+	}
+	{
+		id : 5887
+		name : "LoopControlINTEL"
+		args : [
+			VAR U32 "LoopControlParams"
+		]
+	}
+	{
+		id : 5949
+		name : "FPGARegINTEL"
+		args : [
+			RTYPE
+			RST
+			ID "Result"
+			ID "Input"
+		]
+	}
+	{
+		id : 6016
+		name : "RayQueryGetRayTMinKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+		]
+	}
+	{
+		id : 6017
+		name : "RayQueryGetRayFlagsKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+		]
+	}
+	{
+		id : 6018
+		name : "RayQueryGetIntersectionTKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 6019
+		name : "RayQueryGetIntersectionInstanceCustomIndexKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 6020
+		name : "RayQueryGetIntersectionInstanceIdKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 6021
+		name : "RayQueryGetIntersectionInstanceShaderBindingTableRecordOffsetKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 6022
+		name : "RayQueryGetIntersectionGeometryIndexKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 6023
+		name : "RayQueryGetIntersectionPrimitiveIndexKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 6024
+		name : "RayQueryGetIntersectionBarycentricsKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 6025
+		name : "RayQueryGetIntersectionFrontFaceKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 6026
+		name : "RayQueryGetIntersectionCandidateAABBOpaqueKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+		]
+	}
+	{
+		id : 6027
+		name : "RayQueryGetIntersectionObjectRayDirectionKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 6028
+		name : "RayQueryGetIntersectionObjectRayOriginKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 6029
+		name : "RayQueryGetWorldRayDirectionKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+		]
+	}
+	{
+		id : 6030
+		name : "RayQueryGetWorldRayOriginKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+		]
+	}
+	{
+		id : 6031
+		name : "RayQueryGetIntersectionObjectToWorldKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+	{
+		id : 6032
+		name : "RayQueryGetIntersectionWorldToObjectKHR"
+		args : [
+			RTYPE
+			RST
+			ID "RayQuery"
+			ID "Intersection"
+		]
+	}
+]
+
+SourceLanguage : [
+	{
+		id : 0
+		name : "Unknown"
+	}
+	{
+		id : 1
+		name : "ESSL"
+	}
+	{
+		id : 2
+		name : "GLSL"
+	}
+	{
+		id : 3
+		name : "OpenCL_C"
+	}
+	{
+		id : 4
+		name : "OpenCL_CPP"
+	}
+	{
+		id : 5
+		name : "HLSL"
+	}
+	{
+		id : 6
+		name : "CPP_for_OpenCL"
+	}
+]
+
+ExecutionModel : [
+	{
+		id : 0
+		name : "Vertex"
+	}
+	{
+		id : 1
+		name : "TesselationControl"
+	}
+	{
+		id : 2
+		name : "TesselationEvaluation"
+	}
+	{
+		id : 3
+		name : "Geometry"
+	}
+	{
+		id : 4
+		name : "Fragment"
+	}
+	{
+		id : 5
+		name : "GLCompute"
+	}
+	{
+		id : 6
+		name : "Kernel"
+	}
+	{
+		id : 5267
+		name : "TaskNV"
+	}
+	{
+		id : 5268
+		name : "MeshNV"
+	}
+	{
+		id : 5313
+		name : "RayGenerationKHR"
+	}
+	{
+		id : 5314
+		name : "IntersectionKHR"
+	}
+	{
+		id : 5315
+		name : "AnyHitKHR"
+	}
+	{
+		id : 5316
+		name : "ClosestHitKHR"
+	}
+	{
+		id : 5317
+		name : "MissKHR"
+	}
+	{
+		id : 5318
+		name : "CallableKHR"
+	}
+]
+
+AddressingModel : [
+	{
+		id : 0
+		name : "Logical"
+	}
+	{
+		id : 1
+		name : "Physical32"
+	}
+	{
+		id : 2
+		name : "Physical64"
+	}
+	{
+		id : 3
+		name : "PhysicalStorageBuffer64"
+	}
+]
+
+MemoryModel : [
+	{
+		id : 0
+		name : "Simple"
+	}
+	{
+		id : 1
+		name : "GLSL450"
+	}
+	{
+		id : 2
+		name : "OpenCL"
+	}
+	{
+		id : 3
+		name : "Vulkan"
+	}
+]
+
+ExecutionMode : [
+	{
+		id : 0
+		name : "Invocations"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 1
+		name : "SpacingEqual"
+	}
+	{
+		id : 2
+		name : "SpacingFractionalEven"
+	}
+	{
+		id : 3
+		name : "SpacingFractionalOdd"
+	}
+	{
+		id : 4
+		name : "VertexOrderCw"
+	}
+	{
+		id : 5
+		name : "VertexOrderCcw"
+	}
+	{
+		id : 6
+		name : "PixelCenterInteger"
+	}
+	{
+		id : 7
+		name : "OriginUpperLeft"
+	}
+	{
+		id : 8
+		name : "OriginLowerLeft"
+	}
+	{
+		id : 9
+		name : "EarlyFragmentTests"
+	}
+	{
+		id : 10
+		name : "PointMode"
+	}
+	{
+		id : 11
+		name : "Xfb"
+	}
+	{
+		id : 12
+		name : "DepthReplacing"
+	}
+	{
+		id : 14
+		name : "DepthGreater"
+	}
+	{
+		id : 15
+		name : "DepthLess"
+	}
+	{
+		id : 16
+		name : "DepthUnchanged"
+	}
+	{
+		id : 17
+		name : "LocalSize"
+		args : [
+			U32 "X"
+			U32 "Y"
+			U32 "Z"
+		]
+	}
+	{
+		id : 18
+		name : "LocalSizeHint"
+		args : [
+			U32 "X"
+			U32 "Y"
+			U32 "Z"
+		]
+	}
+	{
+		id : 19
+		name : "InputPoints"
+	}
+	{
+		id : 20
+		name : "InputLines"
+	}
+	{
+		id : 21
+		name : "InputLinesAdjacency"
+	}
+	{
+		id : 22
+		name : "Triangles"
+	}
+	{
+		id : 23
+		name : "InputTrianglesAdjacency"
+	}
+	{
+		id : 24
+		name : "Quads"
+	}
+	{
+		id : 25
+		name : "Isolines"
+	}
+	{
+		id : 26
+		name : "OutputVertices"
+		args : [
+			U32 "VertexCount"
+		]
+	}
+	{
+		id : 27
+		name : "OutputPoints"
+	}
+	{
+		id : 28
+		name : "OutputLineStrip"
+	}
+	{
+		id : 29
+		name : "OutputTriangleStrip"
+	}
+	{
+		id : 30
+		name : "VecTypeHint"
+		args : [
+			U32 "VectorType"
+		]
+	}
+	{
+		id : 31
+		name : "ContractionOff"
+	}
+	{
+		id : 33
+		name : "Initializer"
+	}
+	{
+		id : 34
+		name : "Finalizer"
+	}
+	{
+		id : 35
+		name : "SubgroupSize"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 36
+		name : "SubgroupsPerWorkgroup"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 37
+		name : "SubgroupsPerWorkgroupId"
+		args : [
+			ID
+		]
+	}
+	{
+		id : 38
+		name : "LocalSizeId"
+		args : [
+			ID "X"
+			ID "Y"
+			ID "Z"
+		]
+	}
+	{
+		id : 39
+		name : "LocalSizeHintId"
+		args : [
+			ID "X"
+			ID "Y"
+			ID "Z"
+		]
+	}
+	{
+		id : 4421
+		name : "SubgroupUniformControlFlowKHR"
+	}
+	{
+		id : 4446
+		name : "PostDepthCoverage"
+	}
+	{
+		id : 4459
+		name : "DenormPreserve"
+		args : [
+			U32 "TargetWidth"
+		]
+	}
+	{
+		id : 4460
+		name : "DenormFlushToZero"
+		args : [
+			U32 "TargetWidth"
+		]
+	}
+	{
+		id : 461
+		name : "SignedZeroInfNanPreserve"
+		args : [
+			U32 "TargetWidth"
+		]
+	}
+	{
+		id : 4462
+		name : "RoundingModeRTE"
+		args : [
+			U32 "TargetWidth"
+		]
+	}
+	{
+		id : 4463
+		name : "RoundingModeRTZ"
+		args : [
+			U32 "TargetWidth"
+		]
+	}
+	{
+		id : 5027
+		name : "StencilRefReplacingEXT"
+	}
+	{
+		id : 5269
+		name : "OutputLinesNV"
+	}
+	{
+		id : 5270
+		name : "OutputPrimitivesNV"
+		args : [
+			U32 "PrimitiveCount"
+		]
+	}
+	{
+		id : 5289
+		name : "DerivativeGroupQuadsNV"
+	}
+	{
+		id : 5290
+		name : "DerivativeGroupLinearNV"
+	}
+	{
+		id : 5298
+		name : "OutputTrianglesNV"
+	}
+	{
+		id : 5366
+		name : "PixelInterlockOrderedEXT"
+	}
+	{
+		id : 5367
+		name : "PixelInterlockUnorderedEXT"
+	}
+	{
+		id : 5368
+		name : "SampleInterlockOrderedEXT"
+	}
+	{
+		id : 5369
+		name : "SampleInterlockUnorderedEXT"
+	}
+	{
+		id : 5370
+		name : "ShadingRateInterlockOrderedEXT"
+	}
+	{
+		id : 5371
+		name : "ShadingRateInterlockUnorderedEXT"
+	}
+	{
+		id : 5618
+		name : "SharedLocalMemorySizeINTEL"
+		args : [
+			U32 "Size"
+		]
+	}
+	{
+		id : 5620
+		name : "RoundingModeRTPINTEL"
+		args : [
+			U32 "TargetWidth"
+		]
+	}
+	{
+		id : 5621
+		name : "RoundingModeRTNINTEL"
+		args : [
+			U32 "TargetWidth"
+		]
+	}
+	{
+		id : 5622
+		name : "FloatingPointModeALTINTEL"
+		args : [
+			U32 "TargetWidth"
+		]
+	}
+	{
+		id : 5623
+		name : "FloatingPointModeIEEEINTEL"
+		args : [
+			U32 "TargetWidth"
+		]
+	}
+	{
+		id : 5893
+		name : "MaxWorkgroupSizeINTEL"
+		args : [
+			U32 "X"
+			U32 "Y"
+			U32 "Z"
+		]
+	}
+	{
+		id : 5894
+		name : "MaxWorkDimINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 5895
+		name : "NoGlobalOffsetINTEL"
+	}
+	{
+		id : 5896
+		name : "NumSIMDWorkitemsINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 5903
+		name : "SchedulerTargetFmaxMhzINTEL"
+		args : [
+			U32
+		]
+	}
+]
+
+StorageClass : [
+	{
+		id : 0
+		name : "UniformConstant"
+	}
+	{
+		id : 1
+		name : "Input"
+	}
+	{
+		id : 2
+		name : "Uniform"
+	}
+	{
+		id : 3
+		name : "Output"
+	}
+	{
+		id : 4
+		name : "Workgroup"
+	}
+	{
+		id : 5
+		name : "CrossWorkgroup"
+	}
+	{
+		id : 6
+		name : "Private"
+	}
+	{
+		id : 7
+		name : "Function"
+	}
+	{
+		id : 8
+		name : "Generic"
+	}
+	{
+		id : 9
+		name : "PushConstant"
+	}
+	{
+		id : 10
+		name : "AtomicCounter"
+	}
+	{
+		id : 11
+		name : "Image"
+	}
+	{
+		id : 12
+		name : "StorageBuffer"
+	}
+	{
+		id : 5328
+		name : "CallableDataKHR"
+	}
+	{
+		id : 5329
+		name : "IncomingCallableDataKHR"
+	}
+	{
+		id : 5338
+		name : "RayPayloadKHR"
+	}
+	{
+		id : 5339
+		name : "HitAttributeKHR"
+	}
+	{
+		id : 5342
+		name : "IncomingRayPayloadKHR"
+	}
+	{
+		id : 5343
+		name : "ShaderRecordBufferKHR"
+	}
+	{
+		id : 5349
+		name : "PhysicalStorageBuffer"
+	}
+	{
+		id : 5605
+		name : "CodeSectionINTEL"
+	}
+	{
+		id : 5936
+		name : "DeviceOnlyINTEL"
+	}
+	{
+		id : 5937
+		name : "HostOnlyINTEL"
+	}
+]
+
+Dim : [
+	{
+		id : 0
+		name : "1D"
+	}
+	{
+		id : 1
+		name : "2D"
+	}
+	{
+		id : 2
+		name : "3D"
+	}
+	{
+		id : 3
+		name : "Cube"
+	}
+	{
+		id : 4
+		name : "Rect"
+	}
+	{
+		id : 5
+		name : "Buffer"
+	}
+	{
+		id : 6
+		name : "SubpassData"
+	}
+]
+
+SamplerAddressingMode : [
+	{
+		id : 0
+		name : "None"
+	}
+	{
+		id : 1
+		name : "ClampToEdge"
+	}
+	{
+		id : 2
+		name : "Clamp"
+	}
+	{
+		id : 3
+		name : "Repeat"
+	}
+	{
+		id : 4
+		name : "RepeatMirrored"
+	}
+]
+
+SamplerFilterMode : [
+	{
+		id : 0
+		name : "Nearest"
+	}
+	{
+		id : 1
+		name : "Linear"
+	}
+]
+
+ImageFormat : [
+	{
+		id : 0
+		name : "Unknown"
+	}
+	{
+		id : 1
+		name : "Rgba32f"
+	}
+	{
+		id : 2
+		name : "Rgba16f"
+	}
+	{
+		id : 3
+		name : "R32f"
+	}
+	{
+		id : 4
+		name : "Rgba8"
+	}
+	{
+		id : 5
+		name : "Rgba8Snorm"
+	}
+	{
+		id : 6
+		name : "Rg32f"
+	}
+	{
+		id : 7
+		name : "Rg16f"
+	}
+	{
+		id : 8
+		name : "R11fG11fB10f"
+	}
+	{
+		id : 9
+		name : "R16f"
+	}
+	{
+		id : 10
+		name : "Rgba16"
+	}
+	{
+		id : 11
+		name : "Rgb10A2"
+	}
+	{
+		id : 12
+		name : "Rg16"
+	}
+	{
+		id : 13
+		name : "Rg8"
+	}
+	{
+		id : 14
+		name : "R16"
+	}
+	{
+		id : 15
+		name : "R8"
+	}
+	{
+		id : 16
+		name : "Rgba16Snorm"
+	}
+	{
+		id : 17
+		name : "Rg16Snorm"
+	}
+	{
+		id : 18
+		name : "Rg8Snorm"
+	}
+	{
+		id : 19
+		name : "R16Snorm"
+	}
+	{
+		id : 20
+		name : "R8Snorm"
+	}
+	{
+		id : 21
+		name : "Rgba32i"
+	}
+	{
+		id : 22
+		name : "Rgba16i"
+	}
+	{
+		id : 23
+		name : "Rgba8i"
+	}
+	{
+		id : 24
+		name : "R32i"
+	}
+	{
+		id : 25
+		name : "Rg32i"
+	}
+	{
+		id : 26
+		name : "Rg16i"
+	}
+	{
+		id : 27
+		name : "Rg8i"
+	}
+	{
+		id : 28
+		name : "R16i"
+	}
+	{
+		id : 29
+		name : "R8i"
+	}
+	{
+		id : 30
+		name : "Rgba32ui"
+	}
+	{
+		id : 31
+		name : "Rgba16ui"
+	}
+	{
+		id : 32
+		name : "Rgba8ui"
+	}
+	{
+		id : 33
+		name : "R32ui"
+	}
+	{
+		id : 34
+		name : "Rgb10a2ui"
+	}
+	{
+		id : 35
+		name : "Rg32ui"
+	}
+	{
+		id : 36
+		name : "Rg16ui"
+	}
+	{
+		id : 37
+		name : "Rg8ui"
+	}
+	{
+		id : 38
+		name : "R16ui"
+	}
+	{
+		id : 39
+		name : "R8ui"
+	}
+	{
+		id : 40
+		name : "R64ui"
+	}
+	{
+		id : 41
+		name : "R64i"
+	}
+]
+
+ImageChannelOrder : [
+	{
+		id : 0
+		name : "R"
+	}
+	{
+		id : 1
+		name : "A"
+	}
+	{
+		id : 2
+		name : "RG"
+	}
+	{
+		id : 3
+		name : "RA"
+	}
+	{
+		id : 4
+		name : "RGB"
+	}
+	{
+		id : 5
+		name : "RGBA"
+	}
+	{
+		id : 6
+		name : "BGRA"
+	}
+	{
+		id : 7
+		name : "ARGB"
+	}
+	{
+		id : 8
+		name : "Intensity"
+	}
+	{
+		id : 9
+		name : "Luminance"
+	}
+	{
+		id : 10
+		name : "Rx"
+	}
+	{
+		id : 11
+		name : "RGx"
+	}
+	{
+		id : 12
+		name : "RGBx"
+	}
+	{
+		id : 13
+		name : "Depth"
+	}
+	{
+		id : 14
+		name : "DepthStencil"
+	}
+	{
+		id : 15
+		name : "sRGB"
+	}
+	{
+		id : 16
+		name : "sRGBx"
+	}
+	{
+		id : 17
+		name : "sRGBA"
+	}
+	{
+		id : 18
+		name : "sBGRA"
+	}
+	{
+		id : 19
+		name : "ABGR"
+	}
+]
+
+ImageChannelDataType : [
+	{
+		id : 0
+		name : "SnormInt8"
+	}
+	{
+		id : 1
+		name : "SnormInt16"
+	}
+	{
+		id : 2
+		name : "UnormInt8"
+	}
+	{
+		id : 3
+		name : "UnormInt16"
+	}
+	{
+		id : 4
+		name : "UnormShort565"
+	}
+	{
+		id : 5
+		name : "UnormShort555"
+	}
+	{
+		id : 6
+		name : "UnormInt101010"
+	}
+	{
+		id : 7
+		name : "SignedInt8"
+	}
+	{
+		id : 8
+		name : "SignedInt16"
+	}
+	{
+		id : 9
+		name : "SignedInt32"
+	}
+	{
+		id : 10
+		name : "UnsignedInt8"
+	}
+	{
+		id : 11
+		name : "UnsignedInt16"
+	}
+	{
+		id : 12
+		name : "UnsignedInt32"
+	}
+	{
+		id : 13
+		name : "HalfFloat"
+	}
+	{
+		id : 14
+		name : "Float"
+	}
+	{
+		id : 15
+		name : "UnormInt24"
+	}
+	{
+		id : 16
+		name : "UnormInt101010_2"
+	}
+]
+
+ImageOperands : [
+	{
+		id : 0x1
+		name : "Bias"
+		args : [
+			ID
+		]
+	}
+	{
+		id : 0x2
+		name : "Lod"
+		args : [
+			ID
+		]
+	}
+	{
+		id : 0x4
+		name : "Grad"
+		args : [
+			ID "dx"
+			ID "dy"
+		]
+	}
+	{
+		id : 0x8
+		name : "ConstOffset"
+		args : [
+			ID
+		]
+	}
+	{
+		id : 0x10
+		name : "Offset"
+		args : [
+			ID
+		]
+	}
+	{
+		id : 0x20
+		name : "ConstOffsets"
+		args : [
+			ID
+		]
+	}
+	{
+		id : 0x40
+		name : "Sample"
+		args : [
+			ID "SampleCount"
+		]
+	}
+	{
+		id : 0x80
+		name : "MinLod"
+		args : [
+			ID "SampleCount"
+		]
+		
+	}
+	{
+		id : 0x100
+		name : "MakeTexelAvailable"
+		args : [
+			SCOPEID
+		]
+	}
+	{
+		id : 0x200
+		name : "MakeTexelVisible"
+		args : [
+			SCOPEID
+		]
+	}
+	{
+		id : 0x400
+		name : "NonPrivateTexel"
+	}
+	{
+		id : 0x800
+		name : "VolatileTexel"
+	}
+	{
+		id : 0x1000
+		name : "SignExtend"
+	}
+	{
+		id : 0x2000
+		name : "ZeroExtend"
+	}
+	{
+		id : 0x4000
+		name : "Nontemporal"
+	}
+	{
+		id : 0x10000
+		name : "Offsets"
+	}
+]
+
+FpFastMathMode : [
+	{
+		id : 0x0
+		name : "None"
+	}
+	{
+		id : 0x1
+		name : "NotNaN"
+	}
+	{
+		id : 0x2
+		name : "NotInf"
+	}
+	{
+		id : 0x4
+		name : "NSZ"
+	}
+	{
+		id : 0x8
+		name : "AllowRecip"
+	}
+	{
+		id : 0x10
+		name : "Fast"
+	}
+	{
+		id : 0x10000
+		name : "AllowContractFastINTEL"
+	}
+	{
+		id : 0x20000
+		name : "AllowContractReassocINTEL"
+	}
+]
+
+FpRoundingMode : [
+	{
+		id : 0
+		name : "RTE"
+	}
+	{
+		id : 1
+		name : "RTZ"
+	}
+	{
+		id : 2
+		name : "RTP"
+	}
+	{
+		id : 3
+		name : "RTN"
+	}
+]
+
+LinkageType : [
+	{
+		id : 0
+		name : "Export"
+	}
+	{
+		id : 1
+		name : "Import"
+	}
+	{
+		id : 2
+		name : "LinkOnceODR"
+	}
+]
+
+AccessQualifier : [
+	{
+		id : 0
+		name : "ReadOnly"
+	}
+	{
+		id : 1
+		name : "WriteOnly"
+	}
+	{
+		id : 2
+		name : "ReadWrite"
+	}
+]
+
+FunctionParameterAttribute : [
+	{
+		id : 0
+		name : "Zext"
+	}
+	{
+		id : 1
+		name : "Sext"
+	}
+	{
+		id : 2
+		name : "ByVal"
+	}
+	{
+		id : 3
+		name : "Sret"
+	}
+	{
+		id : 4
+		name : "NoAlias"
+	}
+	{
+		id : 5
+		name : "NoCapture"
+	}
+	{
+		id : 6
+		name : "NoWrite"
+	}
+	{
+		id : 7
+		name : "NoReadWrite"
+	}
+]
+
+Decoration : [
+	{
+		id : 0
+		name : "RelaxedPrecision"
+	}
+	{
+		id : 1
+		name : "SpecId"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 2
+		name : "Block"
+	}
+	{
+		id : 3
+		name : "BufferBlock"
+	}
+	{
+		id : 4
+		name : "RowMajor"
+	}
+	{
+		id : 5
+		name : "ColMajor"
+	}
+	{
+		id : 6
+		name : "ArrayStride"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 7
+		name : "MatrixStride"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 8
+		name : "GLSLShared"
+	}
+	{
+		id : 9
+		name : "GLSLPacked"
+	}
+	{
+		id : 10
+		name : "CPacked"
+	}
+	{
+		id : 11
+		name : "BuiltIn"
+		args : [
+			BUILTIN
+		]
+	}
+	{
+		id : 13
+		name : "NoPerspective"
+	}
+	{
+		id : 14
+		name : "Flat"
+	}
+	{
+		id : 15
+		name : "Patch"
+	}
+	{
+		id : 16
+		name : "Centroid"
+	}
+	{
+		id : 17
+		name : "Sample"
+	}
+	{
+		id : 18
+		name : "Invariant"
+	}
+	{
+		id : 19
+		name : "Restrict"
+	}
+	{
+		id : 20
+		name : "Aliased"
+	}
+	{
+		id : 21
+		name : "Volatile"
+	}
+	{
+		id : 22
+		name : "Constant"
+	}
+	{
+		id : 23
+		name : "Coherent"
+	}
+	{
+		id : 24
+		name : "NonWritable"
+	}
+	{
+		id : 25
+		name : "NonReadable"
+	}
+	{
+		id : 26
+		name : "Uniform"
+	}
+	{
+		id : 27
+		name : "UniformId"
+		args : [
+			SCOPEID
+		]
+	}
+	{
+		id : 28
+		name : "SaturatedConversion"
+	}
+	{
+		id : 29
+		name : "Stream"
+		args : [
+			U32 "StreamNumber"
+		]
+	}
+	{
+		id : 30
+		name : "Location"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 31
+		name : "Component"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 32
+		name : "Index"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 33
+		name : "Binding"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 34
+		name : "DescriptorSet"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 35
+		name : "Offset"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 36
+		name : "XfbBuffer"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 37
+		name : "XfbStride"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 38
+		name : "FuncParamAttr"
+		args : [
+			FUNCTIONPARAMETERATTRIBUTE
+		]
+	}
+	{
+		id : 39
+		name : "FPRoundingMode"
+		args : [
+			FPROUNDINGMODE
+		]
+	}
+	{
+		id : 40
+		name : "FPFastMathMode"
+		args : [
+			FPFASTMATHMODE
+		]
+	}
+	{
+		id : 41
+		name : "LinkageAttributes"
+		args : [
+			STR "Name"
+			LINKAGETYPE
+		]
+	}
+	{
+		id : 42
+		name : "NoContraction"
+	}
+	{
+		id : 43
+		name : "InputAttachmentIndex"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 44
+		name : "Alignment"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 45
+		name : "MaxByteOffset"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 46
+		name : "AlignmentId"
+		args : [
+			ID
+		]
+	}
+	{
+		id : 47
+		name : "MaxByteOffsetId"
+		args : [
+			ID
+		]
+	}
+	{
+		id : 4469
+		name : "NoSignedWrap"
+	}
+	{
+		id : 4470
+		name : "NoUnsignedWrap"
+	}
+	{
+		id : 4999
+		name : "ExplicitInterpAMD"
+	}
+	{
+		id : 5248
+		name : "OverrideCoverageNV"
+	}
+	{
+		id : 5250
+		name : "PassthroughNV"
+	}
+	{
+		id : 5252
+		name : "ViewportRelativeNV"
+	}
+	{
+		id : 5256
+		name : "SecondaryViewportRelativeNV"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 5271
+		name : "PerPrimitiveNV"
+	}
+	{
+		id : 5272
+		name : "PerViewNV"
+	}
+	{
+		id : 5273
+		name : "PerTaskNV"
+	}
+	{
+		id : 5285
+		name : "PerVertexKHR"
+	}
+	{
+		id : 5300
+		name : "NonUniform"
+	}
+	{
+		id : 5355
+		name : "RestrictPointer"
+	}
+	{
+		id : 5356
+		name : "AliasedPointer"
+	}
+	{
+		id : 5398
+		name : "BindlessSamplerNV"
+	}
+	{
+		id : 5399
+		name : "BindlessImageNV"
+	}
+	{
+		id : 5400
+		name : "BoundSamplerNV"
+	}
+	{
+		id : 5401
+		name : "BoundImageNV"
+	}
+	{
+		id : 5599
+		name : "SIMTCallINTEL"
+		args : [
+			U32 "N"
+		]
+	}
+	{
+		id : 5602
+		name : "ReferencedIndirectlyINTEL"
+	}
+	{
+		id : 5607
+		name : "ClobberINTEL"
+		args : [
+			U32 "Register"
+		]
+	}
+	{
+		id : 5608
+		name : "SideEffectsINTEL"
+	}
+	{
+		id : 5624
+		name : "VectorComputeVariableINTEL"
+	}
+	{
+		id : 5625
+		name : "FuncParamIOKindINTEL"
+		args : [
+			U32 "Kind"
+		]
+	}
+	{
+		id : 5626
+		name : "VectorComputeFunctionINTEL"
+	}
+	{
+		id : 5627
+		name : "StackCallINTEL"
+	}
+	{
+		id : 5628
+		name : "GlobalVariableOffsetINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 5634
+		name : "CounterBuffer"
+		args : [
+			ID
+		]
+	}
+	{
+		id : 5635
+		name : "UserSemantic"
+		args : [
+			STR
+		]
+	}
+	{
+		id : 5636
+		name : "UserTypeGOOGLE"
+		args : [
+			STR
+		]
+	}
+	{
+		id : 5822
+		name : "FunctionRoundingModeINTEL"
+		args : [
+			U32 "TargetWidth"
+			FPROUNDINGMODE
+		]
+	}
+	{
+		id : 5823
+		name : "FunctionDenormModeINTEL"
+		args : [
+			U32 "TargetWidth"
+			RESERVEDFPDENORMMODE
+		]
+	}
+	{
+		id : 5825
+		name : "RegisterINTEL"
+	}
+	{
+		id : 5826
+		name : "MemoryINTEL"
+		args : [
+			U32 "MemoryType"
+		]
+	}
+	{
+		id : 5827
+		name : "NumbanksINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 5828
+		name : "BankwidthINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 5829
+		name : "MaxPrivateCopiesINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 5830
+		name : "SinglepumpINTEL"
+	}
+	{
+		id : 5831
+		name : "DoublepumpINTEL"
+	}
+	{
+		id : 5832
+		name : "MaxReplicatesINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 5833
+		name : "SimpleDualPortINTEL"
+	}
+	{
+		id : 5834
+		name : "MergeINTEL"
+		args : [
+			U32 "MergeKey"
+			U32 "MergeType"
+		]
+	}
+	{
+		id : 5835
+		name : "BankBitsINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 5836
+		name : "ForcePow2DepthINTEL"
+		args : [
+			U32 "ForceKey"
+		]
+	}
+	{
+		id : 5899
+		name : "BurstCoalesceINTEL"
+	}
+	{
+		id : 5900
+		name : "CacheSizeINTEL"
+		args : [
+			U32 "Bytes"
+		]
+	}
+	{
+		id : 5901
+		name : "DontStaticallyCoalesceINTEL"
+	}
+	{
+		id : 5902
+		name : "PrefetchINTEL"
+		args : [
+			U32 "Bytes"
+		]
+	}
+	{
+		id : 5905
+		name : "StallEnableINTEL"
+	}
+	{
+		id : 5907
+		name : "FuseLoopsInFunctionINTEL"
+	}
+	{
+		id : 5921
+		name : "BufferLocationINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 5944
+		name : "IOPipeStorageINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 6080
+		name : "FunctionFloatingPointModeINTEL"
+		args : [
+			U32 "TargetWidth"
+			RESERVEDFPOPERATIONMODE
+		]
+	}
+	{
+		id : 6085
+		name : "SingleElementVectorINTEL"
+	}
+	{
+		id : 6087
+		name : "VectorComputeCallableFunctionINTEL"
+	}
+	{
+		id : 6140
+		name : "MediaBlockIOINTEL"
+	}
+]
+
+Builtin : [
+	{
+		id : 0
+		name : "Position"
+	}
+	{
+		id : 1
+		name : "PointSize"
+	}
+	{
+		id : 3
+		name : "ClipDistance"
+	}
+	{
+		id : 4
+		name : "CullDistance"
+	}
+	{
+		id : 5
+		name : "VertexId"
+	}
+	{
+		id : 6
+		name : "InstanceId"
+	}
+	{
+		id : 7
+		name : "PrimitiveId"
+	}
+	{
+		id : 8
+		name : "InvocationId"
+	}
+	{
+		id : 9
+		name : "Layer"
+	}
+	{
+		id : 10
+		name : "ViewportIndex"
+	}
+	{
+		id : 11
+		name : "TessLevelOuter"
+	}
+	{
+		id : 12
+		name : "TessLevelInner"
+	}
+	{
+		id : 13
+		name : "TessCoord"
+	}
+	{
+		id : 14
+		name : "PatchVertices"
+	}
+	{
+		id : 15
+		name : "FragCoord"
+	}
+	{
+		id : 16
+		name : "PointCoord"
+	}
+	{
+		id : 17
+		name : "FrontFacing"
+	}
+	{
+		id : 18
+		name : "SampleId"
+	}
+	{
+		id : 19
+		name : "SamplePosition"
+	}
+	{
+		id : 20
+		name : "SampleMask"
+	}
+	{
+		id : 22
+		name : "FragDepth"
+	}
+	{
+		id : 23
+		name : "HelperInvocation"
+	}
+	{
+		id : 24
+		name : "NumWorkgroups"
+	}
+	{
+		id : 25
+		name : "WorkgroupSize"
+	}
+	{
+		id : 26
+		name : "WorkgroupId"
+	}
+	{
+		id : 27
+		name : "LocalInvocationId"
+	}
+	{
+		id : 28
+		name : "GlobalInvocationId"
+	}
+	{
+		id : 29
+		name : "LocalInvocationIndex"
+	}
+	{
+		id : 30
+		name : "WorkDim"
+	}
+	{
+		id : 31
+		name : "GlobalSize"
+	}
+	{
+		id : 32
+		name : "EnqueuedWorkgroupSize"
+	}
+	{
+		id : 33
+		name : "GlobalOffset"
+	}
+	{
+		id : 34
+		name : "GlobalLinearId"
+	}
+	{
+		id : 36
+		name : "SubgroupSize"
+	}
+	{
+		id : 37
+		name : "SubgroupMaxSize"
+	}
+	{
+		id : 38
+		name : "NumSubgroups"
+	}
+	{
+		id : 39
+		name : "NumEnqueuedSubgroups"
+	}
+	{
+		id : 40
+		name : "SubgroupId"
+	}
+	{
+		id : 41
+		name : "SubgroupLocalInvocationId"
+	}
+	{
+		id : 42
+		name : "VertexIndex"
+	}
+	{
+		id : 43
+		name : "InstanceIndex"
+	}
+	{
+		id : 4416
+		name : "SubgroupEqMask"
+	}
+	{
+		id : 4417
+		name : "SubgroupGeMask"
+	}
+	{
+		id : 4418
+		name : "SubgroupGtMask"
+	}
+	{
+		id : 4419
+		name : "SubgroupLeMask"
+	}
+	{
+		id : 4420
+		name : "SubgroupLtMask"
+	}
+	{
+		id : 4424
+		name : "BaseVertex"
+	}
+	{
+		id : 4425
+		name : "BaseInstance"
+	}
+	{
+		id : 4426
+		name : "DrawIndex"
+	}
+	{
+		id : 4432
+		name : "PrimitiveShadingRateKHR"
+	}
+	{
+		id : 4438
+		name : "DeviceIndex"
+	}
+	{
+		id : 4440
+		name : "ViewIndex"
+	}
+	{
+		id : 4444
+		name : "ShadingRateKHR"
+	}
+	{
+		id : 4992
+		name : "BaryCoordNoPerspAMD"
+	}
+	{
+		id : 4993
+		name : "BaryCoordNoPerspCentroidAMD"
+	}
+	{
+		id : 4994
+		name : "BaryCoordNoPerspSampleAMD"
+	}
+	{
+		id : 4995
+		name : "BaryCoordSmoothAMD"
+	}
+	{
+		id : 4996
+		name : "BaryCoordSmoothCentroidAMD"
+	}
+	{
+		id : 4997
+		name : "BaryCoordSmoothSampleAMD"
+	}
+	{
+		id : 4998
+		name : "BaryCoordPullModelAMD"
+	}
+	{
+		id : 5014
+		name : "FragStencilRefEXT"
+	}
+	{
+		id : 5253
+		name : "ViewportMaskNV"
+	}
+	{
+		id : 5257
+		name : "SecondaryPositionNV"
+	}
+	{
+		id : 5258
+		name : "SecondaryViewportMaskNV"
+	}
+	{
+		id : 5261
+		name : "PositionPerViewNV"
+	}
+	{
+		id : 5262
+		name : "ViewportMaskPerViewNV"
+	}
+	{
+		id : 5264
+		name : "FullyCoveredEXT"
+	}
+	{
+		id : 5274
+		name : "TaskCountNV"
+	}
+	{
+		id : 5275
+		name : "PrimitiveCountNV"
+	}
+	{
+		id : 5276
+		name : "PrimitiveIndicesNV"
+	}
+	{
+		id : 5277
+		name : "ClipDistancePerViewNV"
+	}
+	{
+		id : 5278
+		name : "CullDistancePerViewNV"
+	}
+	{
+		id : 5279
+		name : "LayerPerViewNV"
+	}
+	{
+		id : 5280
+		name : "MeshViewCountNV"
+	}
+	{
+		id : 5281
+		name : "MeshViewIndicesNV"
+	}
+	{
+		id : 5286
+		name : "BaryCoordKHR"
+	}
+	{
+		id : 5287
+		name : "BaryCoordNoPerspKHR"
+	}
+	{
+		id : 5292
+		name : "FragSizeEXT"
+	}
+	{
+		id : 5293
+		name : "FragInvocationCountEXT"
+	}
+	{
+		id : 5319
+		name : "LaunchIdKHR"
+	}
+	{
+		id : 5320
+		name : "LaunchSizeKHR"
+	}
+	{
+		id : 5321
+		name : "WorldRayOriginKHR"
+	}
+	{
+		id : 5322
+		name : "WorldRayDirectionKHR"
+	}
+	{
+		id : 5323
+		name : "ObjectRayOriginKHR"
+	}
+	{
+		id : 5324
+		name : "ObjectRayDirectionKHR"
+	}
+	{
+		id : 5325
+		name : "RayTminKHR"
+	}
+	{
+		id : 5326
+		name : "RayTmaxKHR"
+	}
+	{
+		id : 5327
+		name : "InstanceCustomIndexKHR"
+	}
+	{
+		id : 5330
+		name : "ObjectToWorldKHR"
+	}
+	{
+		id : 5331
+		name : "WorldToObjectKHR"
+	}
+	{
+		id : 5332
+		name : "HitTNV"
+	}
+	{
+		id : 5333
+		name : "HitKindKHR"
+	}
+	{
+		id : 5334
+		name : "CurrentRayTimeNV"
+	}
+	{
+		id : 5351
+		name : "IncomingRayFlagsKHR"
+	}
+	{
+		id : 5352
+		name : "RayGeometryIndexKHR"
+	}
+	{
+		id : 5374
+		name : "WarpsPerSMNV"
+	}
+	{
+		id : 5375
+		name : "SMCountNV"
+	}
+	{
+		id : 5376
+		name : "WarpIDNV"
+	}
+	{
+		id : 5377
+		name : "SMIDNV"
+	}
+]
+
+SelectionControl : [
+	{
+		id : 0x0
+		name : "None"
+	}
+	{
+		id : 0x1
+		name : "Flatten"
+	}
+	{
+		id : 0x2
+		name : "DontFlatten"
+	}
+]
+
+LoopControl : [
+	{
+		id : 0x0
+		name : "None"
+	}
+	{
+		id : 0x1
+		name : "Unroll"
+	}
+	{
+		id : 0x2
+		name : "DontUnroll"
+	}
+	{
+		id : 0x4
+		name : "DependencyInfinite"
+	}
+	{
+		id : 0x8
+		name : "DependencyLength"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x10
+		name : "MinInterations"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x20
+		name : "MaxIterations"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x40
+		name : "IterationMultiple"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x80
+		name : "PeelCount"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x100
+		name : "PartialCount"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x10000
+		name : "InitiationIntervalINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x20000
+		name : "MaxConcurrencyINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x40000
+		name : "DependencyArrayINTEL"
+		args : [
+			U32 "PairCount"
+			IDU32PAIR "VariableAndLoopIterations"
+		]
+	}
+	{
+		id : 0x80000
+		name : "PipelineEnableINTEL"
+		args : [
+			U32
+		]
+		
+	}
+	{
+		id : 0x100000
+		name : "LoopCoalesceINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x200000
+		name : "MaxInterleavingINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x400000
+		name : "SpeculatedIterationsINTEL"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x800000
+		name : "NoFusionINTEL"
+	}
+	{
+		id : 0x1000000
+		name : "LoopCountINTEL"
+		args : [
+			I64 "Min"
+			I64 "Max"
+			I64 "Expected"
+		]
+	}
+]
+
+FunctionControl : [
+	{
+		id : 0x0
+		name : "None"
+	}
+	{
+		id : 0x1
+		name : "Inline"
+	}
+	{
+		id : 0x2
+		name : "DontInline"
+	}
+	{
+		id : 0x4
+		name : "Pure"
+	}
+	{
+		id : 0x8
+		name : "Const"
+	}
+	{
+		id : 0x10000
+		name : "OptNoneINTEL"
+	}
+]
+
+MemorySemantics : [
+	{
+		id : 0x0
+		name : "Relaxed"
+	}
+	{
+		id : 0x2
+		name : "Acquire"
+	}
+	{
+		id : 0x4
+		name : "Release"
+	}
+	{
+		id : 0x8
+		name : "AcquireRelease"
+	}
+	{
+		id : 0x10
+		name : "SequentiallyConsistent"
+	}
+	{
+		id : 0x40
+		name : "UniformMemory"
+	}
+	{
+		id : 0x80
+		name : "SubgroupMemory"
+	}
+	{
+		id : 0x100
+		name : "WorkgroupMemory"
+	}
+	{
+		id : 0x200
+		name : "CrossWorkgroupMemory"
+	}
+	{
+		id : 0x400
+		name : "AtomicCounterMemory"
+	}
+	{
+		id : 0x800
+		name : "ImageMemory"
+	}
+	{
+		id : 0x1000
+		name : "OutputMemory"
+	}
+	{
+		id : 0x2000
+		name : "MakeAvailable"
+	}
+	{
+		id : 0x4000
+		name : "MakeVisible"
+	}
+	{
+		id : 0x8000
+		name : "Volatile"
+	}
+]
+
+MemoryOperands : [
+	{
+		id : 0x0
+		name : "None"
+	}
+	{
+		id : 0x1
+		name : "Volatile"
+	}
+	{
+		id : 0x2
+		name : "Aligned"
+		args : [
+			U32
+		]
+	}
+	{
+		id : 0x4
+		name : "Nontemporal"
+	}
+	{
+		id : 0x8
+		name : "MakePointerAvailable"
+		args : [
+			SCOPEID
+		]
+	}
+	{
+		id : 0x10
+		name : "MakePointerVisible"
+		args : [
+			SCOPEID
+		]
+	}
+	{
+		id : 0x20
+		name : "NonPrivatePointer"
+	}
+]
+
+Scope : [
+	{
+		id : 0
+		name : "CrossDevice"
+	}
+	{
+		id : 1
+		name : "Device"
+	}
+	{
+		id : 2
+		name : "Workgroup"
+	}
+	{
+		id : 3
+		name : "Subgroup"
+	}
+	{
+		id : 4
+		name : "Invocation"
+	}
+	{
+		id : 5
+		name : "QueueFamily"
+	}
+	{
+		id : 6
+		name : "ShaderCallKHR"
+	}
+]
+
+GroupOperation : [
+	{
+		id : 0
+		name : "Reduce"
+	}
+	{
+		id : 1
+		name : "InclusiveScan"
+	}
+	{
+		id : 2
+		name : "ExclusiveScan"
+	}
+	{
+		id : 3
+		name : "ClusteredReduce"
+	}
+	{
+		id : 6
+		name : "PartitionedReduceNV"
+	}
+	{
+		id : 7
+		name : "PartitionedInclusiveScanNV"
+	}
+	{
+		id : 8
+		name : "PartitionedExclusiveScanNV"
+	}
+]
+
+KernelEnqueueFlags : [
+	{
+		id : 0
+		name : "NoWait"
+	}
+	{
+		id : 1
+		name : "WaitKernel"
+	}
+	{
+		id : 2
+		name : "WaitWorkGroup"
+	}
+]
+
+KernelProfilingInfo : [
+	{
+		id : 0x1
+		name : "CmdExecTime"
+	}
+]
+
+Capability : [
+	{
+		id : 0
+		name : "Matrix"
+	}
+	{
+		id : 1
+		name : "Shader"
+	}
+	{
+		id : 2
+		name : "Geometry"
+	}
+	{
+		id : 3
+		name : "Tesselation"
+	}
+	{
+		id : 4
+		name : "Addresses"
+	}
+	{
+		id : 5
+		name : "Linkage"
+	}
+	{
+		id : 6
+		name : "Kernel"
+	}
+	{
+		id : 7
+		name : "Vector16"
+	}
+	{
+		id : 8
+		name : "Float16Buffer"
+	}
+	{
+		id : 9
+		name : "Float16"
+	}
+	{
+		id : 10
+		name : "Float64"
+	}
+	{
+		id : 11
+		name : "Int64"
+	}
+	{
+		id : 12
+		name : "Int64Atomics"
+	}
+	{
+		id : 13
+		name : "ImageBasic"
+	}
+	{
+		id : 14
+		name : "ImageReadWrite"
+	}
+	{
+		id : 15
+		name : "ImageMipmap"
+	}
+	{
+		id : 17
+		name : "Pipes"
+	}
+	{
+		id : 18
+		name : "Groups"
+	}
+	{
+		id : 19
+		name : "DeviceEnqueue"
+	}
+	{
+		id : 20
+		name : "LiteralSampler"
+	}
+	{
+		id : 21
+		name : "AtomicStorage"
+	}
+	{
+		id : 22
+		name : "Int16"
+	}
+	{
+		id : 23
+		name : "TesselationPointSize"
+	}
+	{
+		id : 24
+		name : "GeometryPointSize"
+	}
+	{
+		id : 25
+		name : "ImageGatherExtended"
+	}
+	{
+		id : 27
+		name : "StorageImageMultisample"
+	}
+	{
+		id : 28
+		name : "UniformBufferArrayDynamicIndexing"
+	}
+	{
+		id : 29
+		name : "SampledImageArrayDynamicIndexing"
+	}
+	{
+		id : 30
+		name : "StorageBufferArrayDynamicIndexing"
+	}
+	{
+		id : 31
+		name : "StorageImageArrayDynamicIndexing"
+	}
+	{
+		id : 32
+		name : "ClipDistance"
+	}
+	{
+		id : 33
+		name : "CullDistance"
+	}
+	{
+		id : 34
+		name : "ImageCubeArray"
+	}
+	{
+		id : 35
+		name : "SampleRateShading"
+	}
+	{
+		id : 36
+		name : "ImageRect"
+	}
+	{
+		id : 37
+		name : "SampledRect"
+	}
+	{
+		id : 38
+		name : "GenericPointer"
+	}
+	{
+		id : 39
+		name : "Int8"
+	}
+	{
+		id : 40
+		name : "InputAttachment"
+	}
+	{
+		id : 41
+		name : "SparseResidency"
+	}
+	{
+		id : 42
+		name : "MinLod"
+	}
+	{
+		id : 43
+		name : "Sampled1D"
+	}
+	{
+		id : 44
+		name : "Image1D"
+	}
+	{
+		id : 45
+		name : "SampledCubeArray"
+	}
+	{
+		id : 46
+		name : "SampledBuffer"
+	}
+	{
+		id : 47
+		name : "ImageBuffer"
+	}
+	{
+		id : 48
+		name : "ImageMSArray"
+	}
+	{
+		id : 49
+		name : "StorageImageExtendedFormats"
+	}
+	{
+		id : 50
+		name : "ImageQuery"
+	}
+	{
+		id : 51
+		name : "DerivativeControl"
+	}
+	{
+		id : 52
+		name : "InterpolationFunction"
+	}
+	{
+		id : 53
+		name : "TransformFeedback"
+	}
+	{
+		id : 54
+		name : "GeometryStreams"
+	}
+	{
+		id : 55
+		name : "StorageImageReadWithoutFormat"
+	}
+	{
+		id : 56
+		name : "StorageImageWriteWithoutFormat"
+	}
+	{
+		id : 57
+		name : "MultiViewport"
+	}
+	{
+		id : 58
+		name : "SubgroupDispatch"
+	}
+	{
+		id : 59
+		name : "NamedBarrier"
+	}
+	{
+		id : 60
+		name : "PipeStorage"
+	}
+	{
+		id : 61
+		name : "GroupNonUniform"
+	}
+	{
+		id : 62
+		name : "GroupNonUniformVote"
+	}
+	{
+		id : 63
+		name : "GroupNonUniformArithmetic"
+	}
+	{
+		id : 64
+		name : "GroupNonUniformBallot"
+	}
+	{
+		id : 65
+		name : "GroupNonUniformShuffle"
+	}
+	{
+		id : 66
+		name : "GroupNonUniformShuffleRelative"
+	}
+	{
+		id : 67
+		name : "GroupNonUniformClustered"
+	}
+	{
+		id : 68
+		name : "GroupNonUniformQuad"
+	}
+	{
+		id : 69
+		name : "ShaderLayer"
+	}
+	{
+		id : 70
+		name : "ShaderViewportIndex"
+	}
+	{
+		id : 71
+		name : "UniformDecoration"
+	}
+	{
+		id : 4422
+		name : "FragmentShadingRateKHR"
+	}
+	{
+		id : 4423
+		name : "SubgroupBallotKHR"
+	}
+	{
+		id : 4427
+		name : "DrawParameters"
+	}
+	{
+		id : 4428
+		name : "WorkgroupMemoryExplicitLayoutKHR"
+	}
+	{
+		id : 4429
+		name : "WorkgroupMemoryExplicitLayout8BitAccessKHR"
+	}
+	{
+		id : 4430
+		name : "WorkgroupMemoryExplicitLayout16BitAccessKHR"
+	}
+	{
+		id : 4431
+		name : "SubgroupVoteKHR"
+	}
+	{
+		id : 4433
+		name : "StorageBuffer16BitAccess"
+	}
+	{
+		id : 4434
+		name : "UniformAndStorageBuffer16BitAcess"
+	}
+	{
+		id : 4435
+		name : "StoragePushConstant16"
+	}
+	{
+		id : 4436
+		name : "StorageInputOutput16"
+	}
+	{
+		id : 4437
+		name : "DeviceGroup"
+	}
+	{
+		id : 4439
+		name : "MultiView"
+	}
+	{
+		id : 4441
+		name : "VariablePointersStorageBuffer"
+	}
+	{
+		id : 4442
+		name : "VariablePointers"
+	}
+	{
+		id : 4445
+		name : "AtomicStorageOps"
+	}
+	{
+		id : 4447
+		name : "SampleMaskPostDepthCoverage"
+	}
+	{
+		id : 4448
+		name : "StorageBuffer8BitAcess"
+	}
+	{
+		id : 4449
+		name : "UniformAndStorageBuffer8BitAccess"
+	}
+	{
+		id : 4450
+		name : "StoragePushConstant8"
+	}
+	{
+		id : 4464
+		name : "DenormPreserve"
+	}
+	{
+		id : 4465
+		name : "DenormFlushToZero"
+	}
+	{
+		id : 4466
+		name : "SignedZeroInfNanPreserve"
+	}
+	{
+		id : 4467
+		name : "RoundingModeRTE"
+	}
+	{
+		id : 4468
+		name : "RoundingModeRTZ"
+	}
+	{
+		id : 4471
+		name : "RayQueryProvisionalKHR"
+	}
+	{
+		id : 4472
+		name : "RayQueryKHR"
+	}
+	{
+		id : 4478
+		name : "RayTraversalPrimitiveCullingKHR"
+	}
+	{
+		id : 4479
+		name : "RayTracingKHR"
+	}
+	{
+		id : 5008
+		name : "Float16ImageAMD"
+	}
+	{
+		id : 5009
+		name : "ImageGatherBiasLodAMD"
+	}
+	{
+		id : 5010
+		name : "FragmentMaskAMD"
+	}
+	{
+		id : 5013
+		name : "StencilExportEXT"
+	}
+	{
+		id : 5015
+		name : "ImageReadWriteLodAMD"
+	}
+	{
+		id : 5016
+		name : "Int64ImageEXT"
+	}
+	{
+		id : 5055
+		name : "ShaderClockKHR"
+	}
+	{
+		id : 5249
+		name : "SampleMaskOverrideCoverageNV"
+	}
+	{
+		id : 5251
+		name : "GeometryShaderPassthroughNV"
+	}
+	{
+		id : 5254
+		name : "ShaderViewportIndexLayerEXT"
+	}
+	{
+		id : 5255
+		name : "ShaderViewportMaskNV"
+	}
+	{
+		id : 5259
+		name : "ShaderStereoViewNV"
+	}
+	{
+		id : 5260
+		name : "PerViewAttributesNV"
+	}
+	{
+		id : 5265
+		name : "FragmentFullyCoveredEXT"
+	}
+	{
+		id : 5266
+		name : "MeshShadingNV"
+	}
+	{
+		id : 5282
+		name : "ImageFootprintNV"
+	}
+	{
+		id : 5284
+		name : "FragmentBarycentricKHR"
+	}
+	{
+		id : 5288
+		name : "ComputeDerivativeGroupQuadsNV"
+	}
+	{
+		id : 5291
+		name : "FragmentDensityEXT"
+	}
+	{
+		id : 5297
+		name : "GroupNonUniformPartitionedNV"
+	}
+	{
+		id : 5301
+		name : "ShaderNonUniform"
+	}
+	{
+		id : 5302
+		name : "RuntimeDescriptorArray"
+	}
+	{
+		id : 5303
+		name : "InputAttachmentArrayDynamicIndexing"
+	}
+	{
+		id : 5304
+		name : "UniformTexelBufferArrayDynamicIndexing"
+	}
+	{
+		id : 5305
+		name : "StorageTexelBufferArrayDynamicIndexing"
+	}
+	{
+		id : 5306
+		name : "UniformBufferArrayNonUniformIndexing"
+	}
+	{
+		id : 5307
+		name : "SampledImageArrayNonUniformIndexing"
+	}
+	{
+		id : 5308
+		name : "StorageBufferArrayNonUniformIndexing"
+	}
+	{
+		id : 5309
+		name : "StorageImageArrayNonUniformIndexing"
+	}
+	{
+		id : 5310
+		name : "InputAttachmentArrayNonUniformIndexing"
+	}
+	{
+		id : 5311
+		name : "UniformTexelBufferArrayNonUniformIndexing"
+	}
+	{
+		id : 5312
+		name : "StorageTexelBufferArrayNonUniformIndexing"
+	}
+	{
+		id : 5340
+		name : "RayTracingNV"
+	}
+	{
+		id : 5341
+		name : "RayTracingMotionBlurNV"
+	}
+	{
+		id : 5345
+		name : "VulkanMemoryModel"
+	}
+	{
+		id : 5346
+		name : "VulkanMemoryModelDeviceScope"
+	}
+	{
+		id : 5347
+		name : "PhysicalStorageBufferAddresses"
+	}
+	{
+		id : 5350
+		name : "ComputeDerivativeGroupLinearNV"
+	}
+	{
+		id : 5353
+		name : "RayTracingProvisionalKHR"
+	}
+	{
+		id : 5357
+		name : "CooperativeMatrixNV"
+	}
+	{
+		id : 5363
+		name : "FragmentShaderSampleInterlockEXT"
+	}
+	{
+		id : 5372
+		name : "FragmentShaderShadingRateInterlockEXT"
+	}
+	{
+		id : 5373
+		name : "ShaderSMBuiltinsNV"
+	}
+	{
+		id : 5378
+		name : "FragmentShaderPixelInterlockEXT"
+	}
+	{
+		id : 5379
+		name : "DemoteToHelperInvocation"
+	}
+	{
+		id : 5390
+		name : "BindlessTextureNV"
+	}
+	{
+		id : 5568
+		name : "SubgroupShuffleINTEL"
+	}
+	{
+		id : 5569
+		name : "SubgroupBufferBlockIOINTEL"
+	}
+	{
+		id : 5570
+		name : "SubgroupImageBlockIOINTEL"
+	}
+	{
+		id : 5579
+		name : "SubgroupImageMediaBlockIOINTEL"
+	}
+	{
+		id : 5582
+		name : "RoundToInfinityINTEL"
+	}
+	{
+		id : 5583
+		name : "FloatingPointModeINTEL"
+	}
+	{
+		id : 5584
+		name : "IntegerFunctions2INTEL"
+	}
+	{
+		id : 5603
+		name : "FunctionPointersINTEL"
+	}
+	{
+		id : 5604
+		name : "IndirectReferencesINTEL"
+	}
+	{
+		id : 5606
+		name : "AsmINTEL"
+	}
+	{
+		id : 5612
+		name : "AtomicFloat32MinMaxEXT"
+	}
+	{
+		id : 5613
+		name : "AtomicFloat64MinMaxEXT"
+	}
+	{
+		id : 5616
+		name : "AtomicFloat16MinMaxEXT"
+	}
+	{
+		id : 5617
+		name : "VectorComputeINTEL"
+	}
+	{
+		id : 5619
+		name : "VectorAnyINTEL"
+	}
+	{
+		id : 5629
+		name : "ExpectAssumeKHR"
+	}
+	{
+		id : 5696
+		name : "SubgroupAvcMotionEstimationINTEL"
+	}
+	{
+		id : 5697
+		name : "SubgroupAvcMotionEstimationIntraINTEL"
+	}
+	{
+		id : 5698
+		name : "SubgroupAvcMotionEstimationChromaINTEL"
+	}
+	{
+		id : 5817
+		name : "VariableLengthArrayINTEL"
+	}
+	{
+		id : 5821
+		name : "FunctionFloatControlINTEL"
+	}
+	{
+		id : 5824
+		name : "FPGAMemoryAttributesINTEL"
+	}
+	{
+		id : 5837
+		name : "FPFastMathModeINTEL"
+	}
+	{
+		id : 5844
+		name : "ArbitraryPrecisionIntegersINTEL"
+	}
+	{
+		id : 5845
+		name : "ArbitraryPrecisionFloatingPointINTEL"
+	}
+	{
+		id : 5886
+		name : "UnstructuredLoopControlsINTEL"
+	}
+	{
+		id : 5888
+		name : "FPGALoopControlsINTEL"
+	}
+	{
+		id : 5892
+		name : "KernelAttributesINTEL"
+	}
+	{
+		id : 5897
+		name : "FPGAKernelAttributesINTEL"
+	}
+	{
+		id : 5898
+		name : "FPGAMemoryAccessesINTEL"
+	}
+	{
+		id : 5904
+		name : "FPGAClusterAttributesINTEL"
+	}
+	{
+		id : 5906
+		name : "LoopFuseINTEL"
+	}
+	{
+		id : 5920
+		name : "FPGABufferLocationINTEL"
+	}
+	{
+		id : 5922
+		name : "ArbitraryPrecisionFixedPointINTEL"
+	}
+	{
+		id : 5935
+		name : "USMStorageClassesINTEL"
+	}
+	{
+		id : 5943
+		name : "IOPipesINTEL"
+	}
+	{
+		id : 5945
+		name : "BlockingPipesINTEL"
+	}
+	{
+		id : 5948
+		name : "FPGARegINTEL"
+	}
+	{
+		id : 6016
+		name : "DotProductInputAll"
+	}
+	{
+		id : 6017
+		name : "DotProductInput4x8Bit"
+	}
+	{
+		id : 6018
+		name : "DotProductInput4x8BitPacked"
+	}
+	{
+		id : 6019
+		name : "DotProduct"
+	}
+	{
+		id : 6025
+		name : "BitInstructions"
+	}
+	{
+		id : 6033
+		name : "AtomicFloat32AddEXT"
+	}
+	{
+		id : 6034
+		name : "AtomicFloat64AddEXT"
+	}
+	{
+		id : 6089
+		name : "LongConstantCompositeINTEL"
+	}
+	{
+		id : 6094
+		name : "OptNoneINTEL"
+	}
+	{
+		id : 6095
+		name : "AtomicFloat16AddEXT"
+	}
+	{
+		id : 6114
+		name : "DebugInfoModuleINTEL"
+	}
+]
+
+ReservedRayFlags : [
+	{
+		id : 0x0
+		name : "None"
+	}
+	{
+		id : 0x1
+		name : "OpaqueKHR"
+	}
+	{
+		id : 0x2
+		name : "NoOpaqueKHR"
+	}
+	{
+		id : 0x4
+		name : "TerminateOnFirstHitKHR"
+	}
+	{
+		id : 0x8
+		name : "SkipClosestHitShaderKHR"
+	}
+	{
+		id : 0x10
+		name : "CullBackFacingTrianglesKHR"
+	}
+	{
+		id : 0x20
+		name : "CullFrontFacingTrianglesKHR"
+	}
+	{
+		id : 0x40
+		name : "CullOpaqueKHR"
+	}
+	{
+		id : 0x80
+		name : "CullNoOpaqueKHR"
+	}
+	{
+		id : 0x100
+		name : "SkipTrianglesKHR"
+	}
+	{
+		id : 0x200
+		name : "SkipAABBsKHR"
+	}
+]
+
+ReservedRayQueryIntersection : [
+	{
+		id : 0
+		name : "RayQueryCandidateIntersectionKHR"
+	}
+	{
+		id : 1
+		name : "RayQueryCommittedIntersectionKHR"
+	}
+]
+
+ReservedRayQueryCommittedType : [
+	{
+		id : 0
+		name : "RayQueryCommittedIntersectionNoneKHR"
+	}
+	{
+		id : 1
+		name : "RayQueryCommittedIntersectionTriangleKHR"
+	}
+	{
+		id : 2
+		name : "RayQueryCommittedIntersectionGeneratedKHR"
+	}
+]
+
+ReservedRayQueryCandidateType : [
+	{
+		id : 0
+		name : "RayQueryCandidateIntersectionTriangleKHR"
+	}
+	{
+		id : 1
+		name : "RayQueryCandidateIntersectionAABBKHR"
+	}
+]
+
+ReservedFragmentShadingRate : [
+	{
+		id : 0x0
+		name : "None"
+	}
+	{
+		id : 0x1
+		name : "Vertical2Pixels"
+	}
+	{
+		id : 0x2
+		name : "Vertical4Pixels"
+	}
+	{
+		id : 0x4
+		name : "Horizontal2Pixels"
+	}
+	{
+		id : 0x8
+		name : "Horizontal4Pixels"
+	}
+]
+
+ReservedFpDenormMode : [
+	{
+		id : 0
+		name : "Preserve"
+	}
+	{
+		id : 1
+		name : "FlushToZero"
+	}
+]
+
+ReservedFpOperationMode : [
+	{
+		id : 0
+		name : "IEEE"
+	}
+	{
+		id : 1
+		name : "ALT"
+	}
+]
+
+QuantizationMode : [
+	{
+		id : 0
+		name : "TRN"
+	}
+	{
+		id : 1
+		name : "TRN_ZERO"
+	}
+	{
+		id : 2
+		name : "RND"
+	}
+	{
+		id : 3
+		name : "RND_ZERO"
+	}
+	{
+		id : 4
+		name : "RND_INF"
+	}
+	{
+		id : 5
+		name : "RND_MIN_INF"
+	}
+	{
+		id : 6
+		name : "RND_CONV"
+	}
+	{
+		id : 7
+		name : "RND_CONV_ODD"
+	}
+]
+
+OverflowMode : [
+	{
+		id : 0
+		name : "WRAP"
+	}
+	{
+		id : 1
+		name : "SAT"
+	}
+	{
+		id : 2
+		name : "SAT_ZERO"
+	}
+	{
+		id : 3
+		name : "SAT_SYM"
+	}
+]
+
+PackedVectorFormat : [
+	{
+		id : 0
+		name : "PackedVectorFormat4x8Bit"
 	}
 ]
