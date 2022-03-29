@@ -106,11 +106,11 @@ enum class pstate
 
 static uint32_t instruction_index_count = 0;
 
-static spirv_insn_index instruction_indices[65536];
+static spird::insn_index instruction_indices[65536];
 
-static spirv_data_table_header table_headers[256];
+static spird::table_header table_headers[256];
 
-static spirv_insn_index* hashtables[256];
+static spird::insn_index* hashtables[256];
 
 static void* enum_data[256];
 
@@ -171,7 +171,7 @@ public:
 		m_data[m_used - 1] = '\0';
 	}
 
-	void append(spirv_insn_argtype type) noexcept
+	void append(spird::insn_argtype type) noexcept
 	{
 		grow(1);
 
@@ -272,19 +272,19 @@ static const char* skip_whitespace(const char* str) noexcept
 
 }
 
-static void create_hashtable(uint32_t* out_table_size, spirv_insn_index** out_table, info_type_mask curr_info_mask) noexcept
+static void create_hashtable(uint32_t* out_table_size, spird::insn_index** out_table, spird::info_type_mask curr_info_mask) noexcept
 {
 	uint32_t table_size = (instruction_index_count * 3) >> 1;
 
 	if (table_size > 0xFF'FF'FF)
 		panic("Size of table is greater than maximum of 0xFFFFFF.\n");
 
-	spirv_insn_index* table = static_cast<spirv_insn_index*>(malloc(table_size * sizeof(spirv_insn_index)));
+	spird::insn_index* table = static_cast<spird::insn_index*>(malloc(table_size * sizeof(spird::insn_index)));
 
 	if (table == nullptr)
 		panic("malloc failed.\n");
 
-	memset(table, 0xFF, table_size * sizeof(spirv_insn_index));
+	memset(table, 0xFF, table_size * sizeof(spird::insn_index));
 
 	uint16_t* offsets = static_cast<uint16_t*>(malloc(table_size * sizeof(uint16_t)));
 
@@ -295,7 +295,7 @@ static void create_hashtable(uint32_t* out_table_size, spirv_insn_index** out_ta
 
 	for (uint32_t i = 0; i != instruction_index_count; ++i)
 	{
-		spirv_insn_index elem = instruction_indices[i];
+		spird::insn_index elem = instruction_indices[i];
 
 		uint32_t hash = hash_knuth(elem.opcode, table_size);
 
@@ -311,7 +311,7 @@ static void create_hashtable(uint32_t* out_table_size, spirv_insn_index** out_ta
 
 				offset = tmp_off;
 
-				spirv_insn_index tmp_ind = table[hash];
+				spird::insn_index tmp_ind = table[hash];
 
 				table[hash] = elem;
 
@@ -341,11 +341,11 @@ static void print_usage() noexcept
 	fprintf(stderr, "Usage: %s [--ignore=info[;info...]] inputfile outputfile\n", prog_name);
 }
 
-static bool parse_args(int argc, const char** argv, const char** out_input_filename, const char** out_output_filename, info_type_mask* out_ignored_info_types)
+static bool parse_args(int argc, const char** argv, const char** out_input_filename, const char** out_output_filename, spird::info_type_mask* out_ignored_info_types)
 {
 	*out_input_filename = *out_output_filename = nullptr;
 
-	*out_ignored_info_types = info_type_mask::none;
+	*out_ignored_info_types = spird::info_type_mask::none;
 
 	const char* input_filename = nullptr, * output_filename = nullptr;
 
@@ -442,7 +442,7 @@ static bool parse_args(int argc, const char** argv, const char** out_input_filen
 
 	*out_output_filename = output_filename;
 
-	*out_ignored_info_types = static_cast<info_type_mask>(ignore_mask);
+	*out_ignored_info_types = static_cast<spird::info_type_mask>(ignore_mask);
 
 	return true;
 }
@@ -453,7 +453,7 @@ int main(int argc, const char** argv)
 
 	const char* input_filename, * output_filename;
 
-	info_type_mask ignored_info_types;
+	spird::info_type_mask ignored_info_types;
 
 	if (!parse_args(argc, argv, &input_filename, &output_filename, &ignored_info_types))
 		return 1;
@@ -493,7 +493,7 @@ int main(int argc, const char** argv)
 
 	pstate state = pstate::seek_enum_open;
 
-	spirv_insn_index curr_index;
+	spird::insn_index curr_index;
 
 	uint8_t curr_argc;
 
@@ -505,7 +505,7 @@ int main(int argc, const char** argv)
 
 	uint32_t curr_enum_type;
 
-	info_type_mask curr_info_mask;
+	spird::info_type_mask curr_info_mask;
 
 	bool done = false;
 
@@ -541,7 +541,7 @@ int main(int argc, const char** argv)
 
 			curr_enum_type = table_index;
 
-			curr_info_mask = info_type_mask::none;
+			curr_info_mask = spird::info_type_mask::none;
 
 			if (table_index == ~0u)
 				parse_panic("enum-name", curr);
@@ -566,7 +566,7 @@ int main(int argc, const char** argv)
 		{
 			if (*curr == '{')
 			{
-				if ((ignored_info_types & info_type_mask::arg_all_) != info_type_mask::arg_all_)
+				if ((ignored_info_types & spird::info_type_mask::arg_all_) != spird::info_type_mask::arg_all_)
 					curr_index.byte_offset = output.reserve_byte();
 				else
 					curr_index.byte_offset = output.size();
@@ -663,11 +663,11 @@ int main(int argc, const char** argv)
 				++i;
 			}
 
-			if ((ignored_info_types & info_type_mask::name) == info_type_mask::none)
+			if ((ignored_info_types & spird::info_type_mask::name) == spird::info_type_mask::none)
 			{
 				output.append(curr, i);
 
-				curr_info_mask |= info_type_mask::name;
+				curr_info_mask |= spird::info_type_mask::name;
 			}
 
 			curr = skip_whitespace(curr + i + 1);
@@ -774,16 +774,16 @@ int main(int argc, const char** argv)
 						uint8_t argument_type_and_flags = static_cast<uint8_t>(i);
 
 						if (flag_optional)
-							i |= spirv_insn_arg_optional_bit;
+							i |= spird::insn_arg_optional_bit;
 
 						if (flag_variadic)
-							i |= spirv_insn_arg_variadic_bit;
+							i |= spird::insn_arg_variadic_bit;
 
-						if ((ignored_info_types & info_type_mask::arg_type) != info_type_mask::arg_type)
+						if ((ignored_info_types & spird::info_type_mask::arg_type) != spird::info_type_mask::arg_type)
 						{
-							output.append(static_cast<spirv_insn_argtype>(argument_type_and_flags));
+							output.append(static_cast<spird::insn_argtype>(argument_type_and_flags));
 
-							curr_info_mask |= info_type_mask::arg_type;
+							curr_info_mask |= spird::info_type_mask::arg_type;
 						}
 
 						break;
@@ -823,7 +823,7 @@ int main(int argc, const char** argv)
 					++i;
 				}
 
-				if ((ignored_info_types & info_type_mask::arg_name) == info_type_mask::none)
+				if ((ignored_info_types & spird::info_type_mask::arg_name) == spird::info_type_mask::none)
 					output.append(curr, i);
 
 				curr = skip_whitespace(curr + i + 1);
@@ -832,11 +832,11 @@ int main(int argc, const char** argv)
 			{
 				char c = '\0';
 
-				if ((ignored_info_types & info_type_mask::arg_name) != info_type_mask::arg_name)
+				if ((ignored_info_types & spird::info_type_mask::arg_name) != spird::info_type_mask::arg_name)
 				{
 					output.append(&c, 0);
 
-					curr_info_mask |= info_type_mask::arg_name;
+					curr_info_mask |= spird::info_type_mask::arg_name;
 				}
 			}
 
@@ -849,7 +849,7 @@ int main(int argc, const char** argv)
 			if (*curr != '}')
 				parse_panic("}", curr);
 
-			if ((ignored_info_types & info_type_mask::arg_all_) != info_type_mask::arg_all_)
+			if ((ignored_info_types & spird::info_type_mask::arg_all_) != spird::info_type_mask::arg_all_)
 				output.overwrite(curr_index.byte_offset, curr_argc);
 
 			instruction_indices[instruction_index_count++] = curr_index;
@@ -871,7 +871,7 @@ int main(int argc, const char** argv)
 				char* data = static_cast<char*>(output.steal(&data_bytes));
 
 				// Remove argc if enum has no arguments and argc has not already been removed due to ignored types
-				if ((curr_info_mask & info_type_mask::arg_all_) == info_type_mask::none && (ignored_info_types & info_type_mask::arg_all_) != info_type_mask::arg_all_)
+				if ((curr_info_mask & spird::info_type_mask::arg_all_) == spird::info_type_mask::none && (ignored_info_types & spird::info_type_mask::arg_all_) != spird::info_type_mask::arg_all_)
 				{
 					for (uint32_t i = 0; i != instruction_index_count; ++i)
 					{
@@ -917,7 +917,7 @@ int main(int argc, const char** argv)
 			break;
 		}
 
-	spirv_data_header file_header;
+	spird::header file_header;
 	file_header.version = 3;
 	file_header.table_count = enum_count;
 
@@ -933,7 +933,7 @@ int main(int argc, const char** argv)
 
 		table_headers[i].table_offset = table_offset;
 
-		table_offset += table_headers[i].size() * sizeof(spirv_insn_index);
+		table_offset += table_headers[i].size() * sizeof(spird::insn_index);
 	}
 
 	if (fwrite(table_headers, 1, enum_count * sizeof(table_headers[0]), output_file) != enum_count * sizeof(table_headers[0]))
@@ -952,7 +952,7 @@ int main(int argc, const char** argv)
 
 		enum_offset += enum_data_sizes[i];
 
-		if (fwrite(hashtables[i], 1, table_headers[i].size() * sizeof(spirv_insn_index), output_file) != table_headers[i].size() * sizeof(spirv_insn_index))
+		if (fwrite(hashtables[i], 1, table_headers[i].size() * sizeof(spird::insn_index), output_file) != table_headers[i].size() * sizeof(spird::insn_index))
 			panic("Could not write to file %s.\n", argv[2]);
 	}
 
