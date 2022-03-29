@@ -183,11 +183,6 @@ namespace spird
 		
 		return lhs;
 	}
-
-	inline bool operator!(const enum_flags& arg) noexcept
-	{
-		return arg != enum_flags::none;
-	}
 }
 
 #endif // SPV_DATA_DEFS_HPP_INCLUDE_GUARD
