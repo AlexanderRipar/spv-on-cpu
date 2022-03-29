@@ -918,7 +918,7 @@ int main(int argc, const char** argv)
 		}
 
 	spirv_data_header file_header;
-	file_header.version = 2;
+	file_header.version = 3;
 	file_header.table_count = enum_count;
 
 	if (fwrite(&file_header, 1, sizeof(file_header), output_file) != sizeof(file_header))
