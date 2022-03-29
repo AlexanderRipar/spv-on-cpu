@@ -124,15 +124,15 @@ int main(int argc, const char** argv)
 		}
 	}
 
-	uint32_t table_entry_cnt = reinterpret_cast<const spirv_data_table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spirv_data_header))->size();
+	uint32_t table_entry_cnt = reinterpret_cast<const spird::table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spird::file_header))->size();
 
 	fprintf(output_file, "instructions : [\n");
 
 	const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
 
-	const spirv_data_header* file_header = static_cast<const spirv_data_header*>(spv_data);
+	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
 
-	const spirv_insn_index* indices = reinterpret_cast<const spirv_insn_index*>(raw_data + sizeof(spirv_data_header) + sizeof(spirv_data_table_header) * file_header->table_count);
+	const spird::insn_index* indices = reinterpret_cast<const spird::insn_index*>(raw_data + sizeof(spird::file_header) + sizeof(spird::table_header) * file_header->table_count);
 
 	for (uint32_t i = 0; i != table_entry_cnt; ++i)
 	{
@@ -141,9 +141,9 @@ int main(int argc, const char** argv)
 		if (opcode == ~0u)
 			continue;
 
-		spirv_data_info op_data;
+		spird::data_info op_data;
 
-		if (spvcpu::result rst = get_spirv_data(spv_data, spirv_enum_id::Instruction, opcode, &op_data); rst != spvcpu::result::success)
+		if (spvcpu::result rst = get_spirv_data(spv_data, spird::enum_id::Instruction, opcode, &op_data); rst != spvcpu::result::success)
 		{
 			printf("Could not get operation data for opcode %d. (Error %d)\n", opcode, rst);
 
@@ -160,13 +160,13 @@ int main(int argc, const char** argv)
 
 			const char* varstr = "";
 
-			if (argtype & spirv_insn_arg_optional_bit)
+			if (argtype & spird::insn_arg_optional_bit)
 				optstr = "OPT ";
 
-			if (argtype & spirv_insn_arg_variadic_bit)
+			if (argtype & spird::insn_arg_variadic_bit)
 				varstr = "VAR ";
 
-			argtype &= spirv_insn_argtype_mask;
+			argtype &= spird::insn_argtype_mask;
 
 			const char* argtypename = "<Invalid>";
 
