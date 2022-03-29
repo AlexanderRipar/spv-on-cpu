@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <cstdlib>
 
-#include "spv_data_accessor.hpp"
+#include "spird_accessor.hpp"
 
 static constexpr const char* argument_type_names[]
 {
