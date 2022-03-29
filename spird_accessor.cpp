@@ -60,9 +60,9 @@ spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uin
 	for (uint32_t i = 0; i != argc; ++i)
 	{
 		if ((info_types & spird::info_type_mask::arg_type) != spird::info_type_mask::none)
-			out_data->arg_types[i] = static_cast<spird::insn_argtype>(*entry++);
+			out_data->arg_types[i] = static_cast<spird::arg_type>(*entry++);
 		else
-			out_data->arg_types[i] = spird::insn_argtype::UNKNOWN;
+			out_data->arg_types[i] = spird::arg_type::UNKNOWN;
 
 		if ((info_types & spird::info_type_mask::arg_all_) == spird::info_type_mask::arg_name)
 		{

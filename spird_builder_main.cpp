@@ -171,7 +171,7 @@ public:
 		m_data[m_used - 1] = '\0';
 	}
 
-	void append(spird::insn_argtype type) noexcept
+	void append(spird::arg_type type) noexcept
 	{
 		grow(1);
 
@@ -781,7 +781,7 @@ int main(int argc, const char** argv)
 
 						if ((ignored_info_types & spird::info_type_mask::arg_type) != spird::info_type_mask::arg_type)
 						{
-							output.append(static_cast<spird::insn_argtype>(argument_type_and_flags));
+							output.append(static_cast<spird::arg_type>(argument_type_and_flags));
 
 							curr_info_mask |= spird::info_type_mask::arg_type;
 						}

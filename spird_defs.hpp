@@ -76,7 +76,7 @@ namespace spird
 	
 	static constexpr uint8_t enum_id_count = 41;
 
-	enum class insn_argtype : uint8_t
+	enum class arg_type : uint8_t
 	{
 		INSTRUCTION                   = 0,
 		SOURCELANGUAGE                = 1,

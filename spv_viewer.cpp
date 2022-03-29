@@ -296,13 +296,13 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 			++present_argc;
 
-			spird::insn_argtype arg_type = static_cast<spird::insn_argtype>(static_cast<uint8_t>(op_data.arg_types[i]) & spird::insn_argtype_mask);
+			spird::arg_type arg_type = static_cast<spird::arg_type>(static_cast<uint8_t>(op_data.arg_types[i]) & spird::insn_argtype_mask);
 
 			arg_inds[i] = static_cast<uint16_t>(operand_word_index);
 
 			switch (arg_type)
 			{
-			case spird::insn_argtype::RST:
+			case spird::arg_type::RST:
 			{
 				result_index = operand_word_index;
 
@@ -310,7 +310,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 				break;
 			}
-			case spird::insn_argtype::RTYPE:
+			case spird::arg_type::RTYPE:
 			{
 				result_type_index = operand_word_index;
 
@@ -318,22 +318,22 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 				break;
 			}
-			case spird::insn_argtype::ID:
-			case spird::insn_argtype::TYPID:
-			case spird::insn_argtype::U32:
-			case spird::insn_argtype::MEMBER:
+			case spird::arg_type::ID:
+			case spird::arg_type::TYPID:
+			case spird::arg_type::U32:
+			case spird::arg_type::MEMBER:
 			{
 				++operand_word_index;
 
 				break;
 			}
-			case spird::insn_argtype::LITERAL:
+			case spird::arg_type::LITERAL:
 			{
 				operand_word_index += static_cast<uint32_t>(wordcount - 1);
 
 				break;
 			}
-			case spird::insn_argtype::STR:
+			case spird::arg_type::STR:
 			{
 				const char* str = reinterpret_cast<const char*>(shader_words + word_index + operand_word_index);
 
@@ -341,7 +341,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 				break;
 			}
-			case spird::insn_argtype::ARG:
+			case spird::arg_type::ARG:
 			{
 				// ARG only ever comes at the end of an instruction, 
 				// so we can just assume that this completes the instruction wordcount
@@ -350,9 +350,9 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 				break;
 			}
-			case spird::insn_argtype::U32IDPAIR:
-			case spird::insn_argtype::IDMEMBERPAIR:
-			case spird::insn_argtype::IDIDPAIR:
+			case spird::arg_type::U32IDPAIR:
+			case spird::arg_type::IDMEMBERPAIR:
+			case spird::arg_type::IDIDPAIR:
 			{
 				operand_word_index += 2;
 
@@ -434,18 +434,18 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 				while (n < end_cond)
 				{
-					switch (static_cast<spird::insn_argtype>(argtype_raw))
+					switch (static_cast<spird::arg_type>(argtype_raw))
 					{
-					case spird::insn_argtype::RST:
-					case spird::insn_argtype::RTYPE:
-					case spird::insn_argtype::ARG:
+					case spird::arg_type::RST:
+					case spird::arg_type::RTYPE:
+					case spird::arg_type::ARG:
 					{
 						++n;
 
 						break;
 					}
-					case spird::insn_argtype::U32:
-					case spird::insn_argtype::LITERAL:
+					case spird::arg_type::U32:
+					case spird::arg_type::LITERAL:
 					{
 						// TODO: Non-32-bit Literals
 
@@ -456,8 +456,8 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 						break;
 					}
-					case spird::insn_argtype::ID:
-					case spird::insn_argtype::TYPID:
+					case spird::arg_type::ID:
+					case spird::arg_type::TYPID:
 					{
 						if (result rst = output.append_id(static_cast<const uint32_t*>(arg_ptr)[n]); rst != result::success)
 							return rst;
@@ -466,7 +466,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 						break;
 					}
-					case spird::insn_argtype::STR:
+					case spird::arg_type::STR:
 					{
 						const char* str = reinterpret_cast<const char*>(static_cast<const uint32_t*>(arg_ptr) + n);
 
@@ -477,7 +477,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 						break;
 					}
-					case spird::insn_argtype::MEMBER:
+					case spird::arg_type::MEMBER:
 					{
 						if (result rst = output.append_member(static_cast<const uint32_t*>(arg_ptr)[n]); rst != result::success)
 							return rst;
@@ -486,7 +486,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 						break;
 					}
-					case spird::insn_argtype::U32IDPAIR:
+					case spird::arg_type::U32IDPAIR:
 					{
 						if (result rst = output.append_u32(static_cast<const uint32_t*>(arg_ptr)[n]); rst != result::success)
 							return rst;
@@ -498,7 +498,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 						break;
 					}
-					case spird::insn_argtype::IDMEMBERPAIR:
+					case spird::arg_type::IDMEMBERPAIR:
 					{
 						if (result rst = output.append_id(static_cast<const uint32_t*>(arg_ptr)[n]); rst != result::success)
 							return rst;
@@ -510,7 +510,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 						break;
 					}
-					case spird::insn_argtype::IDIDPAIR:
+					case spird::arg_type::IDIDPAIR:
 					{
 						if (result rst = output.append_id(static_cast<const uint32_t*>(arg_ptr)[n]); rst != result::success)
 							return rst;

@@ -14,7 +14,7 @@ namespace spird
 
 		uint32_t argc;
 
-		spird::insn_argtype arg_types[256];
+		spird::arg_type arg_types[256];
 
 		const char* arg_names[256];
 	};
