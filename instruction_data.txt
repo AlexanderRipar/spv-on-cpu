@@ -6063,7 +6063,7 @@ ImageChannelDataType : [
 	}
 ]
 
-ImageOperands : [
+ImageOperands@BITMASK : [
 	{
 		id : 0x1
 		name : "Bias"
@@ -6170,7 +6170,7 @@ ImageOperands : [
 	}
 ]
 
-FpFastMathMode : [
+FpFastMathMode@BITMASK : [
 	{
 		id : 0x0
 		name : "None"
@@ -7437,7 +7437,7 @@ Builtin : [
 	}
 ]
 
-SelectionControl : [
+SelectionControl@BITMASK : [
 	{
 		id : 0x0
 		name : "None"
@@ -7452,7 +7452,7 @@ SelectionControl : [
 	}
 ]
 
-LoopControl : [
+LoopControl@BITMASK : [
 	{
 		id : 0x0
 		name : "None"
@@ -7585,7 +7585,7 @@ LoopControl : [
 	}
 ]
 
-FunctionControl : [
+FunctionControl@BITMASK : [
 	{
 		id : 0x0
 		name : "None"
@@ -7613,7 +7613,7 @@ FunctionControl : [
 	}
 ]
 
-MemorySemantics : [
+MemorySemantics@BITMASK : [
 	{
 		id : 0x0
 		name : "Relaxed"
@@ -7682,7 +7682,7 @@ MemorySemantics : [
 	}
 ]
 
-MemoryOperands : [
+MemoryOperands@BITMASK : [
 	{
 		id : 0x0
 		name : "None"
@@ -7814,7 +7814,7 @@ KernelEnqueueFlags : [
 	}
 ]
 
-KernelProfilingInfo : [
+KernelProfilingInfo@BITMASK : [
 	{
 		id : 0x1
 		name : "CmdExecTime"
@@ -8712,7 +8712,7 @@ Capability : [
 	}
 ]
 
-ReservedRayFlags : [
+ReservedRayFlags@BITMASK : [
 	{
 		id : 0x0
 		name : "None"
@@ -8813,7 +8813,7 @@ ReservedRayQueryCandidateType : [
 	}
 ]
 
-ReservedFragmentShadingRate : [
+ReservedFragmentShadingRate@BITMASK : [
 	{
 		id : 0x0
 		name : "None"
