@@ -596,6 +596,12 @@ int main(int argc, const char** argv)
 			{
 				curr_index.byte_offset = output.reserve_byte();
 
+				curr_argc = 0;
+
+				prev_arg_was_optional = false;
+
+				prev_arg_was_variadic = false;
+
 				state = pstate::elem_id;
 			}
 			else if (*curr == ']')
@@ -704,12 +710,6 @@ int main(int argc, const char** argv)
 
 				if (*curr != '[')
 					parse_panic("[", curr);
-
-				curr_argc = 0;
-
-				prev_arg_was_optional = false;
-
-				prev_arg_was_variadic = false;
 
 				curr = skip_whitespace(curr + 1);
 
