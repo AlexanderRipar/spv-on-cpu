@@ -272,7 +272,7 @@ static const char* skip_whitespace(const char* str) noexcept
 
 }
 
-static void create_hashtable(uint32_t* out_table_size, spird::insn_index** out_table, spird::info_type_mask curr_info_mask) noexcept
+static void create_hashtable(uint32_t* out_table_size, spird::insn_index** out_table) noexcept
 {
 	uint32_t table_size = (instruction_index_count * 3) >> 1;
 
@@ -331,7 +331,7 @@ static void create_hashtable(uint32_t* out_table_size, spird::insn_index** out_t
 		offsets[hash] = offset;
 	}
 
-	*out_table_size = table_size | (static_cast<uint32_t>(curr_info_mask) << 24);
+	*out_table_size = table_size;
 
 	*out_table = table;
 }
@@ -341,11 +341,11 @@ static void print_usage() noexcept
 	fprintf(stderr, "Usage: %s [--ignore=info[;info...]] inputfile outputfile\n", prog_name);
 }
 
-static bool parse_args(int argc, const char** argv, const char** out_input_filename, const char** out_output_filename, spird::info_type_mask* out_ignored_info_types)
+static bool parse_args(int argc, const char** argv, const char** out_input_filename, const char** out_output_filename, spird::data_mode* out_mode)
 {
 	*out_input_filename = *out_output_filename = nullptr;
 
-	*out_ignored_info_types = spird::info_type_mask::none;
+	*out_mode = spird::data_mode::all;
 
 	const char* input_filename = nullptr, * output_filename = nullptr;
 
@@ -363,62 +363,37 @@ static bool parse_args(int argc, const char** argv, const char** out_input_filen
 		return false;
 	}
 
+	uint32_t mode_index = ~0u;
+
 	for (uint32_t i = 1; i != argc; ++i)
 	{
-		if (strncmp(argv[i], ignore_type_string, strlen(ignore_type_string)) == 0)
+		if (argv[i][0] == '-')
 		{
-			const char* str = argv[i] + strlen(ignore_type_string);
-
-			while (*str != '\0')
+			for (uint32_t j = 0; j != _countof(data_type_strings); ++j)
 			{
-				uint32_t arg_len = 0;
-
-				while (str[arg_len] != ':' && str[arg_len] != '\0')
-					++arg_len;
-
-				uint32_t ignore_idx = ~0u;
-
-				for (uint32_t j = 0; j != _countof(ignore_type_name_strings); ++j)
-					if (strncmp(str, ignore_type_name_strings[j], arg_len) == 0)
+				if (strcmp(argv[i], data_type_strings[j]) == 0)
+				{
+					if (mode_index != ~0u)
 					{
-						ignore_idx = j;
+						fprintf(stderr, "More than one of --for-[all|disassembly|debugging] specified.\n");
 
-						break;
+						return false;
 					}
 
-				if (ignore_idx == ~0u)
-				{
-					fprintf(stderr, "Unexpected ignore type '%.*s'. Valid ignore types are:\n\t", arg_len, str);
+					mode_index = j;
 
-					for (uint32_t j = 0; j != _countof(ignore_type_name_strings); ++j)
-					{
-						fprintf(stderr, "'%s'%s", ignore_type_name_strings[j], j == _countof(ignore_type_name_strings) - 1 ? "\n" : ", ");
-					}
-
-					fprintf(stderr, "More than one ignore type can be specified by separating types with ';'.\n");
-
-					return false;
+					break;
 				}
-
-				if (ignore_mask & (1 << ignore_idx))
-				{
-					fprintf(stderr, "ignore type '%s' specified more than once.\n", ignore_type_name_strings[ignore_idx]);
-
-					return false;
-				}
-
-				ignore_mask |= 1 << ignore_idx;
-
-				str += arg_len + (str[arg_len] == ':');
 			}
-		}
-		else if (argv[i][0] == '-')
-		{
-			fprintf(stderr, "Unknown option '%s'.\n", argv[i]);
 
-			print_usage();
+			if (mode_index == ~0u)
+			{
+				fprintf(stderr, "Unknown option '%s'.\n", argv[i]);
 
-			return false;
+				print_usage();
+
+				return false;
+			}
 		}
 		else if (input_filename == nullptr)
 		{
@@ -442,7 +417,7 @@ static bool parse_args(int argc, const char** argv, const char** out_input_filen
 
 	*out_output_filename = output_filename;
 
-	*out_ignored_info_types = static_cast<spird::info_type_mask>(ignore_mask);
+	*out_mode = mode_index == ~0u ? spird::data_mode::all : static_cast<spird::data_mode>(mode_index);
 
 	return true;
 }
@@ -453,9 +428,9 @@ int main(int argc, const char** argv)
 
 	const char* input_filename, * output_filename;
 
-	spird::info_type_mask ignored_info_types;
+	spird::data_mode mode;
 
-	if (!parse_args(argc, argv, &input_filename, &output_filename, &ignored_info_types))
+	if (!parse_args(argc, argv, &input_filename, &output_filename, &mode))
 		return 1;
 
 	FILE* input_file;
@@ -505,8 +480,6 @@ int main(int argc, const char** argv)
 
 	uint32_t curr_enum_type;
 
-	spird::info_type_mask curr_info_mask;
-
 	bool done = false;
 
 	while (!done)
@@ -541,8 +514,6 @@ int main(int argc, const char** argv)
 
 			curr_enum_type = table_index;
 
-			curr_info_mask = spird::info_type_mask::none;
-
 			if (table_index == ~0u)
 				parse_panic("enum-name", curr);
 
@@ -566,10 +537,7 @@ int main(int argc, const char** argv)
 		{
 			if (*curr == '{')
 			{
-				if ((ignored_info_types & spird::info_type_mask::arg_all_) != spird::info_type_mask::arg_all_)
-					curr_index.byte_offset = output.reserve_byte();
-				else
-					curr_index.byte_offset = output.size();
+				curr_index.byte_offset = output.reserve_byte();
 
 				state = pstate::seek_insn_opcode;
 			}
@@ -663,12 +631,8 @@ int main(int argc, const char** argv)
 				++i;
 			}
 
-			if ((ignored_info_types & spird::info_type_mask::name) == spird::info_type_mask::none)
-			{
+			if (mode == spird::data_mode::all || mode == spird::data_mode::disassembly)
 				output.append(curr, i);
-
-				curr_info_mask |= spird::info_type_mask::name;
-			}
 
 			curr = skip_whitespace(curr + i + 1);
 
@@ -779,12 +743,7 @@ int main(int argc, const char** argv)
 						if (flag_variadic)
 							i |= spird::insn_arg_variadic_bit;
 
-						if ((ignored_info_types & spird::info_type_mask::arg_type) != spird::info_type_mask::arg_type)
-						{
-							output.append(static_cast<spird::arg_type>(argument_type_and_flags));
-
-							curr_info_mask |= spird::info_type_mask::arg_type;
-						}
+						output.append(static_cast<spird::arg_type>(argument_type_and_flags));
 
 						break;
 					}
@@ -823,7 +782,7 @@ int main(int argc, const char** argv)
 					++i;
 				}
 
-				if ((ignored_info_types & spird::info_type_mask::arg_name) == spird::info_type_mask::none)
+				if (mode == spird::data_mode::all || mode == spird::data_mode::disassembly)
 					output.append(curr, i);
 
 				curr = skip_whitespace(curr + i + 1);
@@ -832,12 +791,8 @@ int main(int argc, const char** argv)
 			{
 				char c = '\0';
 
-				if ((ignored_info_types & spird::info_type_mask::arg_name) != spird::info_type_mask::arg_name)
-				{
+				if (mode == spird::data_mode::all || mode == spird::data_mode::disassembly)
 					output.append(&c, 0);
-
-					curr_info_mask |= spird::info_type_mask::arg_name;
-				}
 			}
 
 			state = pstate::seek_args_type;
@@ -849,8 +804,7 @@ int main(int argc, const char** argv)
 			if (*curr != '}')
 				parse_panic("}", curr);
 
-			if ((ignored_info_types & spird::info_type_mask::arg_all_) != spird::info_type_mask::arg_all_)
-				output.overwrite(curr_index.byte_offset, curr_argc);
+			output.overwrite(curr_index.byte_offset, curr_argc);
 
 			instruction_indices[instruction_index_count++] = curr_index;
 
@@ -864,33 +818,9 @@ int main(int argc, const char** argv)
 		{
 			if (instruction_index_count != 0)
 			{
-				create_hashtable(&table_headers[curr_enum_type].table_size_and_types, &hashtables[curr_enum_type], curr_info_mask);
+				create_hashtable(&table_headers[curr_enum_type].size, &hashtables[curr_enum_type]);
 
-				uint32_t data_bytes;
-
-				char* data = static_cast<char*>(output.steal(&data_bytes));
-
-				// Remove argc if enum has no arguments and argc has not already been removed due to ignored types
-				if ((curr_info_mask & spird::info_type_mask::arg_all_) == spird::info_type_mask::none && (ignored_info_types & spird::info_type_mask::arg_all_) != spird::info_type_mask::arg_all_)
-				{
-					for (uint32_t i = 0; i != instruction_index_count; ++i)
-					{
-						uint32_t beg = instruction_indices[i].byte_offset;
-
-						uint32_t end = i == instruction_index_count - 1 ? beg + output.size() : instruction_indices[i + 1].byte_offset;
-
-						for (uint32_t j = beg; j != end; ++j)
-							data[j - i] = data[j];
-
-						instruction_indices[i].byte_offset -= i;
-					}
-
-					data_bytes -= instruction_index_count;
-				}
-
-				enum_data[curr_enum_type] = data;
-
-				enum_data_sizes[curr_enum_type] = data_bytes;
+				enum_data[curr_enum_type] = output.steal(&enum_data_sizes[curr_enum_type]);
 
 				instruction_index_count = 0;
 			}
@@ -910,7 +840,7 @@ int main(int argc, const char** argv)
 	uint32_t enum_count = 0;
 
 	for (uint32_t i = _countof(table_headers); i != 0; --i)
-		if (table_headers[i - 1].size() != 0)
+		if (table_headers[i - 1].size != 0)
 		{
 			enum_count = i;
 
@@ -918,7 +848,7 @@ int main(int argc, const char** argv)
 		}
 
 	spird::file_header file_header;
-	file_header.version = 3;
+	file_header.version = 4 + static_cast<uint32_t>(mode);
 	file_header.table_count = enum_count;
 
 	if (fwrite(&file_header, 1, sizeof(file_header), output_file) != sizeof(file_header))
@@ -928,12 +858,12 @@ int main(int argc, const char** argv)
 
 	for (uint32_t i = 0; i != enum_count; ++i)
 	{
-		if (table_headers[i].size() == 0)
+		if (table_headers[i].size == 0)
 			continue;
 
-		table_headers[i].table_offset = table_offset;
+		table_headers[i].offset = table_offset;
 
-		table_offset += table_headers[i].size() * sizeof(spird::insn_index);
+		table_offset += table_headers[i].size * sizeof(spird::insn_index);
 	}
 
 	if (fwrite(table_headers, 1, enum_count * sizeof(table_headers[0]), output_file) != enum_count * sizeof(table_headers[0]))
@@ -946,13 +876,13 @@ int main(int argc, const char** argv)
 		if (hashtables[i] == nullptr)
 			continue;
 
-		for (uint32_t j = 0; j != table_headers[i].size(); ++j)
+		for (uint32_t j = 0; j != table_headers[i].size; ++j)
 			if (hashtables[i][j].opcode != ~0u)
 				hashtables[i][j].byte_offset += enum_offset;
 
 		enum_offset += enum_data_sizes[i];
 
-		if (fwrite(hashtables[i], 1, table_headers[i].size() * sizeof(spird::insn_index), output_file) != table_headers[i].size() * sizeof(spird::insn_index))
+		if (fwrite(hashtables[i], 1, table_headers[i].size * sizeof(spird::insn_index), output_file) != table_headers[i].size * sizeof(spird::insn_index))
 			panic("Could not write to file %s.\n", argv[2]);
 	}
 

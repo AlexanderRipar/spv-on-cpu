@@ -124,7 +124,7 @@ int main(int argc, const char** argv)
 		}
 	}
 
-	uint32_t table_entry_cnt = reinterpret_cast<const spird::table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spird::file_header))->size();
+	uint32_t table_entry_cnt = reinterpret_cast<const spird::table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spird::file_header))->size;
 
 	fprintf(output_file, "instructions : [\n");
 

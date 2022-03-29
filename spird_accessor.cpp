@@ -12,59 +12,55 @@ spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uin
 
 	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
 
-	if (file_header->version != 3)
+	if (file_header->version < 4 || file_header->version > 6)
 		return spvcpu::result::spirv_data_unknown_version;
+
+	const spird::data_mode mode = static_cast<spird::data_mode>(file_header->version - 4);
 
 	if (enum_id_uint > file_header->table_count)
 		return spvcpu::result::spirv_data_enumeration_not_found;
 
 	const spird::table_header* instruction_table_header = reinterpret_cast<const spird::table_header*>(raw_data + sizeof(spird::file_header)) + enum_id_uint;
 
-	const spird::insn_index* instruction_table = reinterpret_cast<const spird::insn_index*>(raw_data + instruction_table_header->table_offset);
+	const spird::insn_index* instruction_table = reinterpret_cast<const spird::insn_index*>(raw_data + instruction_table_header->offset);
 
-	uint32_t hash = hash_knuth(id, instruction_table_header->size());
+	uint32_t hash = hash_knuth(id, instruction_table_header->size);
 
 	while (instruction_table[hash].opcode != id)
 	{
 		++hash;
 
-		if (hash >= instruction_table_header->size())
+		if (hash >= instruction_table_header->size)
 			return spvcpu::result::unknown_opcode;
 	}
 
 	uint32_t offset = instruction_table[hash].byte_offset;
 
-	spird::info_type_mask info_types = instruction_table_header->types();
-
 	const char* entry = reinterpret_cast<const char*>(raw_data + offset);
 
-	uint32_t argc = 0;
-
-	if ((info_types & spird::info_type_mask::arg_all_) != spird::info_type_mask::none)
-		argc = static_cast<uint32_t>(*entry++);
+	uint32_t argc = static_cast<uint32_t>(*entry++);
 
 	if (argc > 256)
 		return spvcpu::result::too_many_instruction_args;
 
-	if ((info_types & spird::info_type_mask::name) != spird::info_type_mask::none)
+	if (mode == spird::data_mode::all || mode == spird::data_mode::disassembly)
 	{
-			out_data->name = reinterpret_cast<const char*>(entry);
+		out_data->name = reinterpret_cast<const char*>(entry);
 
-			entry += strlen(entry) + 1;
+		entry += strlen(entry) + 1;
 	}
 	else
+	{
 		out_data->name = nullptr;
+	}
 
 	out_data->argc = argc;
 
 	for (uint32_t i = 0; i != argc; ++i)
 	{
-		if ((info_types & spird::info_type_mask::arg_type) != spird::info_type_mask::none)
-			out_data->arg_types[i] = static_cast<spird::arg_type>(*entry++);
-		else
-			out_data->arg_types[i] = spird::arg_type::UNKNOWN;
+		out_data->arg_types[i] = static_cast<spird::arg_type>(*entry++);
 
-		if ((info_types & spird::info_type_mask::arg_all_) == spird::info_type_mask::arg_name)
+		if (mode == spird::data_mode::all || mode == spird::data_mode::disassembly)
 		{
 			out_data->arg_names[i] = entry[0] == '\0' ? nullptr : entry;
 
