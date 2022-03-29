@@ -64,205 +64,7 @@ static constexpr const char* argument_type_names[]
 	"I64",
 };
 
-constexpr const char* const capability_name_strings[]
-{
-	"Matrix",
-	"Shader",
-	"Geometry",
-	"Tesselation",
-	"Addresses",
-	"Linkage",
-	"Kernel",
-	"Vector16",
-	"Float16Buffer",
-	"Float16",
-	"Float64",
-	"Int64",
-	"Int64Atomics",
-	"ImageBasic",
-	"ImageReadWrite",
-	"ImageMipmap",
-	"Pipes",
-	"Groups",
-	"DeviceEnqueue",
-	"LiteralSampler",
-	"AtomicStorage",
-	"Int16",
-	"TesselationPointSize",
-	"GeometryPointSize",
-	"ImageGatherExtended",
-	"StorageImageMultisample",
-	"UniformBufferArrayDynamicIndexing",
-	"SampledImageArrayDynamicIndexing",
-	"StorageBufferArrayDynamicIndexing",
-	"StorageImageArrayDynamicIndexing",
-	"ClipDistance",
-	"CullDistance",
-	"ImageCubeArray",
-	"SampleRateShading",
-	"ImageRect",
-	"SampledRect",
-	"GenericPointer",
-	"Int8",
-	"InputAttachment",
-	"SparseResidency",
-	"MinLod",
-	"Sampled1D",
-	"Image1D",
-	"SampledCubeArray",
-	"SampledBuffer",
-	"ImageBuffer",
-	"ImageMSArray",
-	"StorageImageExtendedFormats",
-	"ImageQuery",
-	"DerivativeControl",
-	"InterpolationFunction",
-	"TransformFeedback",
-	"GeometryStreams",
-	"StorageImageReadWithoutFormat",
-	"StorageImageWriteWithoutFormat",
-	"MultiViewport",
-	"SubgroupDispatch",
-	"NamedBarrier",
-	"PipeStorage",
-	"GroupNonUniform",
-	"GroupNonUniformVote",
-	"GroupNonUniformArithmetic",
-	"GroupNonUniformBallot",
-	"GroupNonUniformShuffle",
-	"GroupNonUniformShuffleRelative",
-	"GroupNonUniformClustered",
-	"GroupNonUniformQuad",
-	"ShaderLayer",
-	"ShaderViewportIndex",
-	"UniformDecoration",
-	"FragmentShadingRateKHR",
-	"SubgroupBallotKHR",
-	"DrawParameters",
-	"WorkgroupMemoryExplicitLayoutKHR",
-	"WorkgroupMemoryExplicitLayout8BitAccessKHR",
-	"WorkgroupMemoryExplicitLayout16BitAccessKHR",
-	"SubgroupVoteKHR",
-	"StorageBuffer16BitAccess",
-	"UniformAndStorageBuffer16BitAcess",
-	"StoragePushConstant16",
-	"StorageInputOutput16",
-	"DeviceGroup",
-	"MultiView",
-	"VariablePointersStorageBuffer",
-	"VariablePointers",
-	"AtomicStorageOps",
-	"SampleMaskPostDepthCoverage",
-	"StorageBuffer8BitAcess",
-	"UniformAndStorageBuffer8BitAccess",
-	"StoragePushConstant8",
-	"DenormPreserve",
-	"DenormFlushToZero",
-	"SignedZeroInfNanPreserve",
-	"RoundingModeRTE",
-	"RoundingModeRTZ",
-	"RayQueryProvisionalKHR",
-	"RayQueryKHR",
-	"RayTraversalPrimitiveCullingKHR",
-	"RayTracingKHR",
-	"Float16ImageAMD",
-	"ImageGatherBiasLodAMD",
-	"FragmentMaskAMD",
-	"StencilExportEXT",
-	"ImageReadWriteLodAMD",
-	"Int64ImageEXT",
-	"ShaderClockKHR",
-	"SampleMaskOverrideCoverageNV",
-	"GeometryShaderPassthroughNV",
-	"ShaderViewportIndexLayerEXT",
-	"ShaderViewportMaskNV",
-	"ShaderStereoViewNV",
-	"PerViewAttributesNV",
-	"FragmentFullyCoveredEXT",
-	"MeshShadingNV",
-	"ImageFootprintNV",
-	"FragmentBarycentricKHR",
-	"ComputeDerivativeGroupQuadsNV",
-	"FragmentDensityEXT",
-	"GroupNonUniformPartitionedNV",
-	"ShaderNonUniform",
-	"RuntimeDescriptorArray",
-	"InputAttachmentArrayDynamicIndexing",
-	"UniformTexelBufferArrayDynamicIndexing",
-	"StorageTexelBufferArrayDynamicIndexing",
-	"UniformBufferArrayNonUniformIndexing",
-	"SampledImageArrayNonUniformIndexing",
-	"StorageBufferArrayNonUniformIndexing",
-	"StorageImageArrayNonUniformIndexing",
-	"InputAttachmentArrayNonUniformIndexing",
-	"UniformTexelBufferArrayNonUniformIndexing",
-	"StorageTexelBufferArrayNonUniformIndexing",
-	"RayTracingNV",
-	"RayTracingMotionBlurNV",
-	"VulkanMemoryModel",
-	"VulkanMemoryModelDeviceScope",
-	"PhysicalStorageBufferAddresses",
-	"ComputeDerivativeGroupLinearNV",
-	"RayTracingProvisionalKHR",
-	"CooperativeMatrixNV",
-	"FragmentShaderSampleInterlockEXT",
-	"FragmentShaderShadingRateInterlockEXT",
-	"ShaderSMBuiltinsNV",
-	"FragmentShaderPixelInterlockEXT",
-	"DemoteToHelperInvocation",
-	"BindlessTextureNV",
-	"SubgroupShuffleINTEL",
-	"SubgroupBufferBlockIOINTEL",
-	"SubgroupImageBlockIOINTEL",
-	"SubgroupImageMediaBlockIOINTEL",
-	"RoundToInfinityINTEL",
-	"FloatingPointModeINTEL",
-	"IntegerFunctions2INTEL",
-	"FunctionPointersINTEL",
-	"IndirectReferencesINTEL",
-	"AsmINTEL",
-	"AtomicFloat32MinMaxEXT",
-	"AtomicFloat64MinMaxEXT",
-	"AtomicFloat16MinMaxEXT",
-	"VectorComputeINTEL",
-	"VectorAnyINTEL",
-	"ExpectAssumeKHR",
-	"SubgroupAvcMotionEstimationINTEL",
-	"SubgroupAvcMotionEstimationIntraINTEL",
-	"SubgroupAvcMotionEstimationChromaINTEL",
-	"VariableLengthArrayINTEL",
-	"FunctionFloatControlINTEL",
-	"FPGAMemoryAttributesINTEL",
-	"FPFastMathModeINTEL",
-	"ArbitraryPrecisionIntegersINTEL",
-	"ArbitraryPrecisionFloatingPointINTEL",
-	"UnstructuredLoopControlsINTEL",
-	"FPGALoopControlsINTEL",
-	"KernelAttributesINTEL",
-	"FPGAKernelAttributesINTEL",
-	"FPGAMemoryAccessesINTEL",
-	"FPGAClusterAttributesINTEL",
-	"LoopFuseINTEL",
-	"FPGABufferLocationINTEL",
-	"ArbitraryPrecisionFixedPointINTEL",
-	"USMStorageClassesINTEL",
-	"IOPipesINTEL",
-	"BlockingPipesINTEL",
-	"FPGARegINTEL",
-	"DotProductInputAll",
-	"DotProductInput4x8Bit",
-	"DotProductInput4x8BitPacked",
-	"DotProduct",
-	"BitInstructions",
-	"AtomicFloat32AddEXT",
-	"AtomicFloat64AddEXT",
-	"LongConstantCompositeINTEL",
-	"OptNoneINTEL",
-	"AtomicFloat16AddEXT",
-	"DebugInfoModuleINTEL",
-};
-
-constexpr uint16_t capability_ids[]
+static constexpr uint16_t capability_ids[]
 {
 	0,
 	1,
@@ -460,6 +262,250 @@ constexpr uint16_t capability_ids[]
 	6114,
 };
 
+static constexpr const char* const capability_name_strings[]
+{
+
+	"Matrix",
+	"Shader",
+	"Geometry",
+	"Tesselation",
+	"Addresses",
+	"Linkage",
+	"Kernel",
+	"Vector16",
+	"Float16Buffer",
+	"Float16",
+	"Float64",
+	"Int64",
+	"Int64Atomics",
+	"ImageBasic",
+	"ImageReadWrite",
+	"ImageMipmap",
+	"Pipes",
+	"Groups",
+	"DeviceEnqueue",
+	"LiteralSampler",
+	"AtomicStorage",
+	"Int16",
+	"TesselationPointSize",
+	"GeometryPointSize",
+	"ImageGatherExtended",
+	"StorageImageMultisample",
+	"UniformBufferArrayDynamicIndexing",
+	"SampledImageArrayDynamicIndexing",
+	"StorageBufferArrayDynamicIndexing",
+	"StorageImageArrayDynamicIndexing",
+	"ClipDistance",
+	"CullDistance",
+	"ImageCubeArray",
+	"SampleRateShading",
+	"ImageRect",
+	"SampledRect",
+	"GenericPointer",
+	"Int8",
+	"InputAttachment",
+	"SparseResidency",
+	"MinLod",
+	"Sampled1D",
+	"Image1D",
+	"SampledCubeArray",
+	"SampledBuffer",
+	"ImageBuffer",
+	"ImageMSArray",
+	"StorageImageExtendedFormats",
+	"ImageQuery",
+	"DerivativeControl",
+	"InterpolationFunction",
+	"TransformFeedback",
+	"GeometryStreams",
+	"StorageImageReadWithoutFormat",
+	"StorageImageWriteWithoutFormat",
+	"MultiViewport",
+	"SubgroupDispatch",
+	"NamedBarrier",
+	"PipeStorage",
+	"GroupNonUniform",
+	"GroupNonUniformVote",
+	"GroupNonUniformArithmetic",
+	"GroupNonUniformBallot",
+	"GroupNonUniformShuffle",
+	"GroupNonUniformShuffleRelative",
+	"GroupNonUniformClustered",
+	"GroupNonUniformQuad",
+	"ShaderLayer",
+	"ShaderViewportIndex",
+	"UniformDecoration",
+	"FragmentShadingRateKHR",
+	"SubgroupBallotKHR",
+	"DrawParameters",
+	"WorkgroupMemoryExplicitLayoutKHR",
+	"WorkgroupMemoryExplicitLayout8BitAccessKHR",
+	"WorkgroupMemoryExplicitLayout16BitAccessKHR",
+	"SubgroupVoteKHR",
+	"StorageBuffer16BitAccess",
+	"UniformAndStorageBuffer16BitAcess",
+	"StoragePushConstant16",
+	"StorageInputOutput16",
+	"DeviceGroup",
+	"MultiView",
+	"VariablePointersStorageBuffer",
+	"VariablePointers",
+	"AtomicStorageOps",
+	"SampleMaskPostDepthCoverage",
+	"StorageBuffer8BitAcess",
+	"UniformAndStorageBuffer8BitAccess",
+	"StoragePushConstant8",
+	"DenormPreserve",
+	"DenormFlushToZero",
+	"SignedZeroInfNanPreserve",
+	"RoundingModeRTE",
+	"RoundingModeRTZ",
+	"RayQueryProvisionalKHR",
+	"RayQueryKHR",
+	"RayTraversalPrimitiveCullingKHR",
+	"RayTracingKHR",
+	"Float16ImageAMD",
+	"ImageGatherBiasLodAMD",
+	"FragmentMaskAMD",
+	"StencilExportEXT",
+	"ImageReadWriteLodAMD",
+	"Int64ImageEXT",
+	"ShaderClockKHR",
+	"SampleMaskOverrideCoverageNV",
+	"GeometryShaderPassthroughNV",
+	"ShaderViewportIndexLayerEXT",
+	"ShaderViewportMaskNV",
+	"ShaderStereoViewNV",
+	"PerViewAttributesNV",
+	"FragmentFullyCoveredEXT",
+	"MeshShadingNV",
+	"ImageFootprintNV",
+	"FragmentBarycentricKHR",
+	"ComputeDerivativeGroupQuadsNV",
+	"FragmentDensityEXT",
+	"GroupNonUniformPartitionedNV",
+	"ShaderNonUniform",
+	"RuntimeDescriptorArray",
+	"InputAttachmentArrayDynamicIndexing",
+	"UniformTexelBufferArrayDynamicIndexing",
+	"StorageTexelBufferArrayDynamicIndexing",
+	"UniformBufferArrayNonUniformIndexing",
+	"SampledImageArrayNonUniformIndexing",
+	"StorageBufferArrayNonUniformIndexing",
+	"StorageImageArrayNonUniformIndexing",
+	"InputAttachmentArrayNonUniformIndexing",
+	"UniformTexelBufferArrayNonUniformIndexing",
+	"StorageTexelBufferArrayNonUniformIndexing",
+	"RayTracingNV",
+	"RayTracingMotionBlurNV",
+	"VulkanMemoryModel",
+	"VulkanMemoryModelDeviceScope",
+	"PhysicalStorageBufferAddresses",
+	"ComputeDerivativeGroupLinearNV",
+	"RayTracingProvisionalKHR",
+	"CooperativeMatrixNV",
+	"FragmentShaderSampleInterlockEXT",
+	"FragmentShaderShadingRateInterlockEXT",
+	"ShaderSMBuiltinsNV",
+	"FragmentShaderPixelInterlockEXT",
+	"DemoteToHelperInvocation",
+	"BindlessTextureNV",
+	"SubgroupShuffleINTEL",
+	"SubgroupBufferBlockIOINTEL",
+	"SubgroupImageBlockIOINTEL",
+	"SubgroupImageMediaBlockIOINTEL",
+	"RoundToInfinityINTEL",
+	"FloatingPointModeINTEL",
+	"IntegerFunctions2INTEL",
+	"FunctionPointersINTEL",
+	"IndirectReferencesINTEL",
+	"AsmINTEL",
+	"AtomicFloat32MinMaxEXT",
+	"AtomicFloat64MinMaxEXT",
+	"AtomicFloat16MinMaxEXT",
+	"VectorComputeINTEL",
+	"VectorAnyINTEL",
+	"ExpectAssumeKHR",
+	"SubgroupAvcMotionEstimationINTEL",
+	"SubgroupAvcMotionEstimationIntraINTEL",
+	"SubgroupAvcMotionEstimationChromaINTEL",
+	"VariableLengthArrayINTEL",
+	"FunctionFloatControlINTEL",
+	"FPGAMemoryAttributesINTEL",
+	"FPFastMathModeINTEL",
+	"ArbitraryPrecisionIntegersINTEL",
+	"ArbitraryPrecisionFloatingPointINTEL",
+	"UnstructuredLoopControlsINTEL",
+	"FPGALoopControlsINTEL",
+	"KernelAttributesINTEL",
+	"FPGAKernelAttributesINTEL",
+	"FPGAMemoryAccessesINTEL",
+	"FPGAClusterAttributesINTEL",
+	"LoopFuseINTEL",
+	"FPGABufferLocationINTEL",
+	"ArbitraryPrecisionFixedPointINTEL",
+	"USMStorageClassesINTEL",
+	"IOPipesINTEL",
+	"BlockingPipesINTEL",
+	"FPGARegINTEL",
+	"DotProductInputAll",
+	"DotProductInput4x8Bit",
+	"DotProductInput4x8BitPacked",
+	"DotProduct",
+	"BitInstructions",
+	"AtomicFloat32AddEXT",
+	"AtomicFloat64AddEXT",
+	"LongConstantCompositeINTEL",
+	"OptNoneINTEL",
+	"AtomicFloat16AddEXT",
+	"DebugInfoModuleINTEL",
+};
+
+static constexpr const char* const enum_name_strings[]
+{
+	"Instruction",
+	"SourceLanguage",
+	"ExecutionModel",
+	"AddressingModel",
+	"MemoryModel",
+	"ExecutionMode",
+	"StorageClass",
+	"Dim",
+	"SamplerAddressingMode",
+	"SamplerFilterMode",
+	"ImageFormat",
+	"ImageChannelOrder",
+	"ImageChannelDataType",
+	"ImageOperands",
+	"FpFastMathMode",
+	"FpRoundingMode",
+	"LinkageType",
+	"AccessQualifier",
+	"FunctionParameterAttribute",
+	"Decoration",
+	"Builtin",
+	"SelectionControl",
+	"LoopControl",
+	"FunctionControl",
+	"MemorySemantics",
+	"MemoryOperands",
+	"Scope",
+	"GroupOperation",
+	"KernelEnqueueFlags",
+	"KernelProfilingInfo",
+	"Capability",
+	"ReservedRayFlags",
+	"ReservedRayQueryIntersection",
+	"ReservedRayQueryCommittedType",
+	"ReservedRayQueryCandidateType",
+	"ReservedFragmentShadingRate",
+	"ReservedFpDenormMode",
+	"ReservedFpOperationMode",
+	"QuantizationMode",
+	"OverflowMode",
+	"PackedVectorFormat",
+};
+
 int main(int argc, const char** argv)
 {
 	if (argc != 2 && argc != 3)
@@ -520,110 +566,119 @@ int main(int argc, const char** argv)
 		}
 	}
 
-	uint32_t table_entry_cnt = reinterpret_cast<const spird::table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spird::file_header))->size;
+	uint32_t table_cnt = reinterpret_cast<const spird::file_header*>(spv_data)->table_count;
 
-	fprintf(output_file, "instructions : [\n");
-
-	const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
-
-	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
-
-	const spird::insn_index* indices = reinterpret_cast<const spird::insn_index*>(raw_data + sizeof(spird::file_header) + sizeof(spird::table_header) * file_header->table_count);
-
-	for (uint32_t i = 0; i != table_entry_cnt; ++i)
+	for (uint32_t t = 0; t != table_cnt; ++t)
 	{
-		uint32_t opcode = indices[i].opcode;
+		const spird::table_header* header = reinterpret_cast<const spird::table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spird::file_header)) + t;
 
-		if (opcode == ~0u)
-			continue;
+		fprintf(output_file, "\n%s : [\n", enum_name_strings[t]);
 
-		spird::data_info op_data;
+		const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
 
-		if (spvcpu::result rst = spird::get_data(spv_data, spird::enum_id::Instruction, opcode, &op_data); rst != spvcpu::result::success)
+		const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
+
+		const spird::insn_index* indices = reinterpret_cast<const spird::insn_index*>(raw_data + header->offset);
+
+		for (uint32_t i = 0; i != header->size; ++i)
 		{
-			printf("Could not get operation data for opcode %d. (Error %d)\n", opcode, rst);
+			uint32_t opcode = indices[i].opcode;
 
-			return 1;
-		}
+			if (opcode == ~0u)
+				continue;
 
-		fprintf(output_file, "\t{\n\t\topcode : %d\n\t\tname : \"%s\"\n\t\targs : [\n", opcode, op_data.name == nullptr ? "<Unknown>" : op_data.name);
+			spird::data_info op_data;
 
-		for (uint32_t i = 0; i != op_data.argc; ++i)
-		{
-			uint8_t argtype = static_cast<uint8_t>(op_data.arg_types[i]);
-
-			const char* optstr = "";
-
-			const char* varstr = "";
-
-			if (argtype & spird::insn_arg_optional_bit)
-				optstr = "OPT ";
-
-			if (argtype & spird::insn_arg_variadic_bit)
-				varstr = "VAR ";
-
-			argtype &= spird::insn_argtype_mask;
-
-			const char* argtypename = "<Invalid>";
-
-			if (argtype < _countof(argument_type_names))
-				argtypename = argument_type_names[argtype];
-
-			fprintf(output_file, "\t\t\t%s%s%s", optstr, varstr, argtypename);
-
-			if (op_data.arg_names[i] == nullptr)
-				fprintf(output_file, "\n");
-			else
-				fprintf(output_file, " \"%s\"\n", op_data.arg_names[i]);
-		}
-
-		fprintf(output_file, "\t\t]\n");
-
-		if (op_data.implies_or_depends != spird::implies_or_depends_mode::none)
-		{
-			fprintf(output_file, op_data.implies_or_depends == spird::implies_or_depends_mode::depends ? "\t\tdepends : " : "\t\timplies : ");
-
-			if (op_data.capability_cnt > 1)
+			if (spvcpu::result rst = spird::get_data(spv_data, static_cast<spird::enum_id>(t), opcode, &op_data); rst != spvcpu::result::success)
 			{
-				fprintf(output_file, "[\n");
+				printf("Could not get operation data for opcode %d. (Error %d in table '%s')\n", opcode, rst, enum_name_strings[t]);
 
-				for (uint8_t i = 0; i != op_data.capability_cnt; ++i)
+				return 1;
+			}
+
+			fprintf(output_file, "\t{\n\t\tid : %d\n\t\tname : \"%s\"\n", opcode, op_data.name == nullptr ? "<Unknown>" : op_data.name);
+
+			if (op_data.argc > 0)
+				fprintf(output_file, "\t\targs : [\n");
+
+			for (uint32_t i = 0; i != op_data.argc; ++i)
+			{
+				uint8_t argtype = static_cast<uint8_t>(op_data.arg_types[i]);
+
+				const char* optstr = "";
+
+				const char* varstr = "";
+
+				if (argtype & spird::insn_arg_optional_bit)
+					optstr = "OPT ";
+
+				if (argtype & spird::insn_arg_variadic_bit)
+					varstr = "VAR ";
+
+				argtype &= spird::insn_argtype_mask;
+
+				const char* argtypename = "<Invalid>";
+
+				if (argtype < _countof(argument_type_names))
+					argtypename = argument_type_names[argtype];
+
+				fprintf(output_file, "\t\t\t%s%s%s", optstr, varstr, argtypename);
+
+				if (op_data.arg_names[i] == nullptr)
+					fprintf(output_file, "\n");
+				else
+					fprintf(output_file, " \"%s\"\n", op_data.arg_names[i]);
+			}
+
+			if (op_data.argc > 0)
+				fprintf(output_file, "\t\t]\n");
+
+			if (op_data.implies_or_depends != spird::implies_or_depends_mode::none)
+			{
+				fprintf(output_file, op_data.implies_or_depends == spird::implies_or_depends_mode::depends ? "\t\tdepends : " : "\t\timplies : ");
+
+				if (op_data.capability_cnt > 1)
+				{
+					fprintf(output_file, "[\n");
+
+					for (uint8_t i = 0; i != op_data.capability_cnt; ++i)
+					{
+						const char* str = nullptr;
+
+						for (uint32_t j = 0; j != _countof(capability_ids); ++j)
+							if (op_data.capabilities[i] == capability_ids[j])
+							{
+								str = capability_name_strings[j];
+
+								break;
+							}
+
+						fprintf(output_file, "\t\t\t%s\n", str);
+					}
+
+					fprintf(output_file, "\t\t]\n");
+				}
+				else
 				{
 					const char* str = nullptr;
 
 					for (uint32_t j = 0; j != _countof(capability_ids); ++j)
-						if (op_data.capabilities[i] == capability_ids[j])
+						if (op_data.capabilities[0] == capability_ids[j])
 						{
 							str = capability_name_strings[j];
 
 							break;
 						}
 
-					fprintf(output_file, "\t\t\t%s\n", str);
+					fprintf(output_file, "%s\n", str);
 				}
-
-				fprintf(output_file, "\t\t]\n");
 			}
-			else
-			{
-				const char* str = nullptr;
 
-				for (uint32_t j = 0; j != _countof(capability_ids); ++j)
-					if (op_data.capabilities[0] == capability_ids[j])
-					{
-						str = capability_name_strings[j];
-
-						break;
-					}
-
-				fprintf(output_file, "%s\n", str);
-			}
+			fprintf(output_file, "\t}\n");
 		}
 
-		fprintf(output_file, "\t}\n");
+		fprintf(output_file, "]\n");
 	}
-
-	fprintf(output_file, "]\n");
 
 	return 0;
 }
