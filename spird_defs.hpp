@@ -8,12 +8,14 @@ namespace spird
 	struct elem_index
 	{
 		uint32_t opcode;
+		
 		uint32_t byte_offset;
 	};
 
 	struct file_header
 	{
 		uint32_t version;
+
 		uint32_t table_count;
 	};
 
