@@ -29,7 +29,7 @@ namespace spird
 
 		uint8_t capability_cnt;
 
-		uint16_t capabilities[63];
+		uint16_t capabilities[127];
 
 	};
 	
