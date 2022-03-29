@@ -5,6 +5,8 @@
 
 namespace spird
 {
+	enum class enum_flags : uint16_t;
+
 	struct elem_index
 	{
 		uint32_t id;
@@ -21,7 +23,9 @@ namespace spird
 
 	struct table_header
 	{
-		uint32_t size;
+		uint16_t size;
+
+		enum_flags flags;
 
 		uint32_t offset;
 	};
@@ -140,6 +144,12 @@ namespace spird
 		PackedVectorFormat            = 40,
 	};
 
+	enum class enum_flags : uint16_t
+	{
+		none = 0x0,
+		bitmask = 0x1
+	};
+
 	enum class data_mode : uint32_t
 	{
 		all,
@@ -149,6 +159,35 @@ namespace spird
 		disassembly_no_implies_and_depends,
 		debugging_no_implies_and_depends,
 	};
+
+	inline enum_flags operator&(const enum_flags& lhs, const enum_flags& rhs) noexcept
+	{
+		return static_cast<enum_flags>(static_cast<uint16_t>(lhs) & static_cast<uint16_t>(rhs));
+	}
+
+	inline enum_flags operator|(const enum_flags& lhs, const enum_flags& rhs) noexcept
+	{
+		return static_cast<enum_flags>(static_cast<uint16_t>(lhs) | static_cast<uint16_t>(rhs));
+	}
+
+	inline enum_flags& operator&=(enum_flags& lhs, const enum_flags& rhs) noexcept
+	{
+		lhs = lhs & rhs;
+		
+		return lhs;
+	}
+
+	inline enum_flags& operator|=(enum_flags& lhs, const enum_flags& rhs) noexcept
+	{
+		lhs = lhs | rhs;
+		
+		return lhs;
+	}
+
+	inline bool operator!(const enum_flags& arg) noexcept
+	{
+		return arg != enum_flags::none;
+	}
 }
 
 #endif // SPV_DATA_DEFS_HPP_INCLUDE_GUARD
