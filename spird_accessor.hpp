@@ -21,6 +21,8 @@ namespace spird
 
 		uint32_t argc;
 
+		spird::enum_flags enum_flags;
+
 		spird::arg_type arg_types[256];
 
 		const char* arg_names[256];
@@ -30,7 +32,6 @@ namespace spird
 		uint8_t capability_cnt;
 
 		uint16_t capabilities[127];
-
 	};
 	
 	spvcpu::result get_data(const void* spv_data, spird::enum_id enum_id, uint32_t id, spird::data_info* out_data) noexcept;

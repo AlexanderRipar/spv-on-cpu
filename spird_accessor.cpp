@@ -63,6 +63,8 @@ spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uin
 		out_data->name = nullptr;
 	}
 
+	out_data->enum_flags = table_header->flags;
+
 	out_data->argc = argc;
 
 	for (uint32_t i = 0; i != argc; ++i)
