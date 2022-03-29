@@ -32,7 +32,7 @@ spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uin
 
 	const uint32_t initial_hash = hash;
 
-	while (instruction_table[hash].opcode != id)
+	while (instruction_table[hash].id != id)
 	{
 		++hash;
 

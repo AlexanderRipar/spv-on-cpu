@@ -308,11 +308,11 @@ static void create_hashtable(uint32_t* out_table_size, spird::elem_index** out_t
 	{
 		spird::elem_index elem = instruction_indices[i];
 
-		uint32_t hash = hash_knuth(elem.opcode, table_size);
+		uint32_t hash = hash_knuth(elem.id, table_size);
 
 		uint16_t offset = 0;
 
-		while (table[hash].opcode != ~0u)
+		while (table[hash].id != ~0u)
 		{
 			if (offset > offsets[hash])
 			{
@@ -657,7 +657,7 @@ int main(int argc, const char** argv)
 
 			}
 
-			curr_index.opcode = opcode;
+			curr_index.id = opcode;
 
 			curr = skip_whitespace(curr);
 
@@ -1059,7 +1059,7 @@ int main(int argc, const char** argv)
 			continue;
 
 		for (uint32_t j = 0; j != table_headers[i].size; ++j)
-			if (hashtables[i][j].opcode != ~0u)
+			if (hashtables[i][j].id != ~0u)
 				hashtables[i][j].byte_offset += enum_offset;
 
 		enum_offset += enum_data_sizes[i];

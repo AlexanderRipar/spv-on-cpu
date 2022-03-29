@@ -7,7 +7,7 @@ namespace spird
 {
 	struct elem_index
 	{
-		uint32_t opcode;
+		uint32_t id;
 		
 		uint32_t byte_offset;
 	};

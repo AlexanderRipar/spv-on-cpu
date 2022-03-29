@@ -582,7 +582,7 @@ int main(int argc, const char** argv)
 
 		for (uint32_t i = 0; i != header->size; ++i)
 		{
-			uint32_t opcode = indices[i].opcode;
+			uint32_t opcode = indices[i].id;
 
 			if (opcode == ~0u)
 				continue;
