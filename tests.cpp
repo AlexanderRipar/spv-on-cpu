@@ -1,8 +1,15 @@
 #include <cstdio>
 #include <cstdint>
 #include <cstdlib>
+#include <cstring>
 
 #include "spird_accessor.hpp"
+#include "spv_viewer.hpp"
+
+#ifdef _WIN32
+#define ftell _ftelli64
+#define fseek _fseeki64
+#endif
 
 static constexpr const char* argument_type_names[]
 {
@@ -461,72 +468,102 @@ static constexpr const char* const capability_name_strings[]
 	"DebugInfoModuleINTEL",
 };
 
-static constexpr const char* const enum_name_strings[]
+bool get_file_content(const char* filename, void** out_data, uint64_t* out_bytes) noexcept
 {
-	"Instruction",
-	"SourceLanguage",
-	"ExecutionModel",
-	"AddressingModel",
-	"MemoryModel",
-	"ExecutionMode",
-	"StorageClass",
-	"Dim",
-	"SamplerAddressingMode",
-	"SamplerFilterMode",
-	"ImageFormat",
-	"ImageChannelOrder",
-	"ImageChannelDataType",
-	"ImageOperands",
-	"FpFastMathMode",
-	"FpRoundingMode",
-	"LinkageType",
-	"AccessQualifier",
-	"FunctionParameterAttribute",
-	"Decoration",
-	"Builtin",
-	"SelectionControl",
-	"LoopControl",
-	"FunctionControl",
-	"MemorySemantics",
-	"MemoryOperands",
-	"Scope",
-	"GroupOperation",
-	"KernelEnqueueFlags",
-	"KernelProfilingInfo",
-	"Capability",
-	"ReservedRayFlags",
-	"ReservedRayQueryIntersection",
-	"ReservedRayQueryCommittedType",
-	"ReservedRayQueryCandidateType",
-	"ReservedFragmentShadingRate",
-	"ReservedFpDenormMode",
-	"ReservedFpOperationMode",
-	"QuantizationMode",
-	"OverflowMode",
-	"PackedVectorFormat",
-};
+	FILE* file;
 
-int main(int argc, const char** argv)
+	if (fopen_s(&file, filename, "rb") != 0)
+	{
+		fprintf(stderr, "Could not open file '%s'.\n", filename);
+
+		return false;
+	}
+
+	if (fseek(file, 0, SEEK_END) != 0)
+	{
+		fprintf(stderr, "Could not seek in file '%s'.\n", filename);
+
+		if (filename != nullptr)
+			fclose(file);
+
+		return false;
+	}
+
+	const int64_t bytes = ftell(file);
+
+	if (bytes < 0)
+	{
+		fprintf(stderr, "Could not ftell in file '%s'.\n", filename);
+
+		if (filename != nullptr)
+			fclose(file);
+
+		return false;
+	}
+
+	if (fseek(file, 0, SEEK_SET) != 0)
+	{
+		fprintf(stderr, "Could not seek in file '%s'.\n", filename);
+
+		if (filename != nullptr)
+			fclose(file);
+
+		return false;
+	}
+
+	void* buffer = malloc(bytes);
+
+	if (buffer == nullptr)
+	{
+		fprintf(stderr, "malloc failed.\n");
+
+		if (filename != nullptr)
+			fclose(file);
+
+		return false;
+	}
+
+	if (fread(buffer, 1, bytes, file) != bytes)
+	{
+		fprintf(stderr, "Could not read from file '%s'.\n", filename);
+
+		if (filename != nullptr)
+			fclose(file);
+
+		return false;
+	}
+
+	if (filename != nullptr)
+		fclose(file);
+
+	*out_data = buffer;
+
+	*out_bytes = static_cast<uint64_t>(bytes);
+
+	return true;
+}
+
+int cycle(int argc, const char** argv) noexcept
 {
 	if (argc != 2 && argc != 3)
 	{
-		printf("Usage: %s input-file [output-file]\n", argv[0]);
+		fprintf(stderr, "Usage: %s input-file [output-file]\n", argv[0]);
 	}
 
 	FILE* input_file;
 
 	FILE* output_file = stdout;
 
-	if (fopen_s(&input_file, argv[1], "rb") != 0)
+	if (errno_t err = fopen_s(&input_file, argv[1], "rb"); err != 0)
 	{
-		printf("Could not open file %s for reading.\n", argv[1]);
+		fprintf(stderr, "Could not open file %s for reading (Error %d).\n", argv[1], err);
 
 		return 1;
 	}
 
 	if (fseek(input_file, 0, SEEK_END) != 0)
 	{
-		printf("Could not seek in file.\n");
+		fprintf(stderr, "Could not seek in file.\n");
 
 		return 1;
 	}
@@ -535,14 +572,14 @@ int main(int argc, const char** argv)
 
 	if (input_bytes < 0)
 	{
-		printf("Could not ftell file.\n");
+		fprintf(stderr, "Could not ftell file.\n");
 
 		return 1;
 	}
 
 	if (fseek(input_file, 0, SEEK_SET) != 0)
 	{
-		printf("Could not seek in file.\n");
+		fprintf(stderr, "Could not seek in file.\n");
 
 		return 1;
 	}
@@ -551,7 +588,7 @@ int main(int argc, const char** argv)
 
 	if (fread(spv_data, 1, input_bytes, input_file) != input_bytes)
 	{
-		printf("Could not read from file.\n");
+		fprintf(stderr, "Could not read from file.\n");
 
 		return 1;
 	}
@@ -560,7 +597,7 @@ int main(int argc, const char** argv)
 	{
 		if (fopen_s(&output_file, argv[2], "wb") != 0)
 		{
-			printf("Could not open file %s for writing.\n", argv[2]);
+			fprintf(stderr, "Could not open file %s for writing.\n", argv[2]);
 
 			return 1;
 		}
@@ -570,9 +607,18 @@ int main(int argc, const char** argv)
 
 	for (uint32_t t = 0; t != table_cnt; ++t)
 	{
+		spird::enum_data enum_data;
+
+		if (spvcpu::result rst = spird::get_enum_data(spv_data, static_cast<spird::enum_id>(t), &enum_data); rst != spvcpu::result::success)
+		{
+			fprintf(stderr, "Could not get data for enumeration %d. (Error %d)\n", t, rst);
+
+			return 1;
+		}
+
 		const spird::table_header* header = reinterpret_cast<const spird::table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spird::file_header)) + t;
 
-		fprintf(output_file, "\n%s%s : [\n", enum_name_strings[t], (header->flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask ? "@BITMASK" : "");
+		fprintf(output_file, "\n%s%s : [\n", enum_data.name, (header->flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask ? "@BITMASK" : "");
 
 		const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
 
@@ -587,16 +633,16 @@ int main(int argc, const char** argv)
 			if (id == ~0u)
 				continue;
 
-			spird::data_info elem_data;
+			spird::elem_data elem_data;
 
-			if (spvcpu::result rst = spird::get_data(spv_data, static_cast<spird::enum_id>(t), id, &elem_data); rst != spvcpu::result::success)
+			if (spvcpu::result rst = spird::get_elem_data(spv_data, static_cast<spird::enum_id>(t), id, &elem_data); rst != spvcpu::result::success)
 			{
-				printf("Could not get operation data for id %d. (Error %d in table '%s')\n", id, rst, enum_name_strings[t]);
+				fprintf(stderr, "Could not get data for element %d of enumeration '%s' (%d). (Error %d)\n", id, enum_data.name, t, rst);
 
 				return 1;
 			}
 
-			if ((elem_data.enum_flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask)
+			if ((enum_data.header->flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask)
 				fprintf(output_file, "\t{\n\t\tid : 0x%x", id);
 			else
 				fprintf(output_file, "\t{\n\t\tid : %d", id);
@@ -686,4 +732,91 @@ int main(int argc, const char** argv)
 	}
 
 	return 0;
+}
+
+int disasm(int argc, const char** argv) noexcept
+{
+	if (argc != 3 && argc != 4)
+	{
+		printf("Usage: %s shader-file spird-file [output-file]\n", argv[0]);
+
+		return 0;
+	}
+
+	FILE* output_file = stdout;
+
+
+	uint64_t shader_bytes;
+
+	void* shader_data;
+
+	uint64_t spird_bytes;
+
+	void* spird_data;
+
+	if (!get_file_content(argv[1], &shader_data, &shader_bytes))
+		return 1;
+
+	if (!get_file_content(argv[2], &spird_data, &spird_bytes))
+		return 1;
+
+	if (argc == 4)
+	{
+		if (fopen_s(&output_file, argv[3], "w") != 0)
+		{
+			fprintf(stderr, "Could not open file %s for writing.\n", argv[2]);
+
+			return 1;
+		}
+	}
+
+	char* disassembly;
+
+	uint64_t disassembly_bytes;
+
+	if (spvcpu::result rst = spvcpu::show_spirv(shader_bytes, shader_data, spird_data, &disassembly); rst != spvcpu::result::success)
+	{
+		fprintf(stderr, "spvcpu::show_spirv failed with error %d.\n", static_cast<uint32_t>(rst));
+
+		return 1;
+	}
+
+	if (fwrite(disassembly, 1, disassembly_bytes, output_file) != disassembly_bytes)
+	{
+		fprintf(stderr, "Could not write to %s%s", output_file == stdout ? "" : "file ", output_file == stdout ? "stdout" : argv[3]);
+
+		return 1;
+	}
+
+	return 0;
+}
+
+void print_usage(const char* prog_name) noexcept
+{
+	fprintf(stderr, "Usage: %s (--cycle|--disasm) [additional args...]\n", prog_name);
+}
+
+int main(int argc, const char** argv)
+{
+	if (argc < 2)
+	{
+		print_usage(argv[0]);
+
+		return 0;
+	}
+	else if (strcmp(argv[1], "--cycle") == 0)
+	{
+		return cycle(argc - 1, argv + 1);
+	}
+	else if (strcmp(argv[1], "--disasm") == 0)
+	{
+		return disasm(argc - 1, argv + 1);
+	}
+	else
+	{
+		print_usage(argv[0]);
+
+		return 0;
+	}
+
 }
