@@ -4,7 +4,52 @@
 
 #include <cstring>
 
-spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uint32_t id, spird::data_info* out_data) noexcept
+static constexpr const char* const enum_name_strings[]
+{
+	"Instruction",
+	"SourceLanguage",
+	"ExecutionModel",
+	"AddressingModel",
+	"MemoryModel",
+	"ExecutionMode",
+	"StorageClass",
+	"Dim",
+	"SamplerAddressingMode",
+	"SamplerFilterMode",
+	"ImageFormat",
+	"ImageChannelOrder",
+	"ImageChannelDataType",
+	"ImageOperands",
+	"FpFastMathMode",
+	"FpRoundingMode",
+	"LinkageType",
+	"AccessQualifier",
+	"FunctionParameterAttribute",
+	"Decoration",
+	"Builtin",
+	"SelectionControl",
+	"LoopControl",
+	"FunctionControl",
+	"MemorySemantics",
+	"MemoryOperands",
+	"Scope",
+	"GroupOperation",
+	"KernelEnqueueFlags",
+	"KernelProfilingInfo",
+	"Capability",
+	"ReservedRayFlags",
+	"ReservedRayQueryIntersection",
+	"ReservedRayQueryCommittedType",
+	"ReservedRayQueryCandidateType",
+	"ReservedFragmentShadingRate",
+	"ReservedFpDenormMode",
+	"ReservedFpOperationMode",
+	"QuantizationMode",
+	"OverflowMode",
+	"PackedVectorFormat",
+};
+
+spvcpu::result spird::get_elem_data(const void* spv_data, spird::enum_id enum_id, uint32_t id, spird::elem_data* out_data) noexcept
 {
 	const uint32_t enum_id_uint = static_cast<uint32_t>(enum_id);
 
@@ -63,8 +108,6 @@ spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uin
 		out_data->name = nullptr;
 	}
 
-	out_data->enum_flags = table_header->flags;
-
 	out_data->argc = argc;
 
 	for (uint32_t i = 0; i != argc; ++i)
@@ -113,6 +156,32 @@ spvcpu::result spird::get_data(const void* spv_data, spird::enum_id enum_id, uin
 	{
 		out_data->implies_or_depends = implies_or_depends_mode::none;
 	}
+
+	return spvcpu::result::success;
+}
+
+spvcpu::result spird::get_enum_data(const void* spv_data, spird::enum_id enum_id, spird::enum_data* out_data) noexcept
+{
+	const uint32_t enum_id_uint = static_cast<uint32_t>(enum_id);
+
+	const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
+
+	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
+
+	if (file_header->version < 4 || file_header->version > 9)
+		return spvcpu::result::spirv_data_unknown_version;
+
+	if (enum_id_uint > file_header->table_count)
+		return spvcpu::result::spirv_data_enumeration_not_found;
+
+	const spird::table_header* table_header = reinterpret_cast<const spird::table_header*>(raw_data + sizeof(spird::file_header)) + enum_id_uint;
+
+	if (enum_id_uint > spird::enum_id_count)
+		out_data->name = "<Unknown>";
+	else
+		out_data->name = enum_name_strings[enum_id_uint];
+
+	out_data->header = table_header;
 
 	return spvcpu::result::success;
 }
