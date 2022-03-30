@@ -23,6 +23,8 @@ namespace spird
 
 		spird::arg_type arg_types[256];
 
+		spird::arg_flags arg_flags[256];
+
 		const char* arg_names[256];
 		
 		implies_or_depends_mode implies_or_depends;

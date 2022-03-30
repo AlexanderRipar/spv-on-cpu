@@ -57,10 +57,10 @@ spvcpu::result spird::get_elem_data(const void* spv_data, spird::enum_id enum_id
 
 	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
 
-	if (file_header->version < 4 || file_header->version > 9)
+	if (file_header->version < 10 || file_header->version > 15)
 		return spvcpu::result::spirv_data_unknown_version;
 
-	const uint32_t mode_bits = file_header->version - 4;
+	const uint32_t mode_bits = file_header->version - 10;
 
 	const spird::data_mode mode = static_cast<spird::data_mode>(mode_bits >= 3 ? mode_bits - 3 : mode_bits);
 
@@ -112,6 +112,8 @@ spvcpu::result spird::get_elem_data(const void* spv_data, spird::enum_id enum_id
 
 	for (uint32_t i = 0; i != argc; ++i)
 	{
+		out_data->arg_flags[i] = static_cast<spird::arg_flags>(*entry++);
+
 		out_data->arg_types[i] = static_cast<spird::arg_type>(*entry++);
 
 		if (mode == spird::data_mode::all || mode == spird::data_mode::disassembly)
