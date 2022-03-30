@@ -791,10 +791,10 @@ int main(int argc, const char** argv)
 						uint8_t argument_type_and_flags = static_cast<uint8_t>(i);
 
 						if (flag_optional)
-							i |= spird::insn_arg_optional_bit;
+							argument_type_and_flags |= spird::insn_arg_optional_bit;
 
 						if (flag_variadic)
-							i |= spird::insn_arg_variadic_bit;
+							argument_type_and_flags |= spird::insn_arg_variadic_bit;
 
 						output.append(static_cast<spird::arg_type>(argument_type_and_flags));
 
