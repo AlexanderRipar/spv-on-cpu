@@ -85,18 +85,27 @@ namespace spird
 		RST                           = 41,
 		RTYPE                         = 42,
 		LITERAL                       = 43,
-		ID                            = 44,
-		TYPID                         = 45,
-		U32                           = 46,
-		STR                           = 47,
-		ARG                           = 48,
-		MEMBER                        = 49,
-		U32IDPAIR                     = 50,
-		IDMEMBERPAIR                  = 51,
-		IDIDPAIR                      = 52,
-		IDU32PAIR                     = 53,
-		I64                           = 54,
+		VALUE                         = 44,
+		TYPE                          = 45,
+		OTHER                         = 46,
+		U32                           = 47,
+		STR                           = 48,
+		ARG                           = 49,
+		MEMBER                        = 50,
+		U32IDPAIR                     = 51,
+		IDMEMBERPAIR                  = 52,
+		IDIDPAIR                      = 53,
+		IDU32PAIR                     = 54,
+		I64                           = 55,
 		UNKNOWN                       = 255,
+	};
+
+	enum class arg_flags : uint8_t
+	{
+		none     = 0x0,
+		optional = 0x1,
+		variadic = 0x2,
+		id       = 0x4,
 	};
 
 	enum class enum_id : uint32_t
@@ -183,6 +192,31 @@ namespace spird
 		
 		return lhs;
 	}
+
+	inline arg_flags operator&(const arg_flags& lhs, const arg_flags& rhs) noexcept
+	{
+		return static_cast<arg_flags>(static_cast<uint16_t>(lhs) & static_cast<uint16_t>(rhs));
+	}
+
+	inline arg_flags operator|(const arg_flags& lhs, const arg_flags& rhs) noexcept
+	{
+		return static_cast<arg_flags>(static_cast<uint16_t>(lhs) | static_cast<uint16_t>(rhs));
+	}
+
+	inline arg_flags& operator&=(arg_flags& lhs, const arg_flags& rhs) noexcept
+	{
+		lhs = lhs & rhs;
+		
+		return lhs;
+	}
+
+	inline arg_flags& operator|=(arg_flags& lhs, const arg_flags& rhs) noexcept
+	{
+		lhs = lhs | rhs;
+		
+		return lhs;
+	}
+
 }
 
 #endif // SPV_DATA_DEFS_HPP_INCLUDE_GUARD

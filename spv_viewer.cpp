@@ -424,7 +424,7 @@ public:
 
 					break;
 				}
-				case spird::arg_type::ID:
+				case spird::arg_type::VALUE:
 				{
 					if (word + 1 > word_end)
 						return spvcpu::result::instruction_wordcount_mismatch;
@@ -436,7 +436,7 @@ public:
 
 					break;
 				}
-				case spird::arg_type::TYPID:
+				case spird::arg_type::TYPE:
 				{
 					if (word + 1 > word_end)
 						return spvcpu::result::instruction_wordcount_mismatch;
@@ -445,6 +445,12 @@ public:
 						return spvcpu::result::no_memory;
 
 					++word; 
+
+					break;
+				}
+				case spird::arg_type::OTHER:
+				{
+					// TODO
 
 					break;
 				}
