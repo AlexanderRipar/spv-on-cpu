@@ -11,6 +11,7 @@ namespace spvcpu
 		uint64_t spirv_bytes,
 		const void* spirv,
 		const void* spird,
+		uint64_t* out_disassembly_bytes,
 		char** out_disassembly
 	) noexcept;
 }

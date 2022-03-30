@@ -774,7 +774,7 @@ int disasm(int argc, const char** argv) noexcept
 
 	uint64_t disassembly_bytes;
 
-	if (spvcpu::result rst = spvcpu::show_spirv(shader_bytes, shader_data, spird_data, &disassembly); rst != spvcpu::result::success)
+	if (spvcpu::result rst = spvcpu::show_spirv(shader_bytes, shader_data, spird_data, &disassembly_bytes, &disassembly); rst != spvcpu::result::success)
 	{
 		fprintf(stderr, "spvcpu::show_spirv failed with error %d.\n", static_cast<uint32_t>(rst));
 

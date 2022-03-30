@@ -361,6 +361,11 @@ public:
 		return tmp;
 	}
 
+	uint32_t size() const noexcept
+	{
+		return m_string_used;
+	}
+
 	spvcpu::result print_arg(const void* spird, spird::arg_type type, const uint32_t*& word, const uint32_t* word_end) noexcept
 	{
 		if (!print_str(" "))
@@ -666,6 +671,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 	uint64_t spirv_bytes,
 	const void* spirv,
 	const void* spird,
+	uint64_t* out_disassembly_bytes,
 	char** out_disassembly
 ) noexcept
 {
@@ -739,6 +745,8 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 	if (result rst = output.finalize(); rst != result::success)
 		return rst;
 	
+	*out_disassembly_bytes = output.size();
+
 	*out_disassembly = output.steal();
 
 	return result::success;
