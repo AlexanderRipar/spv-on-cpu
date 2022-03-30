@@ -444,7 +444,7 @@ public:
 					if (!print_typid(*word))
 						return spvcpu::result::no_memory;
 
-					++word; 
+					++word;
 
 					break;
 				}
