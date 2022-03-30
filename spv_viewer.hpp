@@ -8,9 +8,9 @@
 namespace spvcpu
 {
 	__declspec(dllexport) result show_spirv(
-		uint32_t shader_bytes,
-		const void* shader_data,
-		const void* spirv_data,
+		uint64_t spirv_bytes,
+		const void* spirv,
+		const void* spird,
 		char** out_disassembly
 	) noexcept;
 }

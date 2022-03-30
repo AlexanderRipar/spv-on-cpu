@@ -12,22 +12,35 @@ struct output_buffer
 {
 private:
 
-	static constexpr const char id_prefix = '$';
+	static constexpr size_t max_u32_chars = 10;
+
+	static constexpr size_t max_i32_chars = 11;
+
+	static constexpr size_t max_u64_chars = 20;
+
+	static constexpr size_t max_i64_chars = 20;
 
 	char* m_string;
-	uint32_t m_used;
-	uint32_t m_capacity;
+	uint32_t m_string_used;
+	uint32_t m_string_capacity;
 
-	bool grow(uint32_t additional) noexcept
+	char* m_line;
+	uint32_t m_line_used;
+	uint32_t m_line_capacity;
+
+	uint32_t m_rst_id;
+	uint32_t m_rtype_id;
+
+	bool grow_string(size_t additional) noexcept
 	{
-		if (m_used + additional > m_capacity)
+		while (m_string_used + additional > m_string_capacity)
 		{
-			char* tmp = static_cast<char*>(malloc(m_capacity * 2));
+			char* tmp = static_cast<char*>(malloc(m_string_capacity * 2));
 
 			if (tmp == nullptr)
 				return false;
 
-			m_capacity *= 2;
+			m_string_capacity *= 2;
 
 			m_string = tmp;
 		}
@@ -35,11 +48,37 @@ private:
 		return true;
 	}
 
-	bool append_number_(uint32_t n) noexcept
+	bool grow_line(size_t additional) noexcept
 	{
+		while (m_line_used + additional > m_line_capacity)
+		{
+			char* tmp = static_cast<char*>(malloc(m_line_capacity * 2));
+
+			if (tmp == nullptr)
+				return false;
+
+			m_line_capacity *= 2;
+
+			m_line = tmp;
+		}
+
+		return true;
+	}
+
+	static void print_integer_to_buffer(char* out, uint32_t& out_used, uint64_t n, bool is_signed) noexcept
+	{
+		bool is_negative = false;
+
+		if (is_signed && (n & (1ui64 << 63)))
+		{
+			is_negative = true;
+
+			n = 0 - n;
+		}
+
 		uint32_t log10_ceil = 1;
 
-		uint32_t approx = 10;
+		uint64_t approx = 10;
 
 		while (n >= approx)
 		{
@@ -47,39 +86,229 @@ private:
 
 			++log10_ceil;
 		}
-		
-		if (!grow(log10_ceil))
-			return false;
+
+		if (is_negative)
+			out[out_used++] = '-';
 
 		for(uint32_t i = 0; i != log10_ceil; ++i)
 		{
-			m_string[m_used + log10_ceil - i - 1] = (n % 10) + '0';
+			out[out_used + log10_ceil - i - 1] = (n % 10) + '0';
 
 			n /= 10;
 		}
 
-		m_used += log10_ceil;
+		out_used += log10_ceil;
+	}
+
+	bool print_id(uint32_t id) noexcept
+	{
+		if (!print_str("$") || !grow_line(max_u32_chars))
+			return false;
+			
+		print_integer_to_buffer(m_line, m_line_used, id, false);
 
 		return true;
 	}
 
-	bool append_string_(const char* str) noexcept
+	bool print_typid(uint32_t typid) noexcept
 	{
-		uint32_t additional = static_cast<uint32_t>(strlen(str));
-
-		if (!grow(additional))
+		if (!print_str("T$") || !grow_line(max_u32_chars))
 			return false;
-
-		memcpy(m_string + m_used, str, additional);
-
-		m_used += additional;
+			
+			print_integer_to_buffer(m_line, m_line_used, typid, false);
 
 		return true;
+	}
+
+	bool print_u32(uint32_t n) noexcept
+	{
+		if (!grow_line(max_u32_chars))
+			return false;
+
+		print_integer_to_buffer(m_line, m_line_used, n, false);
+
+		return true;
+	}
+
+	bool print_str(const char* str) noexcept
+	{
+		const size_t len = strlen(str);
+
+		if (!grow_line(len))
+			return false;
+
+		memcpy(m_line + m_line_used, str, len);
+
+		m_line_used += len;
+
+		return true;
+	}
+
+	bool print_member(uint32_t member) noexcept
+	{
+		if (!print_str("@") || !grow_line(max_u32_chars))
+			return false;
+
+		print_integer_to_buffer(m_line, m_line_used, member, false);
+
+		return true;
+	}
+
+	bool print_i64(int64_t n) noexcept
+	{
+		if (!grow_line(max_i64_chars))
+			return false;
+		
+		print_integer_to_buffer(m_line, m_line_used, n, true);
+
+		return true;
+	}
+
+	bool str_print_rst_and_rtype() noexcept
+	{
+		// Factor in additional growth from writing rst and rtype or spaces.
+		// Since ids are limited to at most 4194303, it is safe to assume that
+		// 7 charcters for rst and rtype each, two additonal chars for spaces,
+		// one for the rst marker, two for the rtype marker, and two for "= "
+		// for a total of 7 + 7 + 2 + 1 + 2 + 2 = 21 should suffice for holding
+		// the result prefix.
+		constexpr uint32_t expected_prefix_len = 21;
+
+		// To be conservative ensure that ints larger than the id-limit will
+		// also fit.
+		constexpr uint32_t conservative_prefix_len = expected_prefix_len + 6;
+
+		if (!grow_string(conservative_prefix_len))
+			return false;
+
+		memset(m_string + m_string_used, ' ', expected_prefix_len);
+
+		if (m_rst_id != ~0u)
+		{
+			m_string[m_string_used++] = '$';
+
+			uint32_t rst_used = m_string_used;
+
+			print_integer_to_buffer(m_string, rst_used, m_rst_id, false);
+
+			if (rst_used < m_string_used + 7)
+				rst_used = m_string_used + 7;
+
+			m_string_used = rst_used;
+
+			m_string[m_string_used++] = ' ';
+		}
+		else
+		{
+			m_string_used += 9;
+		}
+
+		if (m_rtype_id != ~0u)
+		{
+			m_string[m_string_used++] = 'T';
+
+			m_string[m_string_used++] = '$';
+
+			uint32_t rtype_used = m_string_used;
+
+			print_integer_to_buffer(m_string, rtype_used, m_rtype_id, false);
+
+			if (rtype_used < m_string_used + 7)
+				rtype_used = m_string_used + 7;
+
+			m_string_used = rtype_used;
+
+			m_string[m_string_used++] = ' ';
+		}
+		else
+		{
+			m_string_used += 10;
+		}
+
+		if (m_rst_id != ~0u)
+		{
+			m_string[m_string_used++] = '=';
+
+			m_string[m_string_used++] = ' ';
+		}
+
+		return true;
+	}
+
+	spvcpu::result print_enum(const void* spird, spird::enum_id enum_id, const uint32_t*& word, const uint32_t* word_end) noexcept
+	{
+		if (word == word_end)
+			return spvcpu::result::instruction_wordcount_mismatch;
+
+		const uint32_t* tmp_word = word + 1;
+
+		spird::enum_data enum_data;
+		
+		if (spvcpu::result rst = spird::get_enum_data(spird, enum_id, &enum_data); rst != spvcpu::result::success)
+			return rst;
+		
+		const uint32_t elem_id = *word;
+
+		if ((enum_data.header->flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask)
+		{
+			uint32_t elem_id_bits = elem_id;
+
+			while (elem_id_bits != 0)
+			{
+				uint32_t lsb = elem_id_bits & -elem_id_bits;
+
+				elem_id_bits ^= lsb;
+
+				spird::elem_data elem_data;
+
+				if (spvcpu::result rst = spird::get_elem_data(spird, enum_id, lsb, &elem_data); rst != spvcpu::result::success)
+					return rst;
+
+				if (!print_str(elem_data.name))
+					return spvcpu::result::no_memory;
+			}
+
+			elem_id_bits = elem_id;
+
+			while (elem_id_bits != 0)
+			{
+				uint32_t lsb = elem_id_bits & -elem_id_bits;
+
+				elem_id_bits ^= lsb;
+
+				spird::elem_data elem_data;
+
+				if (spvcpu::result rst = spird::get_elem_data(spird, enum_id, lsb, &elem_data); rst != spvcpu::result::success)
+					return rst;
+
+				for (uint32_t arg = 0; arg != elem_data.argc; ++arg)
+					if (spvcpu::result rst = print_arg(spird, elem_data.arg_types[arg], tmp_word, word_end); rst != spvcpu::result::success)
+						return rst;
+			}
+		}
+		else
+		{
+			spird::elem_data elem_data;
+
+			if (spvcpu::result rst = spird::get_elem_data(spird, enum_id, elem_id, &elem_data); rst != spvcpu::result::success)
+				return rst;
+
+			if (!print_str(elem_data.name))
+				return spvcpu::result::no_memory;
+
+			for (uint32_t arg = 0; arg != elem_data.argc; ++arg)
+				if (spvcpu::result rst = print_arg(spird, elem_data.arg_types[arg], tmp_word, word_end); rst != spvcpu::result::success)
+					return rst;
+		}
+
+		word = tmp_word;
+
+		return spvcpu::result::success;
 	}
 
 public:
 
-	output_buffer() noexcept : m_string{ nullptr }, m_used{ 0 }, m_capacity{ 0 } {}
+	output_buffer() noexcept : m_string{ nullptr }, m_line{ nullptr } {}
 
 	~output_buffer() noexcept
 	{
@@ -93,83 +322,290 @@ public:
 		if (m_string == nullptr)
 			return spvcpu::result::no_memory;
 
-		m_capacity = 4096;
+		m_string_used = 0;
+
+		m_string_capacity = 4096;
+
+		m_line = static_cast<char*>(malloc(1024));
+
+		if (m_line == nullptr)
+			return spvcpu::result::no_memory;
+
+		m_line_used = 0;
+
+		m_line_capacity = 4096;
+
+		m_rst_id = ~0u;
+
+		m_rtype_id = ~0u;
 
 		return spvcpu::result::success;
 	}
 
 	spvcpu::result finalize() noexcept
 	{
-		if (!grow(1))
+		if (!grow_string(1))
 			return spvcpu::result::no_memory;
 
-		m_string[m_used++] = '\0';
+		m_string[m_string_used++] = '\0';
 
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result append_result(uint32_t id, uint32_t typid) noexcept
+	char* steal() noexcept
 	{
-		if (!append_string_("$") || !append_number_(typid))
+		char* tmp = m_string;
+
+		m_string = nullptr;
+
+		return tmp;
+	}
+
+	spvcpu::result print_arg(const void* spird, spird::arg_type type, const uint32_t*& word, const uint32_t* word_end) noexcept
+	{
+		if (!print_str(" "))
 			return spvcpu::result::no_memory;
+		
+		const bool is_optional_bit = static_cast<uint32_t>(type) & spird::insn_arg_optional_bit;
 
-		if (typid != ~0u)
-			if (!append_string_(" ($") || !append_number_(typid) || !append_string_(")"))
-				return spvcpu::result::no_memory;
+		const bool is_variadic = static_cast<uint32_t>(type) & spird::insn_arg_variadic_bit;
 
-		if (!append_string_(" = "))
+		type = static_cast<spird::arg_type>(static_cast<uint32_t>(type) & spird::insn_argtype_mask);
+
+		if (is_optional_bit && word == word_end)
+			return spvcpu::result::success;
+
+		if (static_cast<uint32_t>(type) < spird::enum_id_count)
+		{
+			do
+			{
+				if (spvcpu::result rst = print_enum(spird, static_cast<spird::enum_id>(type), word, word_end); rst != spvcpu::result::success)
+					return rst;
+			}
+			while (is_variadic && word < word_end);
+		}
+		else
+		{
+			do
+			{
+				switch (type)
+				{
+				case spird::arg_type::RST:
+				{
+					if (word + 1 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					m_rst_id = *word;
+
+					++word;
+
+					break;
+				}
+				case spird::arg_type::RTYPE:
+				{
+					if (word + 1 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					m_rtype_id = *word;
+
+					++word;
+
+					break;
+				}
+				case spird::arg_type::LITERAL:
+				{
+					// TODO
+					word = word_end;
+
+					break;
+				}
+				case spird::arg_type::ID:
+				{
+					if (word + 1 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					if (!print_id(*word))
+						return spvcpu::result::no_memory;
+
+					++word;
+
+					break;
+				}
+				case spird::arg_type::TYPID:
+				{
+					if (word + 1 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					if (!print_typid(*word))
+						return spvcpu::result::no_memory;
+
+					++word; 
+
+					break;
+				}
+				case spird::arg_type::U32:
+				{
+					if (word + 1 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					if (!print_u32(*word))
+						return spvcpu::result::no_memory;
+
+					++word; 
+
+					break;
+				}
+				case spird::arg_type::STR:
+				{
+					const char* str = reinterpret_cast<const char*>(word);
+
+					const size_t str_words = (strlen(str) + 4) >> 2;
+
+					if (word + str_words > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					if (!print_str(str))
+						return spvcpu::result::no_memory;
+
+					word += str_words;
+
+					break;
+				}
+				case spird::arg_type::ARG:
+				{
+					// ARG is handled implicitly by print_enum. Dont touch anything, 
+					// just make sure we have consumed the complete instruction.
+
+					if (word != word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					break;
+				}
+				case spird::arg_type::MEMBER:
+				{
+					if (word + 1 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					if (!print_member(*word))
+						return spvcpu::result::no_memory;
+
+					++word;
+
+					break;
+				}
+				case spird::arg_type::U32IDPAIR:
+				{
+					if (word + 2 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					if (!print_u32(*word))
+						return spvcpu::result::no_memory;
+
+					if (!print_id(word[1]))
+						return spvcpu::result::no_memory;
+
+					word += 2;
+
+					break;
+				}
+				case spird::arg_type::IDMEMBERPAIR:
+				{
+					if (word + 2 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					if (!print_id(*word))
+						return spvcpu::result::no_memory;
+
+					if (!print_member(word[1]))
+						return spvcpu::result::no_memory;
+
+					word += 2;
+
+					break;
+				}
+				case spird::arg_type::IDIDPAIR:
+				{
+					if (word + 2 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					if (!print_id(*word))
+						return spvcpu::result::no_memory;
+
+					if (!print_id(word[1]))
+						return spvcpu::result::no_memory;
+
+					word += 2;
+
+					break;
+				}
+				case spird::arg_type::IDU32PAIR:
+				{
+					if (word + 2 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					if (!print_id(*word))
+						return spvcpu::result::no_memory;
+
+					if (!print_u32(word[1]))
+						return spvcpu::result::no_memory;
+
+					word += 2;
+
+					break;
+				}
+				case spird::arg_type::I64:
+				{
+					if (word + 2 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					int64_t n = *word | (static_cast<int64_t>(word[1]) << 32); 
+
+					if (!print_i64(n))
+						return spvcpu::result::no_memory;
+
+					word += 2;
+
+					break;
+				}
+				default:
+				{
+					return spvcpu::result::unknown_argtype;
+				}
+				}
+			}
+			while (is_variadic && word < word_end);
+		}
+
+		return spvcpu::result::success;
+	}
+
+	spvcpu::result print_instruction_name(const char* name) noexcept
+	{
+		if (!print_str("Op") || !print_str(name))
 			return spvcpu::result::no_memory;
 
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result append_instruction_name(const char* name) noexcept
+	spvcpu::result end_line() noexcept
 	{
-		if (!append_string_(name))
+		if (!str_print_rst_and_rtype())
 			return spvcpu::result::no_memory;
 
-		return spvcpu::result::success;
-	}
-
-	spvcpu::result append_enum(const char* name, spird::enum_id enum_id, uint32_t value) noexcept
-	{
-		enum_id; value;
-
-		if (!append_string_(" [") || !append_string_(name) || !append_string_("]"))
+		// Don't forget to reserve space for the trailing '\n'
+		if (!grow_string(m_line_used + 1))
 			return spvcpu::result::no_memory;
 
-		return spvcpu::result::success;
-	}
+		memcpy(m_string + m_string_used, m_line, m_line_used);
 
-	spvcpu::result append_id(uint32_t id) noexcept
-	{
-		if (!append_string_(" $") || !append_number_(id))
-			return spvcpu::result::no_memory;
+		m_string_used += m_line_used + 1;
 
-		return spvcpu::result::success;
-	}
+		m_line_used = 0;
 
-	spvcpu::result append_member(uint32_t member) noexcept
-	{
-		if (!append_string_(" @") || !append_number_(member))
-			return spvcpu::result::no_memory;
+		m_rst_id = ~0u;
 
-		return spvcpu::result::success;
-	}
-
-	spvcpu::result append_u32(uint32_t n) noexcept
-	{
-		if (!append_string_(" ") || !append_number_(n))
-			return spvcpu::result::no_memory;
-
-		return spvcpu::result::success;
-	}
-
-	spvcpu::result append_string(const char* str) noexcept
-	{
-		if (!append_string_(str))
-			return spvcpu::result::no_memory;
-
+		m_rtype_id = ~0u;
+		
 		return spvcpu::result::success;
 	}
 };
@@ -196,9 +632,9 @@ static constexpr uint32_t reverse_endianness(uint32_t n) noexcept
 	return ((n >> 24) & 0x000000FF) | ((n >> 8) & 0x0000FF00) | ((n << 8) & 0x00FF0000) | ((n << 24) & 0xFF000000);
 }
 
-static spvcpu::result check_header(const void* shader_data) noexcept
+static spvcpu::result check_header(const void* spirv) noexcept
 {
-	const spirv_header* header = static_cast<const spirv_header*>(shader_data);
+	const spirv_header* header = static_cast<const spirv_header*>(spirv);
 
 	if (header->magic == reverse_endianness(spirv::magic_number))
 		return spvcpu::result::wrong_endianness;
@@ -227,24 +663,27 @@ static spvcpu::result check_header(const void* shader_data) noexcept
 // TODO: Handle bitmask enums
 // TODO: Handle enums with arguments
 __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
-	uint32_t shader_bytes,
-	const void* shader_data,
-	const void* instruction_data,
+	uint64_t spirv_bytes,
+	const void* spirv,
+	const void* spird,
 	char** out_disassembly
 ) noexcept
 {
-	const uint32_t* shader_words = static_cast<const uint32_t*>(shader_data);
+	if (spirv_bytes < sizeof(spirv_header))
+		return spvcpu::result::shader_too_small;
+
+	const uint32_t* shader_words = static_cast<const uint32_t*>(spirv);
 
 	std::unique_ptr<uint32_t, deleter> copied_shader_data;
 
 	if (result header_result = check_header(shader_words); header_result == result::wrong_endianness)
 	{
-		copied_shader_data = std::unique_ptr<uint32_t, deleter>(static_cast<uint32_t*>(malloc(shader_bytes)));
+		copied_shader_data = std::unique_ptr<uint32_t, deleter>(static_cast<uint32_t*>(malloc(spirv_bytes)));
 
 		if (copied_shader_data == nullptr)
 			return result::no_memory;
 
-		for (uint32_t i = 0; i != shader_bytes / 4; ++i)
+		for (uint32_t i = 0; i != spirv_bytes / 4; ++i)
 			copied_shader_data.get()[i] = reverse_endianness(shader_words[i]);
 		
 		shader_words = copied_shader_data.get();
@@ -257,291 +696,50 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 
 	output_buffer output;
 
-	for(uint32_t word_index = 5; word_index < shader_bytes / 4;)
+	if (result rst = output.initialize(); rst != result::success)
+		return rst;
+
+	if (spirv_bytes & 3)
+		return result::shader_size_not_divisible_by_four;
+
+	const uint32_t* word_end = shader_words + (spirv_bytes >> 2);
+
+	for(const uint32_t* word = shader_words + 5; word < word_end;)
 	{
-		uint32_t wordcount = shader_words[word_index] >> 16;
+		uint32_t wordcount = *word >> 16;
 
-		uint32_t opcode = shader_words[word_index] & 0xFFFF;
+		Op opcode = static_cast<Op>(*word & 0xFFFF);
 
-		spird::data_info op_data;
+		if (word + wordcount > word_end)
+			return result::instruction_past_data_end;
 
-		if (result op_result = spird::get_data(instruction_data, spird::enum_id::Instruction, opcode, &op_data); op_result != result::success)
-			return op_result;
+		spird::elem_data op_data;
 
-		uint16_t arg_inds[256];
-
-		uint32_t operand_word_index = 1;
-
-		uint32_t present_argc = 0;
-
-		uint32_t result_index = ~0u;
-
-		uint32_t result_type_index = ~0u;
-
-		for(uint32_t i = 0; i != op_data.argc; ++i)
-		{
-			bool is_optional = static_cast<uint8_t>(op_data.arg_types[i]) & spird::insn_arg_optional_bit;
-
-			bool is_variadic = static_cast<uint8_t>(op_data.arg_types[i]) & spird::insn_arg_variadic_bit;
-
-			if (operand_word_index == wordcount)
-			{
-				if (is_optional)
-					break;
-				else
-					return result::instruction_wordcount_mismatch;
-			}
-			else if (operand_word_index > wordcount)
-				return result::instruction_wordcount_mismatch;
-
-			++present_argc;
-
-			spird::arg_type arg_type = static_cast<spird::arg_type>(static_cast<uint8_t>(op_data.arg_types[i]) & spird::insn_argtype_mask);
-
-			arg_inds[i] = static_cast<uint16_t>(operand_word_index);
-
-			switch (arg_type)
-			{
-			case spird::arg_type::RST:
-			{
-				result_index = operand_word_index;
-
-				++operand_word_index;
-
-				break;
-			}
-			case spird::arg_type::RTYPE:
-			{
-				result_type_index = operand_word_index;
-
-				++operand_word_index;
-
-				break;
-			}
-			case spird::arg_type::ID:
-			case spird::arg_type::TYPID:
-			case spird::arg_type::U32:
-			case spird::arg_type::MEMBER:
-			{
-				++operand_word_index;
-
-				break;
-			}
-			case spird::arg_type::LITERAL:
-			{
-				operand_word_index += static_cast<uint32_t>(wordcount - 1);
-
-				break;
-			}
-			case spird::arg_type::STR:
-			{
-				const char* str = reinterpret_cast<const char*>(shader_words + word_index + operand_word_index);
-
-				operand_word_index += static_cast<uint16_t>((strlen(str) + 4) >> 2);
-
-				break;
-			}
-			case spird::arg_type::ARG:
-			{
-				// ARG only ever comes at the end of an instruction, 
-				// so we can just assume that this completes the instruction wordcount
-
-				operand_word_index += static_cast<uint32_t>(wordcount - 1);
-
-				break;
-			}
-			case spird::arg_type::U32IDPAIR:
-			case spird::arg_type::IDMEMBERPAIR:
-			case spird::arg_type::IDIDPAIR:
-			{
-				operand_word_index += 2;
-
-				break;
-			}
-			default: // Enumeration
-			{
-				++operand_word_index;
-
-				break;
-			}
-			}
-		}
-
-
-
-		if (result_index != ~0u)
-		{
-			uint32_t result_id = shader_words[word_index + result_index];
-
-			uint32_t result_type_id = result_type_index == ~0u ? ~0u : shader_words[word_index + result_type_index];
-
-			if (result rst = output.append_result(result_id, result_type_id); rst != result::success)
-				return rst;
-		}
-
-		if (result rst = output.append_instruction_name(op_data.name); rst != result::success)
+		if (result rst = spird::get_elem_data(spird, spird::enum_id::Instruction, static_cast<uint32_t>(opcode), &op_data); rst != result::success)
 			return rst;
 
-		for (uint32_t i = 0; i != present_argc; ++i)
-		{
-			const void* arg_ptr = shader_words + word_index + arg_inds[i];
+		if (result rst = output.print_instruction_name(op_data.name); rst != result::success)
+			return rst;
 
-			uint8_t argtype_raw = static_cast<uint8_t>(op_data.arg_types[i]);
+		const uint32_t* arg_word = word + 1;
 
-			bool is_variadic = argtype_raw & spird::insn_arg_variadic_bit;
+		for (uint32_t arg = 0; arg != op_data.argc; ++arg)
+			if (result rst = output.print_arg(spird, op_data.arg_types[arg], arg_word, word + wordcount); rst != result::success)
+				return rst;
 
-			argtype_raw &= spird::insn_argtype_mask;
+		if (result rst = output.end_line(); rst != result::success)
+			return rst;
 
-			if (argtype_raw < spird::enum_id_count)
-			{
-				// TODO: Enums with arguments
-				// TODO: Enums with bitmasks
-
-				spird::data_info arg_data;
-
-				uint32_t value = static_cast<const uint32_t*>(arg_ptr)[0];
-
-				if (result rst = spird::get_data(instruction_data, static_cast<spird::enum_id>(argtype_raw), value, &arg_data); rst != result::success)
-					return rst;
-
-				if (result rst = output.append_enum(arg_data.name, static_cast<spird::enum_id>(argtype_raw), value); rst != result::success)
-					return rst;
-
-				if (is_variadic)
-				{
-					for(uint32_t j = 1; j != wordcount - arg_inds[i]; ++j)
-					{
-						uint32_t var_value = static_cast<const uint32_t*>(arg_ptr)[i];
-
-						if (result rst = spird::get_data(instruction_data, static_cast<spird::enum_id>(argtype_raw), var_value, &arg_data); rst != result::success)
-							return rst;
-
-						if (result rst = output.append_enum(arg_data.name, static_cast<spird::enum_id>(argtype_raw), var_value); rst != result::success)
-							return rst;
-					}
-				}
-			}
-			else
-			{
-				uint32_t end_cond;
-
-				if (is_variadic || i == present_argc - 1)
-					end_cond = wordcount - arg_inds[present_argc - 1];
-				else
-					end_cond = arg_inds[i + 1] - arg_inds[i];
-
-				uint32_t n = 0;
-
-				while (n < end_cond)
-				{
-					switch (static_cast<spird::arg_type>(argtype_raw))
-					{
-					case spird::arg_type::RST:
-					case spird::arg_type::RTYPE:
-					case spird::arg_type::ARG:
-					{
-						++n;
-
-						break;
-					}
-					case spird::arg_type::U32:
-					case spird::arg_type::LITERAL:
-					{
-						// TODO: Non-32-bit Literals
-
-						if (result rst = output.append_u32(static_cast<const uint32_t*>(arg_ptr)[n]); rst != result::success)
-							return rst;
-
-						++n;
-
-						break;
-					}
-					case spird::arg_type::ID:
-					case spird::arg_type::TYPID:
-					{
-						if (result rst = output.append_id(static_cast<const uint32_t*>(arg_ptr)[n]); rst != result::success)
-							return rst;
-
-						++n;
-
-						break;
-					}
-					case spird::arg_type::STR:
-					{
-						const char* str = reinterpret_cast<const char*>(static_cast<const uint32_t*>(arg_ptr) + n);
-
-						if (result rst = output.append_string(str); rst != result::success)
-							return rst;
-
-						n += (strlen(str) + 4) >> 2;
-
-						break;
-					}
-					case spird::arg_type::MEMBER:
-					{
-						if (result rst = output.append_member(static_cast<const uint32_t*>(arg_ptr)[n]); rst != result::success)
-							return rst;
-
-						++n;
-
-						break;
-					}
-					case spird::arg_type::U32IDPAIR:
-					{
-						if (result rst = output.append_u32(static_cast<const uint32_t*>(arg_ptr)[n]); rst != result::success)
-							return rst;
-
-						if (result rst = output.append_id(static_cast<const uint32_t*>(arg_ptr)[n + 1]); rst != result::success)
-							return rst;
-
-						n += 2;
-
-						break;
-					}
-					case spird::arg_type::IDMEMBERPAIR:
-					{
-						if (result rst = output.append_id(static_cast<const uint32_t*>(arg_ptr)[n]); rst != result::success)
-							return rst;
-
-						if (result rst = output.append_member(static_cast<const uint32_t*>(arg_ptr)[n + 1]); rst != result::success)
-							return rst;
-
-						n += 2;
-
-						break;
-					}
-					case spird::arg_type::IDIDPAIR:
-					{
-						if (result rst = output.append_id(static_cast<const uint32_t*>(arg_ptr)[n]); rst != result::success)
-							return rst;
-
-						if (result rst = output.append_id(static_cast<const uint32_t*>(arg_ptr)[n + 1]); rst != result::success)
-							return rst;
-
-						n += 2;
-
-						break;
-					}
-					default:
-					{
-						return result::unknown_argtype;
-					}
-					}
-				}
-
-				if (n != end_cond)
-					return spvcpu::result::instruction_wordcount_mismatch;
-			}
-		}
-
-		if (operand_word_index != wordcount)
+		if (arg_word != word + wordcount)
 			return result::instruction_wordcount_mismatch;
 
-		output.append_string("\n");
-
-		word_index += wordcount;
+		word = arg_word;
 	}
+
+	if (result rst = output.finalize(); rst != result::success)
+		return rst;
 	
+	*out_disassembly = output.steal();
 
 	return result::success;
 }
