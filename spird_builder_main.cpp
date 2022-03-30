@@ -78,7 +78,7 @@ static constexpr const char* argument_type_names[]{
 	"LITERAL",
 	"VALUE",
 	"TYPE",
-	"OTHER",
+	"UNKNOWN",
 	"U32",
 	"STR",
 	"ARG",

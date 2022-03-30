@@ -87,7 +87,7 @@ namespace spird
 		LITERAL                       = 43,
 		VALUE                         = 44,
 		TYPE                          = 45,
-		OTHER                         = 46,
+		UNKNOWN                       = 46,
 		U32                           = 47,
 		STR                           = 48,
 		ARG                           = 49,
@@ -97,7 +97,6 @@ namespace spird
 		IDIDPAIR                      = 53,
 		IDU32PAIR                     = 54,
 		I64                           = 55,
-		UNKNOWN                       = 255,
 	};
 
 	enum class arg_flags : uint8_t

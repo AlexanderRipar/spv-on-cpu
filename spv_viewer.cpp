@@ -448,7 +448,7 @@ public:
 
 					break;
 				}
-				case spird::arg_type::OTHER:
+				case spird::arg_type::UNKNOWN:
 				{
 					// TODO
 
