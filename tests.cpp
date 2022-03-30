@@ -654,26 +654,31 @@ int cycle(int argc, const char** argv) noexcept
 
 			for (uint32_t i = 0; i != elem_data.argc; ++i)
 			{
-				uint8_t argtype = static_cast<uint8_t>(elem_data.arg_types[i]);
+				spird::arg_type arg_type = elem_data.arg_types[i];
+
+				spird::arg_flags arg_flags = elem_data.arg_flags[i];
 
 				const char* optstr = "";
 
 				const char* varstr = "";
 
-				if (argtype & spird::insn_arg_optional_bit)
+				const char* idstr = "";
+
+				if ((arg_flags & spird::arg_flags::optional) == spird::arg_flags::optional)
 					optstr = "OPT ";
 
-				if (argtype & spird::insn_arg_variadic_bit)
+				if ((arg_flags & spird::arg_flags::variadic) == spird::arg_flags::optional)
 					varstr = "VAR ";
 
-				argtype &= spird::insn_argtype_mask;
+				if ((arg_flags & spird::arg_flags::id) == spird::arg_flags::id)
+					idstr = "ID ";
 
 				const char* argtypename = "<Invalid>";
 
-				if (argtype < _countof(argument_type_names))
-					argtypename = argument_type_names[argtype];
+				if (static_cast<uint8_t>(arg_type) < _countof(argument_type_names))
+					argtypename = argument_type_names[static_cast<uint8_t>(arg_type)];
 
-				fprintf(output_file, "\t\t\t%s%s%s", optstr, varstr, argtypename);
+				fprintf(output_file, "\t\t\t%s%s%s%s", optstr, varstr, idstr, argtypename);
 
 				if (elem_data.arg_names[i] == nullptr)
 					fprintf(output_file, "\n");
