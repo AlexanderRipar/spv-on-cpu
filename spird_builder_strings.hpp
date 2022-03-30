@@ -110,13 +110,11 @@ static constexpr const char* const elem_depends_string      = "depends";
 
 static constexpr const char* const elem_implies_string      = "implies";
 
-static constexpr const char* const args_name_string         = "name";
-
-static constexpr const char* const args_type_string         = "type";
-
 static constexpr const char* const argument_optional_string = "OPT";
 
 static constexpr const char* const argument_variadic_string = "VAR";
+
+static constexpr const char* const argument_id_string       = "ID";
 
 
 

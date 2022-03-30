@@ -76,8 +76,9 @@ static constexpr const char* argument_type_names[]{
 	"RST",
 	"RTYPE",
 	"LITERAL",
-	"ID",
-	"TYPID",
+	"VALUE",
+	"TYPE",
+	"OTHER",
 	"U32",
 	"STR",
 	"ARG",
@@ -741,9 +742,9 @@ int main(int argc, const char** argv)
 
 				bool flag_variadic = false;
 
-				bool is_flag = true;
+				bool flag_id = false;
 
-				while (is_flag)
+				while (true)
 				{
 					name_len = 0;
 
@@ -758,8 +759,6 @@ int main(int argc, const char** argv)
 							panic("Line %d: '%s' specified more than once.\n", line_number, argument_optional_string);
 
 						flag_optional = true;
-
-						is_flag = true;
 					}
 					else if (token_equal(curr, argument_variadic_string))
 					{
@@ -769,12 +768,14 @@ int main(int argc, const char** argv)
 							panic("Line %d: '%s' specified more than once.\n", line_number, argument_optional_string);
 
 						flag_variadic = true;
-
-						is_flag = true;
+					}
+					else if (token_equal(curr, argument_id_string))
+					{
+						flag_id = true;
 					}
 					else
 					{
-						is_flag = false;
+						break;
 					}
 				}
 
@@ -788,15 +789,22 @@ int main(int argc, const char** argv)
 					{
 						name_idx = i;
 
-						uint8_t argument_type_and_flags = static_cast<uint8_t>(i);
+						spird::arg_flags flags = spird::arg_flags::none;
+
+						
 
 						if (flag_optional)
-							argument_type_and_flags |= spird::insn_arg_optional_bit;
+							flags |= spird::arg_flags::optional;
 
 						if (flag_variadic)
-							argument_type_and_flags |= spird::insn_arg_variadic_bit;
+							flags |= spird::arg_flags::variadic;
 
-						output.append(static_cast<spird::arg_type>(argument_type_and_flags));
+						if (flag_id)
+							flags |= spird::arg_flags::id;
+
+						output.append(static_cast<spird::arg_type>(flags));
+
+						output.append(static_cast<spird::arg_type>(i));
 
 						break;
 					}
@@ -1036,7 +1044,7 @@ int main(int argc, const char** argv)
 		}
 
 	spird::file_header file_header;
-	file_header.version = 4 + static_cast<uint32_t>(mode) + (no_implies_and_depends ? 0 : 3);
+	file_header.version = 10 + static_cast<uint32_t>(mode) + (no_implies_and_depends ? 0 : 3);
 	file_header.table_count = enum_count;
 
 	if (fwrite(&file_header, 1, sizeof(file_header), output_file) != sizeof(file_header))
