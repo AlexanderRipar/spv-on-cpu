@@ -23,6 +23,7 @@ namespace spvcpu
 		spirv_data_unknown_version,
 		spirv_data_enumeration_not_found,
 		unknown_argtype,
+		id_arg_without_id,
 	};
 }
 
