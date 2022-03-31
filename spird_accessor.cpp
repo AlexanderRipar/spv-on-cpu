@@ -170,7 +170,7 @@ spvcpu::result spird::get_enum_data(const void* spv_data, spird::enum_id enum_id
 
 	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
 
-	if (file_header->version < 4 || file_header->version > 9)
+	if (file_header->version < 4 || file_header->version > 15)
 		return spvcpu::result::spirv_data_unknown_version;
 
 	if (enum_id_uint > file_header->table_count)
