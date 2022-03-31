@@ -20,7 +20,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
+			ID UNKNOWN "Pointer"
 		]
 		depends : Addresses
 	}
@@ -28,7 +28,7 @@ Instruction : [
 		id : 5630
 		name : "AssumeTrueKHR"
 		args : [
-			ID "Condition"
+			ID UNKNOWN "Condition"
 		]
 		depends : ExpectAssumeKHR
 	}
@@ -38,8 +38,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Value"
-			ID "ExpectedValue"
+			ID UNKNOWN "Value"
+			ID UNKNOWN "ExpectedValue"
 		]
 		depends : ExpectAssumeKHR
 	}
@@ -71,7 +71,7 @@ Instruction : [
 		id : 5
 		name : "Name"
 		args : [
-			ID "Target"
+			ID UNKNOWN "Target"
 			STR "Name"
 		]
 	}
@@ -79,7 +79,7 @@ Instruction : [
 		id : 6
 		name : "MemberName"
 		args : [
-			TYPID "Type"
+			ID TYPE "Type"
 			MEMBER "Member"
 			STR "Name"
 		]
@@ -96,7 +96,7 @@ Instruction : [
 		id : 8
 		name : "Line"
 		args : [
-			ID "Filename"
+			ID STR "Filename"
 			U32 "Line"
 			U32 "Column"
 		]
@@ -118,7 +118,7 @@ Instruction : [
 		id : 71
 		name : "Decorate"
 		args : [
-			ID "Target"
+			ID UNKNOWN "Target"
 			DECORATION
 			OPT VAR ARG
 		]
@@ -127,7 +127,7 @@ Instruction : [
 		id : 72
 		name : "MemberDecorate"
 		args : [
-			TYPID
+			ID TYPE
 			MEMBER
 			DECORATION
 			OPT VAR ARG
@@ -144,8 +144,8 @@ Instruction : [
 		id : 74
 		name : "GroupDecorate"
 		args : [
-			ID "Group"
-			ID "Targets"
+			ID UNKNOWN "Group"
+			ID UNKNOWN "Targets"
 		]
 	}
 	{
@@ -159,7 +159,7 @@ Instruction : [
 		id : 332
 		name : "DecorateId"
 		args : [
-			ID "Target"
+			ID UNKNOWN "Target"
 			DECORATION
 			OPT VAR ARG
 		]
@@ -168,7 +168,7 @@ Instruction : [
 		id : 5632
 		name : "DecorateString"
 		args : [
-			ID "Target"
+			ID UNKNOWN "Target"
 			DECORATION
 			VAR STR "Args"
 		]
@@ -177,7 +177,7 @@ Instruction : [
 		id : 5633
 		name : "MemberDecorateString"
 		args : [
-			TYPID
+			ID TYPE
 			MEMBER
 			DECORATION
 			VAR STR "Args"
@@ -204,7 +204,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Set"
+			ID UNKNOWN "Set"
 			INSTRUCTION
 			OPT VAR ARG
 		]
@@ -222,16 +222,16 @@ Instruction : [
 		name : "EntryPoint"
 		args : [
 			EXECUTIONMODEL
-			ID "EntryPoint"
+			ID UNKNOWN "EntryPoint"
 			STR "Name"
-			OPT VAR ID "Interface"
+			OPT VAR ID UNKNOWN "Interface"
 		]
 	}
 	{
 		id : 16
 		name : "ExecutionMode"
 		args : [
-			ID "EntryPoint"
+			ID UNKNOWN "EntryPoint"
 			EXECUTIONMODE
 			OPT VAR ARG
 		]
@@ -247,9 +247,9 @@ Instruction : [
 		id : 331
 		name : "ExecutionModeId"
 		args : [
-			ID "EntryPoint"
+			ID UNKNOWN "EntryPoint"
 			EXECUTIONMODE
-			VAR ID "Args"
+			VAR ID UNKNOWN "Args"
 		]
 	}
 	{
@@ -288,7 +288,7 @@ Instruction : [
 		name : "TypeVector"
 		args : [
 			RST
-			TYPID "ComponentType"
+			ID TYPE "ComponentType"
 			U32 "ComponentCount"
 		]
 	}
@@ -297,7 +297,7 @@ Instruction : [
 		name : "TypeMatrix"
 		args : [
 			RST
-			TYPID "ColumnType"
+			ID TYPE "ColumnType"
 			U32 "ColumnCount"
 		]
 		depends : Matrix
@@ -307,7 +307,7 @@ Instruction : [
 		name : "TypeImage"
 		args : [
 			RST
-			TYPID "SampledType"
+			ID TYPE "SampledType"
 			DIM
 			U32 "Depth"
 			U32 "Arrayed"
@@ -329,7 +329,7 @@ Instruction : [
 		name : "TypeSampledImage"
 		args : [
 			RST
-			TYPID "ImageType"
+			ID TYPE "ImageType"
 		]
 	}
 	{
@@ -337,8 +337,8 @@ Instruction : [
 		name : "TypeArray"
 		args : [
 			RST
-			TYPID "ElemType"
-			ID "Length"
+			ID TYPE "ElemType"
+			ID VALUE "Length"
 		]
 	}
 	{
@@ -346,7 +346,7 @@ Instruction : [
 		name : "TypeRuntimeArray"
 		args : [
 			RST
-			TYPID "ElemType"
+			ID TYPE "ElemType"
 		]
 		depends : Shader
 	}
@@ -355,7 +355,7 @@ Instruction : [
 		name : "TypeStruct"
 		args : [
 			RST
-			OPT VAR TYPID "Members"
+			OPT VAR ID TYPE "Members"
 		]
 	}
 	{
@@ -373,7 +373,7 @@ Instruction : [
 		args : [
 			RST
 			STORAGECLASS
-			TYPID "Pointee"
+			ID TYPE "Pointee"
 		]
 	}
 	{
@@ -381,8 +381,8 @@ Instruction : [
 		name : "TypeFunction"
 		args : [
 			RST
-			TYPID "ReturnType"
-			OPT VAR TYPID "ArgTypes"
+			ID TYPE "ReturnType"
+			OPT VAR ID TYPE "ArgTypes"
 		]
 	}
 	{
@@ -430,7 +430,7 @@ Instruction : [
 		id : 39
 		name : "TypeForwardPointer"
 		args : [
-			TYPID "PointerType"
+			ID TYPE "PointerType"
 			STORAGECLASS
 		]
 		depends : [ Addresses PhysicalStorageBufferAddresses ]
@@ -464,7 +464,7 @@ Instruction : [
 		id : 6090
 		name : "TypeStructContinuedINTEL"
 		args : [
-			VAR TYPID "MemberTypes"
+			VAR ID TYPE "MemberTypes"
 		]
 		depends : LongConstantCompositeINTEL
 	}
@@ -499,7 +499,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			VAR ID "Constituents"
+			VAR ID VALUE "Constituents"
 		]
 	}
 	{
@@ -553,7 +553,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			VAR ID "Constituents"
+			VAR ID VALUE "Constituents"
 		]
 	}
 	{
@@ -563,14 +563,14 @@ Instruction : [
 			RTYPE
 			RST
 			U32 "Opcode"
-			OPT VAR ID "Operands"
+			OPT VAR ID UNKNOWN "Operands"
 		]
 	}
 	{
 		id : 6091
 		name : "ConstantCompositeContinuedINTEL"
 		args : [
-			VAR ID "Constituents"
+			VAR ID VALUE "Constituents"
 		]
 		depends : LongConstantCompositeINTEL
 	}
@@ -578,7 +578,7 @@ Instruction : [
 		id : 6092
 		name : "SpecConstantCompositeContinuedINTEL"
 		args : [
-			VAR ID "Constituents"
+			VAR ID VALUE "Constituents"
 		]
 		depends : LongConstantCompositeINTEL
 	}
@@ -589,7 +589,7 @@ Instruction : [
 			RTYPE
 			RST
 			STORAGECLASS
-			OPT ID "Initializer"
+			OPT ID VALUE "Initializer"
 		]
 	}
 	{
@@ -598,9 +598,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			TYPID "Image"
-			ID "Coordinate"
-			ID "Sample"
+			ID TYPE "Image"
+			ID VALUE "Coordinate"
+			ID VALUE "Sample"
 		]
 	}
 	{
@@ -609,7 +609,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
+			ID VALUE "Pointer"
 			OPT MEMORYOPERANDS
 		]
 	}
@@ -617,8 +617,8 @@ Instruction : [
 		id : 62
 		name : "Store"
 		args : [
-			ID "Pointer"
-			ID "Object"
+			ID VALUE "Pointer"
+			ID VALUE "Object"
 			OPT MEMORYOPERANDS
 		]
 	}
@@ -626,8 +626,8 @@ Instruction : [
 		id : 63
 		name : "CopyMemory"
 		args : [
-			ID "Target"
-			ID "Source"
+			ID VALUE "Target"
+			ID VALUE "Source"
 			OPT MEMORYOPERANDS
 			OPT MEMORYOPERANDS
 		]
@@ -636,9 +636,9 @@ Instruction : [
 		id : 64
 		name : "CopyMemorySized"
 		args : [
-			ID "Target"
-			ID "Source"
-			ID "Size"
+			ID VALUE "Target"
+			ID VALUE "Source"
+			ID VALUE "Size"
 			OPT MEMORYOPERANDS
 			OPT MEMORYOPERANDS
 		]
@@ -650,8 +650,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
-			VAR ID "Indices"
+			ID VALUE "Base"
+			VAR ID VALUE "Indices"
 		]
 	}
 	{
@@ -660,8 +660,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
-			VAR ID "Indices"
+			ID VALUE "Base"
+			VAR ID VALUE "Indices"
 		]
 	}
 	{
@@ -670,9 +670,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
-			ID "Element"
-			VAR ID "Indices"
+			ID VALUE "Base"
+			ID VALUE "Element"
+			VAR ID VALUE "Indices"
 		]
 		depends : [ Addresses VariablePointers VariablePointersStorageBuffer PhysicalStorageBufferAddresses ]
 	}
@@ -682,7 +682,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			TYPID "Structure"
+			ID TYPE "Structure"
 			MEMBER
 		]
 		depends : Shader
@@ -693,7 +693,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
+			ID VALUE "Pointer"
 		]
 		depends : Kernel
 	}
@@ -703,9 +703,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
-			ID "Element"
-			VAR ID "Indices"
+			ID VALUE "Base"
+			ID VALUE "Element"
+			VAR ID VALUE "Indices"
 		]
 		depends : Addresses
 	}
@@ -715,8 +715,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE "Operand1"
+			ID VALUE "Operand2"
 		]
 	}
 	{
@@ -725,8 +725,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE "Operand1"
+			ID VALUE "Operand2"
 		]
 	}
 	{
@@ -735,8 +735,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE "Operand1"
+			ID VALUE "Operand2"
 		]
 		depends : [ Addresses VariablePointers VariablePointersStorageBuffer ]
 	}
@@ -747,7 +747,7 @@ Instruction : [
 			RTYPE
 			RST
 			FUNCTIONCONTROL
-			TYPID "FunctionType"
+			ID TYPE "FunctionType"
 		]
 	}
 	{
@@ -770,8 +770,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Function"
-			OPT VAR ID "Args"
+			ID UNKNOWN "Function"
+			OPT VAR ID VALUE "Args"
 		]
 	}
 	{
@@ -780,8 +780,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
-			ID "Sampler"
+			ID VALUE "Image"
+			ID VALUE "Sampler"
 		]
 	}
 	{
@@ -790,10 +790,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : Shader
 	}
@@ -803,10 +803,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
 			IMAGEOPERANDS
-			VAR ID "Operands"
+			VAR ID ARG
 		]
 	}
 	{
@@ -815,11 +815,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Dref"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Dref"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : Shader
 	}
@@ -829,11 +829,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Dref"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Dref"
 			IMAGEOPERANDS
-			VAR ID "Operands"
+			VAR ID ARG
 		]
 		depends : Shader
 	}
@@ -843,10 +843,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : Shader
 	}
@@ -856,10 +856,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID  "Coordinate"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
 			IMAGEOPERANDS
-			VAR ID "Operands"
+			VAR ID ARG
 		]
 		depends : Shader
 	}
@@ -869,11 +869,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Dref"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Dref"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : Shader
 	}
@@ -883,11 +883,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Dref"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Dref"
 			IMAGEOPERANDS
-			VAR ID "Operands"
+			VAR ID ARG
 		]
 		depends : Shader
 	}
@@ -897,10 +897,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
-			ID "Coordinate"
+			ID VALUE "Image"
+			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 	}
 	{
@@ -909,11 +909,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Component"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Component"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : Shader
 	}
@@ -923,11 +923,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Dref"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Dref"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : Shader
 	}
@@ -937,21 +937,21 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
-			ID "Coordinate"
+			ID VALUE "Image"
+			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 	}
 	{
 		id : 99
 		name : "ImageWrite"
 		args : [
-			ID "Image"
-			ID "Coordinate"
-			ID "Texel"
+			ID VALUE "Image"
+			ID VALUE "Coordinate"
+			ID VALUE "Texel"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 	}
 	{
@@ -960,7 +960,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
+			ID VALUE "SampledImage"
 		]
 	}
 	{
@@ -969,7 +969,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
+			ID VALUE "Image"
 		]
 		depends : Kernel
 	}
@@ -979,7 +979,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
+			ID VALUE "Image"
 		]
 		depends : Kernel
 	}
@@ -989,8 +989,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
-			ID "Lod"
+			ID VALUE "Image"
+			ID VALUE "Lod"
 		]
 		depends : [ Kernel ImageQuery ]
 	}
@@ -1000,7 +1000,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
+			ID VALUE "Image"
 		]
 		depends : [ Kernel ImageQuery ]
 	}
@@ -1010,8 +1010,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
 		]
 		depends : ImageQuery
 	}
@@ -1021,7 +1021,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
+			ID VALUE "Image"
 		]
 		depends : [ Kernel ImageQuery ]
 	}
@@ -1031,7 +1031,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
+			ID VALUE "Image"
 		]
 		depends : [ Kernel ImageQuery ]
 	}
@@ -1041,10 +1041,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1054,10 +1054,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
 			IMAGEOPERANDS
-			VAR ID "Operands"
+			VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1067,11 +1067,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Dref"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Dref"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1081,11 +1081,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Dref"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Dref"
 			IMAGEOPERANDS
-			VAR ID "Operands"
+			VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1095,10 +1095,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1108,10 +1108,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
 			IMAGEOPERANDS
-			VAR ID "Operands"
+			VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1121,11 +1121,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Dref"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Dref"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1135,11 +1135,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Dref"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Dref"
 			IMAGEOPERANDS
-			VAR ID "Operands"
+			VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1149,10 +1149,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
-			ID "Coordinate"
+			ID VALUE "Image"
+			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1162,11 +1162,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Component"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Component"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1176,11 +1176,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Dref"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Dref"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1190,7 +1190,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "ResidentCode"
+			ID VALUE "ResidentCode"
 		]
 		depends : SparseResidency
 	}
@@ -1200,10 +1200,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
-			ID "Coordinate"
+			ID VALUE "Image"
+			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : SparseResidency
 	}
@@ -1213,12 +1213,12 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SampledImage"
-			ID "Coordinate"
-			ID "Granularity"
-			ID "Coarse"
+			ID VALUE "SampledImage"
+			ID VALUE "Coordinate"
+			ID VALUE "Granularity"
+			ID VALUE "Coarse"
 			OPT IMAGEOPERANDS
-			OPT VAR ID "Operands"
+			OPT VAR ID ARG
 		]
 		depends : ImageFootprintNV
 	}
@@ -1228,7 +1228,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "FloatValue"
+			ID VALUE
 		]
 	}
 	{
@@ -1237,7 +1237,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "FloatValue"
+			ID VALUE
 		]
 	}
 	{
@@ -1246,7 +1246,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SignedValue"
+			ID VALUE
 		]
 	}
 	{
@@ -1255,7 +1255,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "UnsignedValue"
+			ID VALUE
 		]
 	}
 	{
@@ -1264,7 +1264,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "UnsignedValue"
+			ID VALUE
 		]
 	}
 	{
@@ -1273,7 +1273,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SignedValue"
+			ID VALUE
 		]
 	}
 	{
@@ -1282,7 +1282,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "FloatValue"
+			ID VALUE
 		]
 	}
 	{
@@ -1291,7 +1291,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Value"
+			ID VALUE
 		]
 		depends : Shader
 	}
@@ -1301,7 +1301,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
+			ID VALUE
 		]
 		depends : [ Addresses PhysicalStorageBufferAddresses ]
 	}
@@ -1311,7 +1311,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SignedValue"
+			ID VALUE
 		]
 		depends : Kernel
 	}
@@ -1321,7 +1321,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "UnsignedValue"
+			ID VALUE
 		]
 		depends : Kernel
 	}
@@ -1331,7 +1331,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "IntegerValue"
+			ID VALUE
 		]
 		depends : [ Addresses PhysicalStorageBufferAddresses ]
 	}
@@ -1341,7 +1341,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
+			ID VALUE
 		]
 		depends : Kernel
 	}
@@ -1351,7 +1351,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
+			ID VALUE
 		]
 		depends : Kernel
 	}
@@ -1361,7 +1361,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
+			ID VALUE
 			STORAGECLASS
 		]
 		depends : Kernel
@@ -1372,7 +1372,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 	}
 	{
@@ -1381,8 +1381,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector"
-			ID "Index"
+			ID VALUE "Vector"
+			ID VALUE "Index"
 		]
 	}
 	{
@@ -1391,9 +1391,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector"
-			ID "Component"
-			ID "Index"
+			ID VALUE "Vector"
+			ID VALUE "Component"
+			ID VALUE "Index"
 		]
 	}
 	{
@@ -1402,8 +1402,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector1"
-			ID "Vector2"
+			ID VALUE "Vector1"
+			ID VALUE "Vector2"
 			OPT VAR U32 "Components"
 		]
 	}
@@ -1413,7 +1413,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			OPT VAR ID "Constituents" 
+			OPT VAR ID VALUE "Constituents" 
 		]
 	}
 	{
@@ -1422,7 +1422,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Composite"
+			ID VALUE "Composite"
 			VAR U32 "Indices"
 		]
 	}
@@ -1432,8 +1432,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Object"
-			ID "Composite"
+			ID VALUE "Object"
+			ID VALUE "Composite"
 			VAR U32 "Indices"
 		]
 	}
@@ -1443,7 +1443,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 	}
 	{
@@ -1452,7 +1452,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Matrix"
+			ID VALUE "Matrix"
 		]
 		depends : Matrix
 	}
@@ -1462,7 +1462,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 	}
 	{
@@ -1471,7 +1471,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 	}
 	{
@@ -1480,7 +1480,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 	}
 	{
@@ -1489,8 +1489,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1499,8 +1499,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1509,8 +1509,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1519,8 +1519,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1529,8 +1529,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1539,8 +1539,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1549,8 +1549,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1559,8 +1559,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1569,8 +1569,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1579,8 +1579,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1589,8 +1589,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1599,8 +1599,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1609,8 +1609,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1619,8 +1619,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1629,8 +1629,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector"
-			ID "Scalar"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1639,8 +1639,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Matrix"
-			ID "Scalar"
+			ID VALUE
+			ID VALUE
 		]
 		depends : Matrix
 	}
@@ -1650,8 +1650,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector"
-			ID "Matrix"
+			ID VALUE
+			ID VALUE
 		]
 		depends : Matrix
 	}
@@ -1661,8 +1661,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Matrix"
-			ID "Vector"
+			ID VALUE
+			ID VALUE
 		]
 		depends : Matrix
 	}
@@ -1672,8 +1672,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "LeftMatrix"
-			ID "RightMatrix"
+			ID VALUE
+			ID VALUE
 		]
 		depends : Matrix
 	}
@@ -1683,8 +1683,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector1"
-			ID "Vector2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : Matrix
 	}
@@ -1694,8 +1694,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector1"
-			ID "Vector2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1704,8 +1704,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1714,8 +1714,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1724,8 +1724,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1734,8 +1734,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1744,8 +1744,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector1"
-			ID "Vector2"
+			ID VALUE
+			ID VALUE
 			OPT PACKEDVECTORFORMAT
 		]
 		depends : DotProduct
@@ -1756,8 +1756,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector1"
-			ID "Vector2"
+			ID VALUE
+			ID VALUE
 			OPT PACKEDVECTORFORMAT
 		]
 		depends : DotProduct
@@ -1768,8 +1768,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector1"
-			ID "Vector2"
+			ID VALUE
+			ID VALUE
 			OPT PACKEDVECTORFORMAT
 		]
 		depends : DotProduct
@@ -1780,9 +1780,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector1"
-			ID "Vector2"
-			ID "Accumulator"
+			ID VALUE
+			ID VALUE
+			ID VALUE "Accumulator"
 			OPT PACKEDVECTORFORMAT
 		]
 		depends : DotProduct
@@ -1793,9 +1793,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector1"
-			ID "Vector2"
-			ID "Accumulator"
+			ID VALUE
+			ID VALUE
+			ID VALUE "Accumulator"
 			OPT PACKEDVECTORFORMAT
 		]
 		depends : DotProduct
@@ -1806,9 +1806,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector1"
-			ID "Vector2"
-			ID "Accumulator"
+			ID VALUE
+			ID VALUE
+			ID VALUE "Accumulator"
 			OPT PACKEDVECTORFORMAT
 		]
 		depends : DotProduct
@@ -1819,8 +1819,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
-			ID "Shift"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1829,8 +1829,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
-			ID "Shift"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1839,8 +1839,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
-			ID "Shift"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1849,8 +1849,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1859,8 +1859,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1869,8 +1869,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -1879,7 +1879,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 	}
 	{
@@ -1888,10 +1888,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
-			ID "Insert"
-			ID "Offset"
-			ID "Count"
+			ID VALUE "Base"
+			ID VALUE "Insert"
+			ID VALUE "Offset"
+			ID VALUE "Count"
 		]
 		depends : [ Shader BitInstructions ]
 	}
@@ -1901,9 +1901,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
-			ID "Offset"
-			ID "Count"
+			ID VALUE "Base"
+			ID VALUE "Offset"
+			ID VALUE "Count"
 		]
 		depends : [ Shader BitInstructions ]
 	}
@@ -1913,9 +1913,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
-			ID "Offset"
-			ID "Count"
+			ID VALUE "Base"
+			ID VALUE "Offset"
+			ID VALUE "Count"
 		]
 		depends : [ Shader BitInstructions ]
 	}
@@ -1925,7 +1925,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
+			ID VALUE
 		]
 		depends : [ Shader BitInstructions ]
 	}
@@ -1935,7 +1935,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Base"
+			ID VALUE
 		]
 	}
 	{
@@ -1944,7 +1944,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector"
+			ID VALUE "Vector"
 		]
 	}
 	{
@@ -1953,7 +1953,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Vector"
+			ID VALUE "Vector"
 		]
 	}
 	{
@@ -1962,7 +1962,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Value"
+			ID VALUE
 		]
 	}
 	{
@@ -1971,7 +1971,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Value"
+			ID VALUE
 		]
 	}
 	{
@@ -1980,7 +1980,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Value"
+			ID VALUE
 		]
 		depends : Kernel
 	}
@@ -1990,7 +1990,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Value"
+			ID VALUE
 		]
 		depends : Kernel
 	}
@@ -2000,7 +2000,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Value"
+			ID VALUE
 		]
 		depends : Kernel
 	}
@@ -2010,8 +2010,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : Kernel
 	}
@@ -2021,8 +2021,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : Kernel
 	}
@@ -2032,8 +2032,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : Kernel
 	}
@@ -2043,8 +2043,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2053,8 +2053,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2063,8 +2063,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2073,8 +2073,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2083,7 +2083,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 	}
 	{
@@ -2092,9 +2092,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Condition"
-			ID "Object1"
-			ID "Object2"
+			ID UNKNOWN "Condition"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2103,8 +2103,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2113,8 +2113,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2123,8 +2123,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2133,8 +2133,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2143,8 +2143,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2153,8 +2153,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2163,8 +2163,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2173,8 +2173,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2183,8 +2183,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2193,8 +2193,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2203,8 +2203,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2213,8 +2213,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2223,8 +2223,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2233,8 +2233,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2243,8 +2243,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2253,8 +2253,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2263,8 +2263,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2273,8 +2273,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2283,8 +2283,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2293,8 +2293,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2303,8 +2303,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2313,8 +2313,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 	}
 	{
@@ -2323,7 +2323,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "P"
+			ID VALUE "P"
 		]
 		depends : Shader
 	}
@@ -2333,7 +2333,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "P"
+			ID VALUE "P"
 		]
 		depends : Shader
 	}
@@ -2343,7 +2343,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "P"
+			ID VALUE "P"
 		]
 		depends : Shader
 	}
@@ -2353,7 +2353,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "P"
+			ID VALUE "P"
 		]
 		depends : DerivativeControl
 	}
@@ -2363,7 +2363,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "P"
+			ID VALUE "P"
 		]
 		depends : DerivativeControl
 	}
@@ -2373,7 +2373,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "P"
+			ID VALUE "P"
 		]
 		depends : DerivativeControl
 	}
@@ -2383,7 +2383,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "P"
+			ID VALUE "P"
 		]
 		depends : DerivativeControl
 	}
@@ -2393,7 +2393,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "P"
+			ID VALUE "P"
 		]
 		depends : DerivativeControl
 	}
@@ -2403,7 +2403,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "P"
+			ID VALUE "P"
 		]
 		depends : DerivativeControl
 	}
@@ -2413,15 +2413,15 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			VAR IDIDPAIR
+			VAR IDIDPAIR #TODO
 		]
 	}
 	{
 		id : 246
 		name : "LoopMerge"
 		args : [
-			ID "MergeBlock"
-			ID "ContinueTarget"
+			ID UNKNOWN "MergeBlock"
+			ID UNKNOWN "ContinueTarget"
 			LOOPCONTROL
 			OPT VAR ARG
 		]
@@ -2430,7 +2430,7 @@ Instruction : [
 		id : 247
 		name : "SelectionMerge"
 		args : [
-			ID "MergeBlock"
+			ID UNKNOWN "MergeBlock"
 			SELECTIONCONTROL
 		]
 	}
@@ -2445,16 +2445,16 @@ Instruction : [
 		id : 249
 		name : "Branch"
 		args : [
-			ID "TargetLabel"
+			ID UNKNOWN "TargetLabel"
 		]
 	}
 	{
 		id : 250
 		name : "BranchConditional"
 		args : [
-			ID "Condition"
-			ID "TrueLabel"
-			ID "FalseLabel"
+			ID UNKNOWN "Condition"
+			ID UNKNOWN "TrueLabel"
+			ID UNKNOWN "FalseLabel"
 			OPT U32 "TrueWeigth"
 			OPT U32 "FalseWeight"
 		]
@@ -2463,8 +2463,8 @@ Instruction : [
 		id : 251
 		name : "Switch"
 		args : [
-			ID "Selector"
-			ID "Default"
+			ID UNKNOWN "Selector"
+			ID UNKNOWN "Default"
 			OPT VAR U32IDPAIR "Targets"
 		]
 	}
@@ -2485,7 +2485,7 @@ Instruction : [
 		id : 254
 		name : "ReturnValue"
 		args : [
-			ID "Value"
+			ID VALUE "Value"
 		]
 	}
 	{
@@ -2498,7 +2498,7 @@ Instruction : [
 		id : 256
 		name : "LifetimeStart"
 		args : [
-			ID "Pointer"
+			ID VALUE "Pointer"
 			U32 "Size"
 		]
 		depends : Kernel
@@ -2507,7 +2507,7 @@ Instruction : [
 		id : 257
 		name : "LifetimeStop"
 		args : [
-			ID "Pointer"
+			ID VALUE "Pointer"
 			U32 "Size"
 		]
 		depends : Kernel
@@ -2532,19 +2532,19 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
 		]
 	}
 	{
 		id : 228
 		name : "AtomicStore"
 		args : [
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 	}
 	{
@@ -2553,10 +2553,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 	}
 	{
@@ -2565,12 +2565,12 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID "Equal"
-			MEMORYSEMANTICSID "Unequal"
-			ID "Value"
-			ID "Comparator"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS "Equal"
+			ID MEMORYSEMANTICS "Unequal"
+			ID VALUE
+			ID UNKNOWN "Comparator"
 		]
 	}
 	{
@@ -2579,12 +2579,12 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID "Equal"
-			MEMORYSEMANTICSID "Unequal"
-			ID "Value"
-			ID "Comparator"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS "Equal"
+			ID MEMORYSEMANTICS "Unequal"
+			ID VALUE
+			ID UNKNOWN "Comparator"
 		]
 		depends : Kernel
 	}
@@ -2594,9 +2594,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
 		]
 	}
 	{
@@ -2605,9 +2605,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
 		]
 	}
 	{
@@ -2616,10 +2616,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 	}
 	{
@@ -2628,10 +2628,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 	}
 	{
@@ -2640,10 +2640,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 	}
 	{
@@ -2652,10 +2652,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 	}
 	{
@@ -2664,10 +2664,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 	}
 	{
@@ -2676,10 +2676,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 	}
 	{
@@ -2688,10 +2688,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 	}
 	{
@@ -2700,10 +2700,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 	}
 	{
@@ -2712,10 +2712,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 	}
 	{
@@ -2724,9 +2724,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
 		]
 		depends : Kernel
 	}
@@ -2734,9 +2734,9 @@ Instruction : [
 		id : 319
 		name : "AtomicFlagClear"
 		args : [
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
 		]
 		depends : Kernel
 	}
@@ -2746,10 +2746,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 		depends : [ AtomicFloat16MinMaxEXT AtomicFloat32MinMaxEXT AtomicFloat64MinMaxEXT ]
 	}
@@ -2759,10 +2759,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 		depends : [ AtomicFloat16MinMaxEXT AtomicFloat32MinMaxEXT AtomicFloat64MinMaxEXT ]
 	}
@@ -2772,10 +2772,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			SCOPEID
-			MEMORYSEMANTICSID
-			ID "Value"
+			ID VALUE "Pointer"
+			ID SCOPE
+			ID MEMORYSEMANTICS
+			ID VALUE
 		]
 		depends : [ AtomicFloat16AddEXT AtomicFloat32AddEXT AtomicFloat64AddEXT ]
 	}
@@ -2797,7 +2797,7 @@ Instruction : [
 		id : 220
 		name : "EmitStreamVertex"
 		args : [
-			ID "Stream"
+			ID UNKNOWN "Stream"
 		]
 		depends : GeometryStreams
 	}
@@ -2805,7 +2805,7 @@ Instruction : [
 		id : 221
 		name : "EndStreamPrimitive"
 		args : [
-			ID "Stream"
+			ID UNKNOWN "Stream"
 		]
 		depends : GeometryStreams
 	}
@@ -2813,17 +2813,17 @@ Instruction : [
 		id : 224
 		name : "ControlBarrier"
 		args : [
-			SCOPEID "Execution"
-			SCOPEID "Memory"
-			MEMORYSEMANTICSID
+			ID SCOPE "Execution"
+			ID SCOPE "Memory"
+			ID MEMORYSEMANTICS
 		]
 	}
 	{
 		id : 225
 		name : "MemoryBarrier"
 		args : [
-			SCOPEID "Memory"
-			MEMORYSEMANTICSID
+			ID SCOPE "Memory"
+			ID MEMORYSEMANTICS
 		]
 	}
 	{
@@ -2832,7 +2832,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SubgroupCount"
+			ID VALUE "SubgroupCount"
 		]
 		depends : NamedBarrier
 	}
@@ -2840,9 +2840,9 @@ Instruction : [
 		id : 329
 		name : "MemoryNamedBarrier"
 		args : [
-			ID "NamedBarrier"
-			SCOPEID
-			MEMORYSEMANTICSID
+			ID VALUE "NamedBarrier"
+			ID SCOPE
+			ID MEMORYSEMANTICS
 		]
 		depends : NamedBarrier
 	}
@@ -2852,12 +2852,12 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Destination"
-			ID "Source"
-			ID "NumElements"
-			ID "Stride"
-			ID "Event"
+			ID SCOPE
+			ID UNKNOWN "Destination"
+			ID UNKNOWN "Source"
+			ID VALUE "NumElements"
+			ID VALUE "Stride"
+			ID VALUE "Event"
 		]
 		depends : Kernel
 	}
@@ -2865,9 +2865,9 @@ Instruction : [
 		id : 260
 		name : "GroupWaitEvents"
 		args : [
-			SCOPEID
-			ID "NumEvents"
-			ID "EventsList"
+			ID SCOPE
+			ID VALUE "NumEvents"
+			ID VALUE "EventsList"
 		]
 		depends : Kernel
 	}
@@ -2877,8 +2877,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Predicate"
+			ID SCOPE
+			ID UNKNOWN "Predicate"
 		]
 		depends : Groups
 	}
@@ -2888,8 +2888,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Predicate"
+			ID SCOPE
+			ID UNKNOWN "Predicate"
 		]
 		depends : Groups
 	}
@@ -2899,9 +2899,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
-			ID "LocalId"
+			ID SCOPE
+			ID VALUE
+			ID VALUE "LocalId"
 		]
 		depends : Groups
 	}
@@ -2911,9 +2911,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -2923,9 +2923,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -2935,9 +2935,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -2947,9 +2947,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -2959,9 +2959,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -2971,9 +2971,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -2983,9 +2983,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -2995,9 +2995,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -3007,7 +3007,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Predicate"
+			ID UNKNOWN "Predicate"
 		]
 		depends : SubgroupBallotKHR
 	}
@@ -3017,7 +3017,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Value"
+			ID VALUE
 		]
 		depends : SubgroupBallotKHR
 	}
@@ -3027,7 +3027,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Predicate"
+			ID UNKNOWN "Predicate"
 		]
 		depends : SubgroupVoteKHR
 	}
@@ -3037,7 +3037,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Predicate"
+			ID UNKNOWN "Predicate"
 		]
 		depends : SubgroupVoteKHR
 	}
@@ -3047,7 +3047,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Predicate"
+			ID UNKNOWN "Predicate"
 		]
 		depends : SubgroupVoteKHR
 	}
@@ -3057,8 +3057,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Value"
-			ID "Index"
+			ID VALUE
+			ID VALUE "Index"
 		]
 		depends : SubgroupBallotKHR
 	}
@@ -3068,9 +3068,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -3080,9 +3080,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -3092,9 +3092,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -3104,9 +3104,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -3116,9 +3116,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -3128,9 +3128,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -3140,9 +3140,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -3152,9 +3152,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : Groups
 	}
@@ -3164,8 +3164,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Data"
-			ID "InvocationId"
+			ID VALUE "Data"
+			ID VALUE "InvocationId"
 		]
 		depends : SubgroupShuffleINTEL
 	}
@@ -3175,9 +3175,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Current"
-			ID "Next"
-			ID "Delta"
+			ID VALUE "Current"
+			ID VALUE "Next"
+			ID VALUE "Delta"
 		]
 		depends : SubgroupShuffleINTEL
 	}
@@ -3187,9 +3187,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Previous"
-			ID "Current"
-			ID "Delta"
+			ID VALUE "Previous"
+			ID VALUE "Current"
+			ID VALUE "Delta"
 		]
 		depends : SubgroupShuffleINTEL
 	}
@@ -3199,8 +3199,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Data"
-			ID "Value"
+			ID VALUE "Data"
+			ID VALUE
 		]
 		depends : SubgroupShuffleINTEL
 	}
@@ -3210,7 +3210,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
+			ID VALUE "Pointer"
 		]
 		depends : SubgroupBufferBlockIOINTEL
 	}
@@ -3218,8 +3218,8 @@ Instruction : [
 		id : 5576
 		name : "SubgroupBlockWriteINTEL"
 		args : [
-			ID "Pointer"
-			ID "Data"
+			ID VALUE "Pointer"
+			ID VALUE
 		]
 		depends : SubgroupBufferBlockIOINTEL
 	}
@@ -3229,8 +3229,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
-			ID "Coordinate"
+			ID VALUE "Image"
+			ID VALUE "Coordinate"
 		]
 		depends : SubgroupImageBlockIOINTEL
 	}
@@ -3238,9 +3238,9 @@ Instruction : [
 		id : 5578
 		name : "SubgroupImageBlockWriteINTEL"
 		args : [
-			ID "Image"
-			ID "Coordinate"
-			ID "Data"
+			ID VALUE "Image"
+			ID VALUE "Coordinate"
+			ID VALUE "Data"
 		]
 		depends : SubgroupImageBlockIOINTEL
 	}
@@ -3250,10 +3250,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
-			ID "Coordinate"
-			ID "Width"
-			ID "Height"
+			ID VALUE "Image"
+			ID VALUE "Coordinate"
+			ID VALUE "Width"
+			ID VALUE "Height"
 		]
 		depends : SubgroupImageMediaBlockIOINTEL
 	}
@@ -3261,11 +3261,11 @@ Instruction : [
 		id : 5581
 		name : "SubgroupImageMediaBlockWriteINTEL"
 		args : [
-			ID "Image"
-			ID "Coordinate"
-			ID "Width"
-			ID "Height"
-			ID "Data"
+			ID VALUE "Image"
+			ID VALUE "Coordinate"
+			ID VALUE "Width"
+			ID VALUE "Height"
+			ID VALUE "Data"
 		]
 		depends : SubgroupImageMediaBlockIOINTEL
 	}
@@ -3275,10 +3275,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Queue"
-			ID "NumEvents"
-			ID "WaitEvents"
-			ID "RetEvent"
+			ID UNKNOWN "Queue"
+			ID VALUE "NumEvents"
+			ID VALUE "WaitEvents"
+			ID VALUE "RetEvent"
 		]
 		depends : DeviceEnqueue
 	}
@@ -3288,17 +3288,17 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Queue"
-			ID "Flags"
-			ID "NDrange"
-			ID "NumEvents"
-			ID "WaitEvents"
-			ID "RetEvent"
-			ID "Invoke"
-			ID "Param"
-			ID "ParamSize"
-			ID "ParamAlign"
-			OPT VAR ID "LocalSize"
+			ID UNKNOWN "Queue"
+			ID KERNELENQUEUEFLAGS
+			ID UNKNOWN "NDrange"
+			ID VALUE "NumEvents"
+			ID VALUE "WaitEvents"
+			ID VALUE "RetEvent"
+			ID VALUE "Invoke"
+			ID VALUE "Param"
+			ID VALUE "ParamSize"
+			ID VALUE "ParamAlign"
+			OPT VAR ID VALUE "LocalSize"
 		]
 		depends : DeviceEnqueue
 	}
@@ -3308,11 +3308,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "NDrange"
-			ID "Invoke"
-			ID "Param"
-			ID "ParamSize"
-			ID "ParamAlign"
+			ID UNKNOWN "NDrange"
+			ID VALUE "Invoke"
+			ID VALUE "Param"
+			ID VALUE "ParamSize"
+			ID VALUE "ParamAlign"
 		]
 		depends : DeviceEnqueue
 	}
@@ -3322,11 +3322,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "NDrange"
-			ID "Invoke"
-			ID "Param"
-			ID "ParamSize"
-			ID "ParamAlign"
+			ID UNKNOWN "NDrange"
+			ID VALUE "Invoke"
+			ID VALUE "Param"
+			ID VALUE "ParamSize"
+			ID VALUE "ParamAlign"
 		]
 		depends : DeviceEnqueue
 	}
@@ -3336,10 +3336,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Invoke"
-			ID "Param"
-			ID "ParamSize"
-			ID "ParamAlign"
+			ID VALUE "Invoke"
+			ID VALUE "Param"
+			ID VALUE "ParamSize"
+			ID VALUE "ParamAlign"
 		]
 		depends : DeviceEnqueue
 	}
@@ -3349,10 +3349,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Invoke"
-			ID "Param"
-			ID "ParamSize"
-			ID "ParamAlign"
+			ID VALUE "Invoke"
+			ID VALUE "Param"
+			ID VALUE "ParamSize"
+			ID VALUE "ParamAlign"
 		]
 		depends : DeviceEnqueue
 	}
@@ -3360,7 +3360,7 @@ Instruction : [
 		id : 297
 		name : "RetainEvent"
 		args : [
-			ID "Event"
+			ID UNKNOWN "Event"
 		]
 		depends : DeviceEnqueue
 	}
@@ -3368,7 +3368,7 @@ Instruction : [
 		id : 298
 		name : "ReleaseEvent"
 		args : [
-			ID "Event"
+			ID UNKNOWN "Event"
 		]
 		depends : DeviceEnqueue
 	}
@@ -3387,7 +3387,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Event"
+			ID UNKNOWN "Event"
 		]
 		depends : DeviceEnqueue
 	}
@@ -3395,8 +3395,8 @@ Instruction : [
 		id : 301
 		name : "SetUserEventStatus"
 		args : [
-			ID "Event"
-			ID "Status"
+			ID UNKNOWN "Event"
+			ID UNKNOWN "Status"
 		]
 		depends : DeviceEnqueue
 	}
@@ -3404,9 +3404,9 @@ Instruction : [
 		id : 302
 		name : "CaptureEventProfilingInfo"
 		args : [
-			ID "Event"
-			ID "ProfilingInfo"
-			ID "Value"
+			ID UNKNOWN "Event"
+			ID KERNELPROFILINGINFO
+			ID VALUE
 		]
 		depends : DeviceEnqueue
 	}
@@ -3425,9 +3425,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "GlobalWorkSize"
-			ID "LocalWorkSize"
-			ID "GloablWorkOffset"
+			ID VALUE "GlobalWorkSize"
+			ID VALUE "LocalWorkSize"
+			ID VALUE "GloablWorkOffset"
 		]
 		depends : DeviceEnqueue
 	}
@@ -3437,11 +3437,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "SubgroupCount"
-			ID "Invoke"
-			ID "Param"
-			ID "ParamSize"
-			ID "ParamAlign"
+			ID VALUE "SubgroupCount"
+			ID VALUE "Invoke"
+			ID VALUE "Param"
+			ID VALUE "ParamSize"
+			ID VALUE "ParamAlign"
 		]
 		depends : SubgroupDispatch
 	}
@@ -3451,10 +3451,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Invoke"
-			ID "Param"
-			ID "ParamSize"
-			ID "ParamAlign"
+			ID VALUE "Invoke"
+			ID VALUE "Param"
+			ID VALUE "ParamSize"
+			ID VALUE "ParamAlign"
 		]
 		depends : SubgroupDispatch
 	}
@@ -3464,10 +3464,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pipe"
-			ID "Pointer"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID UNKNOWN "Pipe"
+			ID VALUE "Pointer"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3477,10 +3477,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pipe"
-			ID "Pointer"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID UNKNOWN "Pipe"
+			ID VALUE "Pointer"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3490,12 +3490,12 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pipe"
-			ID "ReservId"
-			ID "Index"
-			ID "Pointer"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID UNKNOWN "Pipe"
+			ID VALUE "ReservId"
+			ID VALUE "Index"
+			ID VALUE "Pointer"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3505,12 +3505,12 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pipe"
-			ID "ReservId"
-			ID "Index"
-			ID "Pointer"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID UNKNOWN "Pipe"
+			ID VALUE "ReservId"
+			ID VALUE "Index"
+			ID VALUE "Pointer"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3520,10 +3520,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pipe"
-			ID "NumPackets"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID UNKNOWN "Pipe"
+			ID VALUE "NumPackets"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3533,10 +3533,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pipe"
-			ID "NumPackets"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID UNKNOWN "Pipe"
+			ID VALUE "NumPackets"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3544,10 +3544,10 @@ Instruction : [
 		id : 280
 		name : "CommitReadPipe"
 		args : [
-			ID "Pipe"
-			ID "ReserveId"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID UNKNOWN "Pipe"
+			ID VALUE "ReserveId"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3555,10 +3555,10 @@ Instruction : [
 		id : 281
 		name : "CommitWritePipe"
 		args : [
-			ID "Pipe"
-			ID "ReserveId"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID UNKNOWN "Pipe"
+			ID VALUE "ReserveId"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3568,7 +3568,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "ReserveId"
+			ID VALUE
 		]
 		depends : Pipes
 	}
@@ -3578,9 +3578,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pipe"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID UNKNOWN "Pipe"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3590,9 +3590,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pipe"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID UNKNOWN "Pipe"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3602,11 +3602,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Pipe"
-			ID "NumPackets"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID SCOPE
+			ID UNKNOWN "Pipe"
+			ID VALUE "NumPackets"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3616,11 +3616,11 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Pipe"
-			ID "NumPackets"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID SCOPE
+			ID UNKNOWN "Pipe"
+			ID VALUE "NumPackets"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3628,11 +3628,11 @@ Instruction : [
 		id : 287
 		name : "GroupCommitReadPipe"
 		args : [
-			SCOPEID
-			ID "Pipe"
-			ID "ReserveId"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID SCOPE
+			ID UNKNOWN "Pipe"
+			ID VALUE "ReserveId"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3640,11 +3640,11 @@ Instruction : [
 		id : 288
 		name : "GroupCommitWritePipe"
 		args : [
-			SCOPEID
-			ID "Pipe"
-			ID "ReserveId"
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID SCOPE
+			ID UNKNOWN "Pipe"
+			ID VALUE "ReserveId"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : Pipes
 	}
@@ -3666,7 +3666,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "PipeStorage"
+			ID UNKNOWN "PipeStorage"
 		]
 		depends : PipeStorage
 	}
@@ -3676,8 +3676,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : BlockingPipesINTEL
 	}
@@ -3687,8 +3687,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "PacketSize"
-			ID "PacketAlignment"
+			ID VALUE "PacketSize"
+			ID VALUE "PacketAlignment"
 		]
 		depends : BlockingPipesINTEL
 	}
@@ -3698,7 +3698,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 		]
 		depends : GroupNonUniform
 	}
@@ -3708,8 +3708,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Predicate"
+			ID SCOPE
+			ID UNKNOWN "Predicate"
 		]
 		depends : GroupNonUniformVote
 	}
@@ -3719,8 +3719,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Predicate"
+			ID SCOPE
+			ID UNKNOWN "Predicate"
 		]
 		depends : GroupNonUniformVote
 	}
@@ -3730,8 +3730,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
+			ID SCOPE
+			ID VALUE
 		]
 		depends : GroupNonUniformVote
 	}
@@ -3741,9 +3741,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
-			ID "InvocationId"
+			ID SCOPE
+			ID VALUE
+			ID VALUE "InvocationId"
 		]
 		depends : GroupNonUniformBallot
 	}
@@ -3753,8 +3753,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
+			ID SCOPE
+			ID VALUE
 		]
 		depends : GroupNonUniformBallot
 	}
@@ -3764,8 +3764,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Predicate"
+			ID SCOPE
+			ID UNKNOWN "Predicate"
 		]
 		depends : GroupNonUniformBallot
 	}
@@ -3775,8 +3775,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
+			ID SCOPE
+			ID VALUE
 		]
 		depends : GroupNonUniformBallot
 	}
@@ -3786,9 +3786,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
-			ID "Index"
+			ID SCOPE
+			ID VALUE
+			ID VALUE "Index"
 		]
 		depends : GroupNonUniformBallot
 	}
@@ -3798,9 +3798,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
+			ID VALUE
 		]
 		depends : GroupNonUniformBallot
 	}
@@ -3810,8 +3810,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
+			ID SCOPE
+			ID VALUE
 		]
 		depends : GroupNonUniformBallot
 	}
@@ -3821,8 +3821,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
+			ID SCOPE
+			ID VALUE
 		]
 		depends : GroupNonUniformBallot
 	}
@@ -3832,9 +3832,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
-			ID "InvocationId"
+			ID SCOPE
+			ID VALUE
+			ID VALUE "InvocationId"
 		]
 		depends : GroupNonUniformShuffle
 	}
@@ -3844,9 +3844,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
-			ID "Mask"
+			ID SCOPE
+			ID VALUE
+			ID VALUE "Mask"
 		]
 		depends : GroupNonUniformShuffle
 	}
@@ -3856,9 +3856,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
-			ID "Delta"
+			ID SCOPE
+			ID VALUE
+			ID VALUE "Delta"
 		]
 		depends : GroupNonUniformShuffleRelative
 	}
@@ -3868,9 +3868,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
-			ID "Delta"
+			ID SCOPE
+			ID VALUE
+			ID VALUE "Delta"
 		]
 		depends : GroupNonUniformShuffleRelative
 	}
@@ -3880,10 +3880,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -3893,10 +3893,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -3906,10 +3906,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -3919,10 +3919,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -3932,10 +3932,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -3945,10 +3945,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -3958,10 +3958,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -3971,10 +3971,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -3984,10 +3984,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -3997,10 +3997,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -4010,10 +4010,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -4023,10 +4023,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -4036,10 +4036,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -4049,10 +4049,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -4062,10 +4062,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -4075,10 +4075,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : [ GroupNonUniformArithmetic GroupNonUniformClustered GroupNonUniformPartitionedNV ]
 	}
@@ -4088,10 +4088,10 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 			GROUPOPERATION
-			ID "Value"
-			OPT ID "ClusterSize"
+			ID VALUE
+			OPT ID VALUE "ClusterSize"
 		]
 		depends : GroupNonUniformQuad
 	}
@@ -4101,9 +4101,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
-			ID "Value"
-			ID "Direction"
+			ID SCOPE
+			ID VALUE
+			ID VALUE "Direction"
 		]
 		depends : GroupNonUniformQuad
 	}
@@ -4113,7 +4113,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Value"
+			ID VALUE
 		]
 		depends : GroupNonUniformPartitionedNV
 	}
@@ -4126,17 +4126,17 @@ Instruction : [
 		id : 4445
 		name : "TraceRayKHR"
 		args : [
-			ID "Accel"
-			ID "RayFlags"
-			ID "CullMask"
-			ID "SBTOffset"
-			ID "SBTStride"
-			ID "MissIndex"
-			ID "RayOrigin"
-			ID "RayTmin"
-			ID "RayDirection"
-			ID "RayTmax"
-			ID "Payload"
+			ID VALUE "Accel"
+			ID VALUE "RayFlags"
+			ID VALUE "CullMask"
+			ID VALUE "SBTOffset"
+			ID VALUE "SBTStride"
+			ID VALUE "MissIndex"
+			ID VALUE "RayOrigin"
+			ID VALUE "RayTmin"
+			ID VALUE "RayDirection"
+			ID VALUE "RayTmax"
+			ID VALUE "Payload"
 		]
 		depends : RayTracingKHR
 	}
@@ -4144,8 +4144,8 @@ Instruction : [
 		id : 4446
 		name : "ExecuteCallableKHR"
 		args : [
-			ID "SBTIndex"
-			ID "CallableData"
+			ID VALUE "SBTIndex"
+			ID VALUE "CallableData"
 		]
 		depends : RayTracingKHR
 	}
@@ -4155,7 +4155,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Accel"
+			ID VALUE "Accel"
 		]
 		depends : [ RayTracingKHR RayQueryKHR ]
 	}
@@ -4185,14 +4185,14 @@ Instruction : [
 		id : 4473
 		name : "RayQueryInitializeKHR"
 		args : [
-			ID "RayQuery"
-			ID "Accel"
-			ID "RayFlags"
-			ID "CullMask"
-			ID "RayOrigin"
-			ID "RayTmin"
-			ID "RayDirection"
-			ID "RayTmax"
+			ID VALUE "RayQuery"
+			ID VALUE "Accel"
+			ID VALUE "RayFlags"
+			ID VALUE "CullMask"
+			ID VALUE "RayOrigin"
+			ID VALUE "RayTmin"
+			ID VALUE "RayDirection"
+			ID VALUE "RayTmax"
 		]
 		depends : RayQueryKHR
 	}
@@ -4200,7 +4200,7 @@ Instruction : [
 		id : 4474
 		name : "RayQueryTerminateKHR"
 		args : [
-			ID "RayQuery"
+			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
 	}
@@ -4208,8 +4208,8 @@ Instruction : [
 		id : 4475
 		name : "RayQueryGenerateIntersectionKHR"
 		args : [
-			ID "RayQuery"
-			ID "HitT"
+			ID VALUE "RayQuery"
+			ID VALUE "HitT"
 		]
 		depends : RayQueryKHR
 	}
@@ -4217,7 +4217,7 @@ Instruction : [
 		id : 4476
 		name : "RayQueryConfirmIntersectionKHR"
 		args : [
-			ID "RayQuery"
+			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
 	}
@@ -4227,7 +4227,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
+			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
 	}
@@ -4237,8 +4237,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4248,8 +4248,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
-			ID "Coordinate"
+			ID VALUE "Image"
+			ID VALUE "Coordinate"
 		]
 		depends : FragmentMaskAMD
 	}
@@ -4259,9 +4259,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Image"
-			ID "Coordinate"
-			ID "FragmentIndex"
+			ID VALUE "Image"
+			ID VALUE "Coordinate"
+			ID VALUE "FragmentIndex"
 		]
 		depends : FragmentMaskAMD
 	}
@@ -4271,7 +4271,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			SCOPEID
+			ID SCOPE
 		]
 		depends : ShaderClockKHR
 	}
@@ -4279,8 +4279,8 @@ Instruction : [
 		id : 5299
 		name : "WritePackedPrimitiveIndices4x8NV"
 		args : [
-			ID "IndexOffset"
-			ID "PackedIndices"
+			ID VALUE "IndexOffset"
+			ID VALUE "PackedIndices"
 		]
 		depends : MeshShadingNV
 	}
@@ -4290,8 +4290,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Hit"
-			ID "HitKind"
+			ID VALUE "Hit"
+			ID VALUE "HitKind"
 		]
 		depends : [ RayTracingKHR RayTracingNV ]
 	}
@@ -4313,17 +4313,17 @@ Instruction : [
 		id : 5337
 		name : "TraceNV"
 		args : [
-			ID "Accel"
-			ID "RayFlags"
-			ID "CullMask"
-			ID "SBTOffset"
-			ID "SBTStride"
-			ID "MissIndex"
-			ID "RayOrigin"
-			ID "RayTmin"
-			ID "RayDirection"
-			ID "RayTmax"
-			ID "Payload"
+			ID VALUE "Accel"
+			ID VALUE "RayFlags"
+			ID VALUE "CullMask"
+			ID VALUE "SBTOffset"
+			ID VALUE "SBTStride"
+			ID VALUE "MissIndex"
+			ID VALUE "RayOrigin"
+			ID VALUE "RayTmin"
+			ID VALUE "RayDirection"
+			ID VALUE "RayTmax"
+			ID VALUE "Payload"
 		]
 		depends : RayTracingNV
 	}
@@ -4331,18 +4331,18 @@ Instruction : [
 		id : 5338
 		name : "TraceMotionNV"
 		args : [
-			ID "Accel"
-			ID "RayFlags"
-			ID "CullMask"
-			ID "SBTOffset"
-			ID "SBTStride"
-			ID "MissIndex"
-			ID "RayOrigin"
-			ID "RayTmin"
-			ID "RayDirection"
-			ID "RayTmax"
-			ID "Time"
-			ID "Payload"
+			ID VALUE "Accel"
+			ID VALUE "RayFlags"
+			ID VALUE "CullMask"
+			ID VALUE "SBTOffset"
+			ID VALUE "SBTStride"
+			ID VALUE "MissIndex"
+			ID VALUE "RayOrigin"
+			ID VALUE "RayTmin"
+			ID VALUE "RayDirection"
+			ID VALUE "RayTmax"
+			ID VALUE "Time"
+			ID VALUE "Payload"
 		]
 		depends : RayTracingMotionBlurNV
 	}
@@ -4350,18 +4350,18 @@ Instruction : [
 		id : 5339
 		name : "TraceRayMotionNV"
 		args : [
-			ID "Accel"
-			ID "RayFlags"
-			ID "CullMask"
-			ID "SBTOffset"
-			ID "SBTStride"
-			ID "MissIndex"
-			ID "RayOrigin"
-			ID "RayTmin"
-			ID "RayDirection"
-			ID "RayTmax"
-			ID "Time"
-			ID "Payload"
+			ID VALUE "Accel"
+			ID VALUE "RayFlags"
+			ID VALUE "CullMask"
+			ID VALUE "SBTOffset"
+			ID VALUE "SBTStride"
+			ID VALUE "MissIndex"
+			ID VALUE "RayOrigin"
+			ID VALUE "RayTmin"
+			ID VALUE "RayDirection"
+			ID VALUE "RayTmax"
+			ID VALUE "Time"
+			ID VALUE "Payload"
 		]
 		depends : RayTracingMotionBlurNV
 	}
@@ -4377,8 +4377,8 @@ Instruction : [
 		id : 5344
 		name : "ExecuteCallableNV"
 		args : [
-			ID "SBTIndex"
-			ID "CallableData"
+			ID VALUE "SBTIndex"
+			ID VALUE "CallableData"
 		]
 		depends : RayTracingNV
 	}
@@ -4387,10 +4387,10 @@ Instruction : [
 		name : "TypeCooperativeMatrixNV"
 		args : [
 			RST
-			ID "ComponentType"
-			SCOPEID
-			ID "Rows"
-			ID "Columns"
+			ID VALUE "ComponentType"
+			ID SCOPE
+			ID VALUE "Rows"
+			ID VALUE "Columns"
 		]
 		depends : CooperativeMatrixNV
 	}
@@ -4400,9 +4400,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Pointer"
-			ID "Stride"
-			ID "ColumnMajor"
+			ID VALUE "Pointer"
+			ID VALUE "Stride"
+			ID VALUE "ColumnMajor"
 			OPT MEMORYOPERANDS
 		]
 		depends : CooperativeMatrixNV
@@ -4411,10 +4411,10 @@ Instruction : [
 		id : 5360
 		name : "CooperativeMatrixStoreNV"
 		args : [
-			ID "Pointer"
-			ID "Object"
-			ID "Stride"
-			ID "ColumnMajor"
+			ID VALUE "Pointer"
+			ID VALUE "Object"
+			ID VALUE "Stride"
+			ID VALUE "ColumnMajor"
 			OPT MEMORYOPERANDS
 		]
 		depends : CooperativeMatrixNV
@@ -4425,9 +4425,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "A"
-			ID "B"
-			ID "C"
+			ID VALUE "A"
+			ID VALUE "B"
+			ID VALUE "C"
 		]
 		depends : CooperativeMatrixNV
 	}
@@ -4437,7 +4437,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Type"
+			ID TYPE
 		]
 		depends : CooperativeMatrixNV
 	}
@@ -4478,7 +4478,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 		depends : BindlessTextureNV
 	}
@@ -4488,7 +4488,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 		depends : BindlessTextureNV
 	}
@@ -4498,7 +4498,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 		depends : BindlessTextureNV
 	}
@@ -4508,7 +4508,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 		depends : BindlessTextureNV
 	}
@@ -4518,7 +4518,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 		depends : BindlessTextureNV
 	}
@@ -4528,7 +4528,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 		depends : BindlessTextureNV
 	}
@@ -4546,7 +4546,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4556,7 +4556,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand"
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4566,8 +4566,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4577,8 +4577,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4588,8 +4588,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4599,8 +4599,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4610,8 +4610,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4621,8 +4621,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4632,8 +4632,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4643,8 +4643,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4654,8 +4654,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4665,8 +4665,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4676,8 +4676,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4687,8 +4687,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Operand1"
-			ID "Operand2"
+			ID VALUE
+			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
 	}
@@ -4706,8 +4706,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "Result"
-			ID "Input"
+			ID VALUE "Result"
+			ID VALUE "Input"
 		]
 		depends : FPGARegINTEL
 	}
@@ -4717,7 +4717,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
+			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
 	}
@@ -4727,7 +4727,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
+			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
 	}
@@ -4737,8 +4737,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4748,8 +4748,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4759,8 +4759,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4770,8 +4770,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4781,8 +4781,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4792,8 +4792,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4803,8 +4803,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4814,8 +4814,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4825,7 +4825,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
+			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
 	}
@@ -4835,8 +4835,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4846,8 +4846,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4857,7 +4857,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
+			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
 	}
@@ -4867,7 +4867,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
+			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
 	}
@@ -4877,8 +4877,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -4888,8 +4888,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST
-			ID "RayQuery"
-			ID "Intersection"
+			ID VALUE "RayQuery"
+			ID VALUE "Intersection"
 		]
 		depends : RayQueryKHR
 	}
@@ -5253,7 +5253,7 @@ ExecutionMode : [
 		id : 37
 		name : "SubgroupsPerWorkgroupId"
 		args : [
-			ID
+			ID VALUE
 		]
 		depends : SubgroupDispatch
 	}
@@ -5261,18 +5261,18 @@ ExecutionMode : [
 		id : 38
 		name : "LocalSizeId"
 		args : [
-			ID "X"
-			ID "Y"
-			ID "Z"
+			ID VALUE "X"
+			ID VALUE "Y"
+			ID VALUE "Z"
 		]
 	}
 	{
 		id : 39
 		name : "LocalSizeHintId"
 		args : [
-			ID "X"
-			ID "Y"
-			ID "Z"
+			ID VALUE "X"
+			ID VALUE "Y"
+			ID VALUE "Z"
 		]
 		depends : Kernel
 	}
@@ -6068,7 +6068,7 @@ ImageOperands@BITMASK : [
 		id : 0x1
 		name : "Bias"
 		args : [
-			ID
+			ID VALUE
 		]
 		depends : Shader
 	}
@@ -6076,29 +6076,29 @@ ImageOperands@BITMASK : [
 		id : 0x2
 		name : "Lod"
 		args : [
-			ID
+			ID VALUE
 		]
 	}
 	{
 		id : 0x4
 		name : "Grad"
 		args : [
-			ID "dx"
-			ID "dy"
+			ID VALUE "dx"
+			ID VALUE "dy"
 		]
 	}
 	{
 		id : 0x8
 		name : "ConstOffset"
 		args : [
-			ID
+			ID VALUE
 		]
 	}
 	{
 		id : 0x10
 		name : "Offset"
 		args : [
-			ID
+			ID VALUE
 		]
 		depends : ImageGatherExtended
 	}
@@ -6106,7 +6106,7 @@ ImageOperands@BITMASK : [
 		id : 0x20
 		name : "ConstOffsets"
 		args : [
-			ID
+			ID VALUE
 		]
 		depends : ImageGatherExtended
 	}
@@ -6114,14 +6114,14 @@ ImageOperands@BITMASK : [
 		id : 0x40
 		name : "Sample"
 		args : [
-			ID "SampleCount"
+			ID VALUE "SampleCount"
 		]
 	}
 	{
 		id : 0x80
 		name : "MinLod"
 		args : [
-			ID "SampleCount"
+			ID VALUE "SampleCount"
 		]
 		depends : MinLod
 		
@@ -6130,7 +6130,7 @@ ImageOperands@BITMASK : [
 		id : 0x100
 		name : "MakeTexelAvailable"
 		args : [
-			SCOPEID
+			ID SCOPE
 		]
 		depends : VulkanMemoryModel
 	}
@@ -6138,7 +6138,7 @@ ImageOperands@BITMASK : [
 		id : 0x200
 		name : "MakeTexelVisible"
 		args : [
-			SCOPEID
+			ID SCOPE
 		]
 		depends : VulkanMemoryModel
 	}
@@ -6445,7 +6445,7 @@ Decoration : [
 		id : 27
 		name : "UniformId"
 		args : [
-			SCOPEID
+			ID SCOPE
 		]
 		depends : [ Shader UniformDecoration ]
 	}
@@ -6591,7 +6591,7 @@ Decoration : [
 		id : 46
 		name : "AlignmentId"
 		args : [
-			ID
+			ID VALUE
 		]
 		depends : Kernel
 	}
@@ -6599,7 +6599,7 @@ Decoration : [
 		id : 47
 		name : "MaxByteOffsetId"
 		args : [
-			ID
+			ID VALUE
 		]
 		depends : Addresses
 	}
@@ -6754,7 +6754,7 @@ Decoration : [
 		id : 5634
 		name : "CounterBuffer"
 		args : [
-			ID
+			ID VALUE
 		]
 	}
 	{
@@ -7706,7 +7706,7 @@ MemoryOperands@BITMASK : [
 		id : 0x8
 		name : "MakePointerAvailable"
 		args : [
-			SCOPEID
+			ID SCOPE
 		]
 		depends : VulkanMemoryModel
 	}
@@ -7714,7 +7714,7 @@ MemoryOperands@BITMASK : [
 		id : 0x10
 		name : "MakePointerVisible"
 		args : [
-			SCOPEID
+			ID SCOPE
 		]
 		depends : VulkanMemoryModel
 	}
