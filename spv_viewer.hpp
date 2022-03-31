@@ -7,7 +7,7 @@
 
 namespace spvcpu
 {
-	__declspec(dllexport) result show_spirv(
+	__declspec(dllexport) result disassemble(
 		uint64_t spirv_bytes,
 		const void* spirv,
 		const void* spird,

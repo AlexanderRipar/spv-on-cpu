@@ -664,7 +664,7 @@ static spvcpu::result check_header(const void* spirv) noexcept
 
 // TODO: Handle bitmask enums
 // TODO: Handle enums with arguments
-__declspec(dllexport) spvcpu::result spvcpu::show_spirv(
+__declspec(dllexport) spvcpu::result spvcpu::disassemble(
 	uint64_t spirv_bytes,
 	const void* spirv,
 	const void* spird,
