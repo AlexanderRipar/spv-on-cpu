@@ -791,15 +791,13 @@ int main(int argc, const char** argv)
 
 						spird::arg_flags flags = spird::arg_flags::none;
 
-						
-
 						if (flag_optional)
 							flags |= spird::arg_flags::optional;
 
 						if (flag_variadic)
 							flags |= spird::arg_flags::variadic;
 
-						if (flag_id)
+						if (flag_id || i == static_cast<uint32_t>(spird::arg_type::RST) || i == static_cast<uint32_t>(spird::arg_type::RTYPE))
 							flags |= spird::arg_flags::id;
 
 						output.append(static_cast<spird::arg_type>(flags));
