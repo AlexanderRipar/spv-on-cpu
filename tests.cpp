@@ -787,7 +787,7 @@ int disasm(int argc, const char** argv) noexcept
 		return 1;
 	}
 
-	if (fwrite(disassembly, 1, disassembly_bytes, output_file) != disassembly_bytes)
+	if (fwrite(disassembly, 1, disassembly_bytes - 1, output_file) != disassembly_bytes - 1)
 	{
 		fprintf(stderr, "Could not write to %s%s", output_file == stdout ? "" : "file ", output_file == stdout ? "stdout" : argv[3]);
 
