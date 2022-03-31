@@ -35,7 +35,7 @@ private:
 	{
 		while (m_string_used + additional > m_string_capacity)
 		{
-			char* tmp = static_cast<char*>(malloc(m_string_capacity * 2));
+			char* tmp = static_cast<char*>(realloc(m_string, m_string_capacity * 2));
 
 			if (tmp == nullptr)
 				return false;
@@ -52,7 +52,7 @@ private:
 	{
 		while (m_line_used + additional > m_line_capacity)
 		{
-			char* tmp = static_cast<char*>(malloc(m_line_capacity * 2));
+			char* tmp = static_cast<char*>(realloc(m_line, m_line_capacity * 2));
 
 			if (tmp == nullptr)
 				return false;
@@ -231,6 +231,10 @@ private:
 
 			m_string[m_string_used++] = ' ';
 		}
+		else
+		{
+			m_string_used += 2;
+		}
 
 		return true;
 	}
@@ -282,7 +286,7 @@ private:
 					return rst;
 
 				for (uint32_t arg = 0; arg != elem_data.argc; ++arg)
-					if (spvcpu::result rst = print_arg(spird, elem_data.arg_types[arg], tmp_word, word_end); rst != spvcpu::result::success)
+					if (spvcpu::result rst = print_arg(spird, elem_data.arg_flags[arg], elem_data.arg_types[arg], tmp_word, word_end); rst != spvcpu::result::success)
 						return rst;
 			}
 		}
@@ -297,7 +301,7 @@ private:
 				return spvcpu::result::no_memory;
 
 			for (uint32_t arg = 0; arg != elem_data.argc; ++arg)
-				if (spvcpu::result rst = print_arg(spird, elem_data.arg_types[arg], tmp_word, word_end); rst != spvcpu::result::success)
+				if (spvcpu::result rst = print_arg(spird, elem_data.arg_flags[arg], elem_data.arg_types[arg], tmp_word, word_end); rst != spvcpu::result::success)
 					return rst;
 		}
 
@@ -366,24 +370,26 @@ public:
 		return m_string_used;
 	}
 
-	spvcpu::result print_arg(const void* spird, spird::arg_type type, const uint32_t*& word, const uint32_t* word_end) noexcept
+	spvcpu::result print_arg(const void* spird, spird::arg_flags flags, spird::arg_type type, const uint32_t*& word, const uint32_t* word_end) noexcept
 	{
-		if (!print_str(" "))
-			return spvcpu::result::no_memory;
-		
-		const bool is_optional_bit = static_cast<uint32_t>(type) & spird::insn_arg_optional_bit;
+		const bool is_optional = (flags & spird::arg_flags::optional) == spird::arg_flags::optional;
 
-		const bool is_variadic = static_cast<uint32_t>(type) & spird::insn_arg_variadic_bit;
+		const bool is_variadic = (flags & spird::arg_flags::variadic) == spird::arg_flags::variadic;
+
+		const bool is_id = (flags & spird::arg_flags::id) == spird::arg_flags::id;
 
 		type = static_cast<spird::arg_type>(static_cast<uint32_t>(type) & spird::insn_argtype_mask);
 
-		if (is_optional_bit && word == word_end)
+		if (is_optional && word == word_end)
 			return spvcpu::result::success;
 
-		if (static_cast<uint32_t>(type) < spird::enum_id_count)
+		if (static_cast<uint32_t>(type) < spird::enum_id_count && !is_id)
 		{
 			do
 			{
+				if (!print_str(" "))
+					return spvcpu::result::no_memory;
+		
 				if (spvcpu::result rst = print_enum(spird, static_cast<spird::enum_id>(type), word, word_end); rst != spvcpu::result::success)
 					return rst;
 			}
@@ -393,64 +399,59 @@ public:
 		{
 			do
 			{
+				if(is_id)
+				{
+					if (word + 1 > word_end)
+						return spvcpu::result::instruction_wordcount_mismatch;
+
+					if (type == spird::arg_type::RST)
+					{
+						m_rst_id = *word;
+					}
+					else if (type == spird::arg_type::RTYPE)
+					{
+						m_rtype_id = *word;
+					}
+					else if (type == spird::arg_type::TYPE)
+					{
+						if (!print_str(" "))
+							return spvcpu::result::no_memory;
+		
+						if (!print_typid(*word))
+							return spvcpu::result::no_memory;
+					}
+					else
+					{
+						if (!print_str(" "))
+							return spvcpu::result::no_memory;
+		
+						if (!print_id(*word))
+							return spvcpu::result::no_memory;
+					}
+
+					++word;
+
+					continue;
+				}
+
 				switch (type)
 				{
-				case spird::arg_type::RST:
-				{
-					if (word + 1 > word_end)
-						return spvcpu::result::instruction_wordcount_mismatch;
-
-					m_rst_id = *word;
-
-					++word;
-
-					break;
-				}
-				case spird::arg_type::RTYPE:
-				{
-					if (word + 1 > word_end)
-						return spvcpu::result::instruction_wordcount_mismatch;
-
-					m_rtype_id = *word;
-
-					++word;
-
-					break;
-				}
 				case spird::arg_type::LITERAL:
 				{
+					if (!print_str(" [LIT ") || !print_u32(word_end - word) || !print_str("]"))
+						return spvcpu::result::no_memory;
 					// TODO
 					word = word_end;
 
 					break;
 				}
+				case spird::arg_type::RST:
+				case spird::arg_type::RTYPE:
 				case spird::arg_type::VALUE:
-				{
-					if (word + 1 > word_end)
-						return spvcpu::result::instruction_wordcount_mismatch;
-
-					if (!print_id(*word))
-						return spvcpu::result::no_memory;
-
-					++word;
-
-					break;
-				}
 				case spird::arg_type::TYPE:
-				{
-					if (word + 1 > word_end)
-						return spvcpu::result::instruction_wordcount_mismatch;
-
-					if (!print_typid(*word))
-						return spvcpu::result::no_memory;
-
-					++word;
-
-					break;
-				}
 				case spird::arg_type::UNKNOWN:
 				{
-					// TODO
+					return spvcpu::result::id_arg_without_id;
 
 					break;
 				}
@@ -459,7 +460,7 @@ public:
 					if (word + 1 > word_end)
 						return spvcpu::result::instruction_wordcount_mismatch;
 
-					if (!print_u32(*word))
+					if (!print_str(" ") || !print_u32(*word))
 						return spvcpu::result::no_memory;
 
 					++word; 
@@ -475,7 +476,7 @@ public:
 					if (word + str_words > word_end)
 						return spvcpu::result::instruction_wordcount_mismatch;
 
-					if (!print_str(str))
+					if (!print_str(" \"") || !print_str(str) || !print_str("\""))
 						return spvcpu::result::no_memory;
 
 					word += str_words;
@@ -497,7 +498,7 @@ public:
 					if (word + 1 > word_end)
 						return spvcpu::result::instruction_wordcount_mismatch;
 
-					if (!print_member(*word))
+					if (!print_str(" ") || !print_member(*word))
 						return spvcpu::result::no_memory;
 
 					++word;
@@ -509,10 +510,7 @@ public:
 					if (word + 2 > word_end)
 						return spvcpu::result::instruction_wordcount_mismatch;
 
-					if (!print_u32(*word))
-						return spvcpu::result::no_memory;
-
-					if (!print_id(word[1]))
+					if (!print_str(" ") || !print_u32(*word) || !print_str(" ") || !print_id(word[1]))
 						return spvcpu::result::no_memory;
 
 					word += 2;
@@ -524,10 +522,7 @@ public:
 					if (word + 2 > word_end)
 						return spvcpu::result::instruction_wordcount_mismatch;
 
-					if (!print_id(*word))
-						return spvcpu::result::no_memory;
-
-					if (!print_member(word[1]))
+					if (!print_str(" ") || !print_id(*word) || !print_str(" ") || !print_member(word[1]))
 						return spvcpu::result::no_memory;
 
 					word += 2;
@@ -539,10 +534,7 @@ public:
 					if (word + 2 > word_end)
 						return spvcpu::result::instruction_wordcount_mismatch;
 
-					if (!print_id(*word))
-						return spvcpu::result::no_memory;
-
-					if (!print_id(word[1]))
+					if (!print_str(" ") || !print_id(*word) || !print_str(" ") || !print_id(word[1]))
 						return spvcpu::result::no_memory;
 
 					word += 2;
@@ -554,10 +546,7 @@ public:
 					if (word + 2 > word_end)
 						return spvcpu::result::instruction_wordcount_mismatch;
 
-					if (!print_id(*word))
-						return spvcpu::result::no_memory;
-
-					if (!print_u32(word[1]))
+					if (!print_str(" ") || !print_id(*word) || !print_str(" ") || !print_u32(word[1]))
 						return spvcpu::result::no_memory;
 
 					word += 2;
@@ -571,7 +560,7 @@ public:
 
 					int64_t n = *word | (static_cast<int64_t>(word[1]) << 32); 
 
-					if (!print_i64(n))
+					if (!print_str(" ") || !print_i64(n))
 						return spvcpu::result::no_memory;
 
 					word += 2;
@@ -610,6 +599,8 @@ public:
 		memcpy(m_string + m_string_used, m_line, m_line_used);
 
 		m_string_used += m_line_used + 1;
+
+		m_string[m_string_used - 1] = '\n';
 
 		m_line_used = 0;
 
@@ -736,7 +727,7 @@ __declspec(dllexport) spvcpu::result spvcpu::show_spirv(
 		const uint32_t* arg_word = word + 1;
 
 		for (uint32_t arg = 0; arg != op_data.argc; ++arg)
-			if (result rst = output.print_arg(spird, op_data.arg_types[arg], arg_word, word + wordcount); rst != result::success)
+			if (result rst = output.print_arg(spird, op_data.arg_flags[arg], op_data.arg_types[arg], arg_word, word + wordcount); rst != result::success)
 				return rst;
 
 		if (result rst = output.end_line(); rst != result::success)
