@@ -116,6 +116,8 @@ static constexpr const char* const argument_variadic_string = "VAR";
 
 static constexpr const char* const argument_id_string       = "ID";
 
+static constexpr const char* const argument_result_string   = "RST";
+
 
 
 static constexpr const char* const enum_name_strings[]
