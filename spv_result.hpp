@@ -24,6 +24,12 @@ namespace spvcpu
 		spirv_data_enumeration_not_found,
 		unknown_argtype,
 		id_arg_without_id,
+		id_not_found,
+		unknown_rsttype,
+		incompatible_types,
+		untyped_result,
+		unexpected_literal_type,
+		unhandled_float_width,
 	};
 }
 
