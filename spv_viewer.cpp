@@ -15,7 +15,7 @@
 	// are used. This would mean that the additional discriminant and id would
 	// push the size of id_data to 24, instead of the 16 it really should be.
 #pragma pack(push, 1)
-union type_data
+union raw_type_data
 {
 	// struct void_data_t{} void_data;
 		
@@ -194,7 +194,7 @@ union type_data
 
 struct alignas(uint64_t) id_data
 {
-	type_data m_data;
+	raw_type_data m_data;
 	
 	// This goes at the end so it doesn't cause any misalignment within the union
 	spird::rst_type m_type;
