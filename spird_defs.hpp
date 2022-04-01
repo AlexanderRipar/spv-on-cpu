@@ -171,6 +171,41 @@ namespace spird
 		debugging_no_implies_and_depends,
 	};
 
+	enum class rst_type : uint8_t
+	{
+		Auto                     = 0,
+		Void                     = 1,
+		Bool                     = 2,
+		Int                      = 3,
+		Float                    = 4,
+		Vector                   = 5,
+		Matrix                   = 6,
+		Image                    = 7,
+		Sampler                  = 8,
+		SampledImage             = 9,
+		Array                    = 10,
+		RuntimeArray             = 11,
+		Struct                   = 12,
+		Opaque                   = 13,
+		Pointer                  = 14,
+		Function                 = 15,
+		Event                    = 16,
+		DeviceEvent              = 17,
+		ReserveId                = 18,
+		Queue                    = 19,
+		Pipe                     = 20,
+		PipeStorage              = 21,
+		NamedBarrier             = 22,
+		BufferSurfaceINTEL       = 23,
+		RayQueryKHR              = 24,
+		AccelerationStructureKHR = 25,
+		CooperativeMatrixNV      = 26,
+		String                   = 27,
+		ExtInstSet               = 28,
+		Label                    = 29,
+		DecoGroup                = 30,
+	};
+
 	inline enum_flags operator&(const enum_flags& lhs, const enum_flags& rhs) noexcept
 	{
 		return static_cast<enum_flags>(static_cast<uint16_t>(lhs) & static_cast<uint16_t>(rhs));
