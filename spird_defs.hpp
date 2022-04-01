@@ -253,7 +253,6 @@ namespace spird
 		
 		return lhs;
 	}
-
 }
 
 #endif // SPV_DATA_DEFS_HPP_INCLUDE_GUARD
