@@ -13,7 +13,7 @@
 // This is necessary to force the union to have its actual required size.
 	// Without packing, the union takes up 16 bytes, even though only at most 12
 	// are used. This would mean that the additional discriminant and id would
-	// push the size of id_data to 24, instead of the 16 it really should be.
+	// push the size of type_data to 24, instead of the 16 it really should be.
 #pragma pack(push, 1)
 union raw_type_data
 {
@@ -192,7 +192,7 @@ union raw_type_data
 };
 #pragma pack(pop)
 
-struct alignas(uint64_t) id_data
+struct alignas(uint64_t) type_data
 {
 	raw_type_data m_data;
 	
@@ -200,7 +200,7 @@ struct alignas(uint64_t) id_data
 	spird::rst_type m_type;
 };
 
-static_assert(sizeof(id_data) == 16);
+static_assert(sizeof(type_data) == 16);
 
 struct id_type_map
 {
@@ -211,7 +211,7 @@ private:
 		uint32_t data_index;
 	};
 
-	simple_vec<id_data> m_data;
+	simple_vec<type_data> m_data;
 	
 	simple_table<id_data_mapper> m_ids;
 
@@ -306,7 +306,7 @@ public:
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result add(uint32_t id, const id_data& data) noexcept
+	spvcpu::result add(uint32_t id, const type_data& data) noexcept
 	{
 		if (!m_data.append(data))
 			return spvcpu::result::no_memory;
@@ -317,7 +317,7 @@ public:
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result get(uint32_t id, id_data** out_data) noexcept
+	spvcpu::result get(uint32_t id, type_data** out_data) noexcept
 	{
 		uint32_t h = hash(id, m_table_size_log2);
 
@@ -695,7 +695,7 @@ private:
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result print_type(const id_data* data) noexcept
+	spvcpu::result print_type(const type_data* data) noexcept
 	{
 		switch (data->m_type)
 		{
@@ -852,7 +852,7 @@ private:
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result print_literal(const id_data* data, const uint32_t* literal_word, const uint32_t* literal_end) noexcept
+	spvcpu::result print_literal(const type_data* data, const uint32_t* literal_word, const uint32_t* literal_end) noexcept
 	{
 		if (literal_end - literal_word < 1)
 			return spvcpu::result::instruction_wordcount_mismatch;
@@ -971,7 +971,7 @@ private:
 
 	spvcpu::result extract_id_type(spird::rst_type type, const uint32_t* word, const uint32_t* word_end) noexcept
 	{
-		id_data data;
+		type_data data;
 
 		data.m_type = type;
 
@@ -1012,7 +1012,7 @@ private:
 		{
 			uint32_t component_type_id = word[1];
 
-			id_data* component_type;
+			type_data* component_type;
 
 			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
 				return rst;
@@ -1046,7 +1046,7 @@ private:
 		{
 			uint32_t component_type_id = word[1];
 
-			id_data* component_type;
+			type_data* component_type;
 
 			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
 				return rst;
@@ -1068,7 +1068,7 @@ private:
 		{
 			uint32_t component_type_id = word[1];
 
-			id_data* component_type;
+			type_data* component_type;
 
 			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
 				return rst;
@@ -1117,7 +1117,7 @@ private:
 		{
 			uint32_t component_type_id = word[1];
 
-			id_data* component_type;
+			type_data* component_type;
 
 			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
 				return rst;
@@ -1198,7 +1198,7 @@ private:
 		{
 			uint32_t component_type_id = word[1];
 
-			id_data* component_type;
+			type_data* component_type;
 
 			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
 				return rst;
@@ -1405,7 +1405,7 @@ public:
 				{
 					if (m_rtype_id != ~0u)
 					{
-						id_data* data;
+						type_data* data;
 
 						if (spvcpu::result rst = m_id_map.get(m_rtype_id, &data); rst != spvcpu::result::success)
 							return rst;
