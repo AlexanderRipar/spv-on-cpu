@@ -4,7 +4,7 @@ project(spirv-on-cpu)
 
 find_package(Vulkan REQUIRED)
 
-add_library(spv-on-cpu SHARED spv_viewer.cpp spv_viewer.hpp spird_accessor.cpp spird_accessor.hpp spird_hashing.cpp spird_hashing.hpp spv_defs.hpp spird_defs.hpp)
+add_library(spv-on-cpu SHARED spv_viewer.cpp spv_viewer.hpp spird_accessor.cpp spird_accessor.hpp spird_hashing.cpp spird_hashing.hpp spv_defs.hpp spird_defs.hpp id_data.hpp)
 
 target_link_libraries(spv-on-cpu PRIVATE ${Vulkan_LIBRARY})
 
