@@ -10,10 +10,10 @@
 #include "spird_defs.hpp"
 #include "spird_accessor.hpp"
 
-// This is necessary to force the union to have its actual required size.
-	// Without packing, the union takes up 16 bytes, even though only at most 12
-	// are used. This would mean that the additional discriminant and id would
-	// push the size of type_data to 24, instead of the 16 it really should be.
+// This pragma is necessary to force the union to have its actual required size.
+// Without packing, the union takes up 16 bytes, even though only at most 12
+// are used. This would mean that the additional discriminant and id would
+// push the size of type_data to 24, instead of the 16 it really should be.
 #pragma pack(push, 1)
 union raw_type_data
 {
