@@ -4,9 +4,340 @@
 #include <cstdlib>
 #include <memory>
 
+#include "simple_vec.hpp"
+
 #include "spv_defs.hpp"
 #include "spird_defs.hpp"
 #include "spird_accessor.hpp"
+
+// This is necessary to force the union to have its actual required size.
+	// Without packing, the union takes up 16 bytes, even though only at most 12
+	// are used. This would mean that the additional discriminant and id would
+	// push the size of id_data to 24, instead of the 16 it really should be.
+#pragma pack(push, 1)
+union type_data
+{
+	// struct void_data_t{} void_data;
+		
+	// struct bool_data_t{} bool_data;
+
+	struct int_data_t
+	{
+		uint8_t width;
+
+		bool is_signed;
+	} int_data;
+
+	struct float_data_t
+	{
+		uint8_t width;
+	} float_data;
+
+	struct vector_data_t
+	{
+		spird::rst_type component_type;
+
+		union
+		{
+			float_data_t float_component;
+			
+			int_data_t int_component;
+
+			// bool_data_t bool_component;
+		};
+
+		uint8_t component_count;
+	} vector_data;
+
+	struct matrix_data_t
+	{
+		vector_data_t column_data;
+
+		uint8_t column_count;
+	} matrix_data;
+
+	struct image_data_t
+	{
+		spird::rst_type sample_type;
+
+		union
+		{
+			int_data_t sample_int;
+
+			float_data_t sample_float;
+		};
+			
+		uint8_t dim;
+
+		uint8_t depth;
+			
+		uint8_t arrayedness;
+			
+		uint8_t ms;
+			
+		uint8_t sampled;
+			
+		uint8_t format;
+
+		// 0xFF if none is provided.
+		uint8_t access_qualifier;
+	} image_data;
+
+	// struct sampler_data_t{} sampler_data;
+
+	image_data_t sampled_image_data;
+
+	struct array_data_t
+	{
+		uint64_t length;
+
+		uint32_t element_id;
+	} array_data;
+
+	struct runtime_array_data_t
+	{
+		uint32_t element_id;
+	} runtime_array_data;
+
+	struct struct_data_t
+	{
+		const uint32_t* elements;
+
+		uint32_t element_count;
+	} struct_data;
+
+	struct opaque_data_t
+	{
+		const char* name;
+	} opaque_data;
+
+	struct pointer_data_t
+	{
+		uint32_t storage_class;
+
+		uint32_t pointee_id;
+	} pointer_data;
+
+	struct function_data_t
+	{
+		const uint32_t* argv_ids;
+
+		uint32_t return_type_id;
+			
+		uint8_t argc;
+	} function_data;
+
+	// struct event_data_t {} event_data;
+
+	// struct device_event_data_t {} device_event_data;
+
+	// struct reserve_id_data_t {} reserve_id_data;
+
+	// struct queue_data_t {} queue_data;
+
+	struct pipe_data_t
+	{
+		uint8_t access_qualifier;
+	} pipe_data;
+
+	// struct pipe_storage_data_t {} pipe_storage_data;
+
+	// struct named_barrier_data_t {} named_barrier_data;
+
+	struct buffer_surface_intel_data_t
+	{
+		uint8_t access_qualifier;
+	} buffer_surface_intel_data;
+
+	// struct ray_query_khr_data_t {} ray_query_khr_data;
+
+	// struct acceleration_structure_khr_data_t {} acceleration_structure_khr_data;
+
+	struct cooperative_matrix_nv_data_t
+	{
+		uint32_t scope_id;
+
+		uint32_t rows_id;
+
+		uint32_t columns_id;
+
+		spird::rst_type component_type;
+
+		union
+		{
+			float_data_t float_component;
+			
+			int_data_t int_component;
+
+			// bool_data_t bool_component;
+		};
+	} cooperative_matrix_nv_data;
+	
+	struct string_data_t
+	{
+		const char* string;
+	} string_data;
+
+	struct ext_inst_set_data_t
+	{
+		const char* name;
+	} ext_inst_set_data;
+
+	struct label_data_t
+	{
+		const uint32_t* location;
+	} label_data;
+
+	// struct deco_group_data_t {} deco_group_data;
+};
+#pragma pack(pop)
+
+struct alignas(uint64_t) id_data
+{
+	type_data m_data;
+	
+	// This goes at the end so it doesn't cause any misalignment within the union
+	spird::rst_type m_type;
+};
+
+static_assert(sizeof(id_data) == 16);
+
+struct id_type_map
+{
+private:
+
+	struct id_data_mapper{
+		uint32_t id; 
+		uint32_t data_index;
+	};
+
+	simple_vec<id_data> m_data;
+	
+	simple_table<id_data_mapper> m_ids;
+
+	uint32_t m_used_ids;
+
+	uint8_t m_table_size_log2;
+
+	bool add_internal(id_data_mapper mapper) noexcept
+	{
+		uint32_t size = m_ids.size();
+
+		if ((m_used_ids * 3) >> 1 > size)
+		{
+			id_data_mapper* old = m_ids.steal();
+
+			if (!m_ids.initialize(size * 2))
+			{
+				free(old);
+
+				return false;
+			}
+
+			m_ids.memset(0xFF);
+
+			m_table_size_log2 *= 2;
+
+			const uint32_t mask = (1 << m_table_size_log2) - 1;
+
+			for (uint32_t i = 0; i != size; ++i)
+			{
+				uint32_t h = hash(old[i].id, m_table_size_log2);
+
+				while (m_ids[h].id != ~0u)
+					h = (h + 1) & mask;
+
+				m_ids[h] = old[i];
+			}
+
+			free(old);
+		}
+
+		const uint32_t mask = (1 << m_table_size_log2) - 1;
+
+		uint32_t h = hash(mapper.id, m_table_size_log2);
+
+		while (m_ids[h].id != ~0u)
+			h = (h + 1) & mask;
+
+		m_ids[h] = mapper;
+
+		return true;
+	}
+
+	static uint32_t hash(uint32_t id, uint32_t table_size_log2) noexcept
+	{
+		return (id * 2654435769) >> 32 - table_size_log2;
+	}
+
+public:
+
+	spvcpu::result initialize() noexcept
+	{
+		if (!m_data.initialize(512) || !m_ids.initialize(1 << 11))
+			return spvcpu::result::no_memory;
+
+		m_ids.memset(0xFF);
+
+		m_table_size_log2 = 11;
+
+		m_used_ids = 0;
+
+		return spvcpu::result::success;
+	}
+
+	spvcpu::result add(uint32_t id, uint32_t type_id) noexcept
+	{
+		uint32_t type_h = hash(type_id, m_table_size_log2);
+
+		const uint32_t initial_type_h = type_h;
+
+		while (m_ids[type_h].id == ~0u)
+		{
+			type_h = (type_h + 1);
+
+			if (type_h == initial_type_h)
+				return spvcpu::result::id_not_found;
+		}
+		
+		if (!add_internal({ id, type_h }))
+			return spvcpu::result::no_memory;
+		
+		return spvcpu::result::success;
+	}
+
+	spvcpu::result add(uint32_t id, const id_data& data) noexcept
+	{
+		if (!m_data.append(data))
+			return spvcpu::result::no_memory;
+
+		if (!add_internal({ id, m_data.size() -1 }))
+			return spvcpu::result::no_memory;
+
+		return spvcpu::result::success;
+	}
+
+	spvcpu::result get(uint32_t id, id_data** out_data) noexcept
+	{
+		uint32_t h = hash(id, m_table_size_log2);
+
+		const uint32_t mask = (1 << m_table_size_log2) - 1;
+
+		const uint32_t initial_h = h;
+
+		while (m_ids[h].id != id)
+		{
+			h = (h + 1) & mask;
+
+			if (h == initial_h)
+				return spvcpu::result::id_not_found;
+		}
+		
+		*out_data = &m_data[m_ids[h].data_index];
+
+		return spvcpu::result::success;
+	}
+};
 
 struct output_buffer
 {
@@ -30,6 +361,10 @@ private:
 
 	uint32_t m_rst_id;
 	uint32_t m_rtype_id;
+
+	id_type_map m_id_map;
+
+	spird::rst_type m_rst_type;
 
 	bool grow_string(size_t additional) noexcept
 	{
@@ -100,6 +435,16 @@ private:
 		out_used += log10_ceil;
 	}
 
+	bool print_char(char c) noexcept
+	{
+		if (!grow_line(1))
+			return false;
+
+		m_line[m_line_used++] = c;
+
+		return true;
+	}
+
 	bool print_id(uint32_t id) noexcept
 	{
 		if (!print_str("$") || !grow_line(max_u32_chars))
@@ -160,6 +505,46 @@ private:
 			return false;
 		
 		print_integer_to_buffer(m_line, m_line_used, n, true);
+
+		return true;
+	}
+
+	bool print_u64(uint64_t n) noexcept
+	{
+		if (!grow_line(max_u64_chars))
+			return false;
+		
+		print_integer_to_buffer(m_line, m_line_used, n, false);
+
+		return true;
+	}
+
+	bool print_f64(double n) noexcept
+	{
+		if (!grow_line(350))
+			return false;
+
+		int chars_used = snprintf(m_line + m_line_used, 350, "%f", n);
+
+		if (chars_used >= 0 && chars_used < 350)
+		{
+			m_line_used += chars_used;
+
+			return true;
+		}
+
+		if (chars_used < 0)
+			return false;
+
+		if (!grow_line(chars_used - 349))
+			return false;
+
+		int chars_used_retry = snprintf(m_line + m_line_used, chars_used + 1, "%f", n);
+
+		if (chars_used_retry < 0 || chars_used_retry > chars_used)
+			return print_str("[FloatTooBig]");
+
+		m_line_used += chars_used_retry;
 
 		return true;
 	}
@@ -310,6 +695,566 @@ private:
 		return spvcpu::result::success;
 	}
 
+	spvcpu::result print_type(const id_data* data) noexcept
+	{
+		switch (data->m_type)
+		{
+		case spird::rst_type::Void:
+		{
+			if (!print_str("void"))
+				return spvcpu::result::no_memory;
+			break;
+		}
+		case spird::rst_type::Bool:
+		{
+			if (!print_str("bool"))
+				return spvcpu::result::no_memory;
+			break;
+		}
+		case spird::rst_type::Int:
+		{
+			if (!print_str(data->m_data.int_data.is_signed ? "int" : "uint"))
+				return spvcpu::result::no_memory;
+
+			if (data->m_data.int_data.width != 32)
+				if (!print_u32(data->m_data.int_data.width))
+					return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::Float:
+		{
+			const char* str = "float";
+
+			if (data->m_data.float_data.width == 64)
+				str = "double";
+			
+			if (!print_str(str))
+				return spvcpu::result::no_memory;
+			
+			if (data->m_data.float_data.width != 32 && data->m_data.float_data.width != 64)
+				if (!print_u32(data->m_data.float_data.width))
+					return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::Vector:
+		{
+			char prefix = '\0';
+
+			uint8_t width = 0xFF;
+
+			if (data->m_data.vector_data.component_type == spird::rst_type::Float)
+			{
+				if (data->m_data.vector_data.float_component.width == 16)
+					prefix = 'h';
+				else if (data->m_data.vector_data.float_component.width == 64)
+					prefix = 'd';
+				else if (data->m_data.vector_data.float_component.width != 32)
+					width = data->m_data.vector_data.float_component.width;
+			}
+			else if (data->m_data.vector_data.component_type == spird::rst_type::Int)
+			{
+				if (data->m_data.vector_data.int_component.is_signed)
+					prefix = 'i';
+				else
+					prefix = 'u';
+
+				if (data->m_data.vector_data.int_component.width != 32)
+					width = data->m_data.vector_data.int_component.width;
+			}
+			else if (data->m_data.vector_data.component_type == spird::rst_type::Bool)
+			{
+				prefix = 'b';
+			}
+			else
+			{
+				prefix = '?';
+			}
+
+			if (prefix != '\0')
+				if (!print_char(prefix))
+					return spvcpu::result::no_memory;
+
+			if (width != 0xFF)
+				if (!print_u32(width))
+					return spvcpu::result::no_memory;
+
+			if (!print_str("vec") || !print_u32(data->m_data.vector_data.component_count))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::Matrix:
+		{
+			char prefix = '\0';
+
+			uint8_t width = 0xFF;
+
+			if (data->m_data.matrix_data.column_data.component_type == spird::rst_type::Float)
+			{
+				if (data->m_data.matrix_data.column_data.float_component.width == 16)
+					prefix = 'h';
+				else if (data->m_data.matrix_data.column_data.float_component.width == 64)
+					prefix = 'd';
+				else if (data->m_data.matrix_data.column_data.float_component.width != 32)
+					width = data->m_data.matrix_data.column_data.float_component.width != 32;
+			}
+			else if (data->m_data.matrix_data.column_data.component_type == spird::rst_type::Int)
+			{
+				if (data->m_data.matrix_data.column_data.int_component.is_signed)
+					prefix = 'i';
+				else
+					prefix = 'u';
+
+				if (data->m_data.matrix_data.column_data.int_component.width != 32)
+					width = data->m_data.matrix_data.column_data.int_component.width != 32;
+			}
+			else if (data->m_data.matrix_data.column_data.component_type == spird::rst_type::Bool)
+			{
+				prefix = 'b';
+			}
+			else
+			{
+				prefix = '?';
+			}
+
+			if (prefix != '\0')
+				if (!print_char(prefix))
+					return spvcpu::result::no_memory;
+
+			if (width != 0xFF)
+				if (!print_u32(width))
+					return spvcpu::result::no_memory;
+
+			uint8_t rows = data->m_data.matrix_data.column_data.component_count;
+
+			uint8_t cols = data->m_data.matrix_data.column_count;
+
+			if (!print_str("mat") || !print_u32(cols))
+					return spvcpu::result::no_memory;
+
+			if (rows != cols)
+				if (!print_char('x') || !print_u32(rows))
+					return spvcpu::result::no_memory;
+
+			break;
+		}
+		default:
+		{
+			// TODO: This is just a placeholder return value to
+			// easily find this spot again. This function should
+			// really handle all (!) result types.
+			return spvcpu::result::wrong_magic;
+		}
+		}
+
+		return spvcpu::result::success;
+	}
+
+	spvcpu::result print_literal(const id_data* data, const uint32_t* literal_word, const uint32_t* literal_end) noexcept
+	{
+		if (literal_end - literal_word < 1)
+			return spvcpu::result::instruction_wordcount_mismatch;
+
+		if (!print_char(' '))
+			return spvcpu::result::no_memory;
+
+		switch (data->m_type)
+		{
+		case spird::rst_type::Int:
+		{
+			uint64_t n = *literal_word;
+
+			if (data->m_data.int_data.width == 64)
+			{
+				if (literal_end - literal_word < 2)
+					return spvcpu::result::instruction_wordcount_mismatch;
+
+				n |= static_cast<uint64_t>(literal_word[1]) << 32;
+			}
+
+			if (data->m_data.int_data.is_signed)
+			{
+				if (!print_i64(static_cast<int64_t>(n)))
+					return spvcpu::result::no_memory;
+			}
+			else
+			{
+				if (!print_u64(n))
+					return spvcpu::result::no_memory;
+			}
+
+			break;
+		}
+		case spird::rst_type::Float:
+		{
+			uint64_t float_bits = *literal_word;
+
+			double n;
+
+			if (data->m_data.float_data.width == 64)
+			{
+				if (literal_end - literal_word < 2)
+					return spvcpu::result::instruction_wordcount_mismatch;
+
+				float_bits |= static_cast<uint64_t>(literal_word[1]) << 32;
+
+				memcpy(&n, &float_bits, 8); 
+			}
+			else if (data->m_data.float_data.width == 32)
+			{
+				float f;
+
+				memcpy(&f, &float_bits, 4);
+
+				n = static_cast<double>(f);
+			}
+			else if (data->m_data.float_data.width == 16)
+			{
+				uint64_t sign_bit = (float_bits >> 15) << 63;
+
+				float_bits &= ~(1 << 15);
+
+				uint64_t exponent_raw = float_bits >> 10;
+
+				uint64_t mantissa_raw = float_bits & ((1 << 10) - 1);
+
+				uint64_t exponent = (exponent_raw - 15) + 1023;
+
+				uint64_t mantissa = mantissa_raw;
+
+				if (exponent_raw == 0)
+				{
+					if (mantissa_raw == 0) // +-0
+					{
+						exponent = 0;
+					}
+					else // Denorm
+					{
+						exponent -= 1;
+					}
+				}
+				else if (exponent_raw == 0x1F)
+				{
+					exponent = 0x7FFFF;
+
+					if (mantissa_raw != 0) // NaN
+					{
+						// Make sure we don't signal
+						mantissa = 0x8'0000'0000'0001;
+					}
+				}
+				
+				uint64_t f64_bits = sign_bit | (exponent << 53) | (mantissa << 43);
+
+				memcpy(&n, &f64_bits, 8);
+			}
+			else
+			{
+				return spvcpu::result::unhandled_float_width;
+			}
+
+			if (!print_f64(n))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		default:
+		{
+			return spvcpu::result::unexpected_literal_type;
+		}
+		}
+
+		return spvcpu::result::success;
+	}
+
+	spvcpu::result extract_id_type(spird::rst_type type, const uint32_t* word, const uint32_t* word_end) noexcept
+	{
+		id_data data;
+
+		data.m_type = type;
+
+		// Not passing 'Auto' as type is required from the caller
+		switch (type)
+		{
+		case spird::rst_type::Void:
+		case spird::rst_type::Bool:
+		case spird::rst_type::Sampler:
+		case spird::rst_type::Event:
+		case spird::rst_type::DeviceEvent:
+		case spird::rst_type::ReserveId:
+		case spird::rst_type::Queue:
+		case spird::rst_type::PipeStorage:
+		case spird::rst_type::NamedBarrier:
+		case spird::rst_type::RayQueryKHR:
+		case spird::rst_type::AccelerationStructureKHR:
+		case spird::rst_type::DecoGroup:
+		{
+			// All these types are not parameterized.
+			break;
+		}
+		case spird::rst_type::Int:
+		{
+			data.m_data.int_data.width = word[1];
+
+			data.m_data.int_data.is_signed = word[2];
+
+			break;
+		}
+		case spird::rst_type::Float:
+		{
+			data.m_data.float_data.width = word[1];
+
+			break;
+		}
+		case spird::rst_type::Vector:
+		{
+			uint32_t component_type_id = word[1];
+
+			id_data* component_type;
+
+			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
+				return rst;
+
+			if (component_type->m_type == spird::rst_type::Bool)
+			{
+				data.m_data.vector_data.component_type = spird::rst_type::Bool;
+			}
+			else if (component_type->m_type == spird::rst_type::Int)
+			{
+				data.m_data.vector_data.component_type = spird::rst_type::Int;
+
+				data.m_data.vector_data.int_component = component_type->m_data.int_data;
+			}
+			else if (component_type->m_type == spird::rst_type::Float)
+			{
+				data.m_data.vector_data.component_type = spird::rst_type::Float;
+
+				data.m_data.vector_data.float_component = component_type->m_data.float_data;
+			}
+			else
+			{
+				return spvcpu::result::incompatible_types;
+			}
+
+			data.m_data.vector_data.component_count = word[2];
+
+			break;
+		}
+		case spird::rst_type::Matrix:
+		{
+			uint32_t component_type_id = word[1];
+
+			id_data* component_type;
+
+			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
+				return rst;
+
+			if (component_type->m_type == spird::rst_type::Vector)
+			{
+				data.m_data.matrix_data.column_data = component_type->m_data.vector_data;
+			}
+			else
+			{
+				return spvcpu::result::incompatible_types;
+			}
+
+			data.m_data.matrix_data.column_count = word[2];
+			
+			break;
+		}
+		case spird::rst_type::Image:
+		{
+			uint32_t component_type_id = word[1];
+
+			id_data* component_type;
+
+			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
+				return rst;
+
+			if (component_type->m_type == spird::rst_type::Void)
+			{
+				data.m_data.image_data.sample_type = spird::rst_type::Void;
+			}
+			else if (component_type->m_type == spird::rst_type::Int)
+			{
+				data.m_data.image_data.sample_type = spird::rst_type::Int;
+
+				data.m_data.image_data.sample_int = component_type->m_data.int_data;
+			}
+			else if (component_type->m_type == spird::rst_type::Float)
+			{
+				data.m_data.image_data.sample_type = spird::rst_type::Float;
+
+				data.m_data.image_data.sample_float = component_type->m_data.float_data;
+			}
+			else
+			{
+				return spvcpu::result::incompatible_types;
+			}
+
+			data.m_data.image_data.dim = static_cast<uint8_t>(word[2]);
+
+			data.m_data.image_data.depth = static_cast<uint8_t>(word[3]);
+
+			data.m_data.image_data.arrayedness = static_cast<uint8_t>(word[4]);
+
+			data.m_data.image_data.ms = static_cast<uint8_t>(word[5]);
+
+			data.m_data.image_data.sampled = static_cast<uint8_t>(word[6]);
+
+			data.m_data.image_data.format = static_cast<uint8_t>(word[7]);
+			
+			if (word_end - word > 8)
+				data.m_data.image_data.access_qualifier = static_cast<uint8_t>(word[8]);
+			else
+				data.m_data.image_data.access_qualifier = 0xFF;
+
+			break;
+		}
+		case spird::rst_type::SampledImage:
+		{
+			uint32_t component_type_id = word[1];
+
+			id_data* component_type;
+
+			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
+				return rst;
+
+			if (component_type->m_type == spird::rst_type::Image)
+				data.m_data.sampled_image_data = component_type->m_data.image_data;
+			else
+				return spvcpu::result::incompatible_types;
+			
+			break;
+		}
+		case spird::rst_type::Array:
+		{
+			data.m_data.array_data.element_id = word[1];
+
+			uint32_t length_id = word[2];
+
+			data.m_data.array_data.length = 0;
+
+			break;
+		}
+		case spird::rst_type::RuntimeArray:
+		{
+			data.m_data.runtime_array_data.element_id = word[1];
+
+			break;
+		}
+		case spird::rst_type::Struct:
+		{
+			const ptrdiff_t member_cnt = word_end - word - 1;
+
+			data.m_data.struct_data.element_count = member_cnt;
+
+			if (member_cnt != 0)
+				data.m_data.struct_data.elements = word + 1;
+			else
+				data.m_data.struct_data.elements = nullptr;
+
+			break;
+		}
+		case spird::rst_type::Opaque:
+		{
+			data.m_data.opaque_data.name = reinterpret_cast<const char*>(word + 1);
+
+			break;
+		}
+		case spird::rst_type::Pointer:
+		{
+			data.m_data.pointer_data.storage_class = word[1];
+
+			data.m_data.pointer_data.pointee_id = word[2];
+
+			break;
+		}
+		case spird::rst_type::Function:
+		{
+			data.m_data.function_data.return_type_id = word[1];
+
+			data.m_data.function_data.argc = word_end - word - 2;
+
+			data.m_data.function_data.argv_ids = word + 2;
+
+			break;
+		}
+		case spird::rst_type::Pipe:
+		{
+			data.m_data.pipe_data.access_qualifier = static_cast<uint8_t>(word[1]);
+
+			break;
+		}
+		case spird::rst_type::BufferSurfaceINTEL:
+		{
+			data.m_data.buffer_surface_intel_data.access_qualifier = static_cast<uint8_t>(word[1]);
+
+			break;
+		}
+		case spird::rst_type::CooperativeMatrixNV:
+		{
+			uint32_t component_type_id = word[1];
+
+			id_data* component_type;
+
+			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
+				return rst;
+
+			if (component_type->m_type == spird::rst_type::Int)
+			{
+				data.m_data.cooperative_matrix_nv_data.component_type = spird::rst_type::Int;
+
+				data.m_data.cooperative_matrix_nv_data.int_component = component_type->m_data.int_data;
+			}
+			else if (component_type->m_type == spird::rst_type::Float)
+			{
+				data.m_data.cooperative_matrix_nv_data.component_type = spird::rst_type::Float;
+
+				data.m_data.cooperative_matrix_nv_data.float_component = component_type->m_data.float_data;
+			}
+			else
+			{
+				return spvcpu::result::incompatible_types;
+			}
+			
+			data.m_data.cooperative_matrix_nv_data.scope_id = word[2];
+
+			data.m_data.cooperative_matrix_nv_data.rows_id = word[3];
+
+			data.m_data.cooperative_matrix_nv_data.columns_id = word[4];
+
+			break;
+		}
+		case spird::rst_type::String:
+		{
+			data.m_data.string_data.string = reinterpret_cast<const char*>(word + 1);
+
+			break;
+		}
+		case spird::rst_type::ExtInstSet:
+		{
+			data.m_data.ext_inst_set_data.name = reinterpret_cast<const char*>(word + 1);
+
+			break;
+		}
+		case spird::rst_type::Label:
+		{
+			data.m_data.label_data.location = word - 1;
+
+			break;
+		}
+		default:
+		{
+			return spvcpu::result::unknown_rsttype;
+		}
+		}
+
+		return m_id_map.add(*word, data);
+	}
+
 public:
 
 	output_buffer() noexcept : m_string{ nullptr }, m_line{ nullptr } {}
@@ -343,7 +1288,7 @@ public:
 
 		m_rtype_id = ~0u;
 
-		return spvcpu::result::success;
+		return m_id_map.initialize();
 	}
 
 	spvcpu::result finalize() noexcept
@@ -378,10 +1323,40 @@ public:
 
 		const bool is_id = (flags & spird::arg_flags::id) == spird::arg_flags::id;
 
+		const bool is_result = (flags & spird::arg_flags::result) == spird::arg_flags::result;
+
 		type = static_cast<spird::arg_type>(static_cast<uint32_t>(type) & spird::insn_argtype_mask);
 
 		if (is_optional && word == word_end)
 			return spvcpu::result::success;
+
+		if (is_result)
+		{
+			if (word + 1 > word_end)
+				return spvcpu::result::instruction_wordcount_mismatch;
+
+			m_rst_id = *word;
+
+			m_rst_type = static_cast<spird::rst_type>(type);
+
+			if (static_cast<spird::rst_type>(type) != spird::rst_type::Auto)
+			{
+				if (spvcpu::result rst = extract_id_type(static_cast<spird::rst_type>(type), word, word_end); rst != spvcpu::result::success)
+					return rst;
+			}
+			else
+			{
+				if (m_rtype_id == ~0u)
+					return spvcpu::result::untyped_result;
+
+				if (spvcpu::result rst = m_id_map.add(*word, m_rtype_id); rst != spvcpu::result::success)
+					return rst;
+			}
+
+			++word;
+
+			return spvcpu::result::success;
+		}
 
 		if (static_cast<uint32_t>(type) < spird::enum_id_count && !is_id)
 		{
@@ -404,28 +1379,18 @@ public:
 					if (word + 1 > word_end)
 						return spvcpu::result::instruction_wordcount_mismatch;
 
-					if (type == spird::arg_type::RST)
-					{
-						m_rst_id = *word;
-					}
-					else if (type == spird::arg_type::RTYPE)
+					if (type == spird::arg_type::RTYPE)
 					{
 						m_rtype_id = *word;
 					}
 					else if (type == spird::arg_type::TYPE)
 					{
-						if (!print_str(" "))
-							return spvcpu::result::no_memory;
-		
-						if (!print_typid(*word))
+						if (!print_str(" ") || !print_typid(*word))
 							return spvcpu::result::no_memory;
 					}
 					else
 					{
-						if (!print_str(" "))
-							return spvcpu::result::no_memory;
-		
-						if (!print_id(*word))
+						if (!print_str(" ") || !print_id(*word))
 							return spvcpu::result::no_memory;
 					}
 
@@ -438,9 +1403,22 @@ public:
 				{
 				case spird::arg_type::LITERAL:
 				{
-					if (!print_str(" [LIT ") || !print_u32(word_end - word) || !print_str("]"))
-						return spvcpu::result::no_memory;
-					// TODO
+					if (m_rtype_id != ~0u)
+					{
+						id_data* data;
+
+						if (spvcpu::result rst = m_id_map.get(m_rtype_id, &data); rst != spvcpu::result::success)
+							return rst;
+
+						if (spvcpu::result rst = print_literal(data, word, word_end); rst != spvcpu::result::success)
+							return rst;
+					}
+					else
+					{
+						if (!print_str(" [LIT ") || !print_u32(word_end - word) || !print_str("]"))
+							return spvcpu::result::no_memory;
+					}
+
 					word = word_end;
 
 					break;
@@ -587,8 +1565,26 @@ public:
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result end_line() noexcept
+	spvcpu::result end_line(id_type_map& id_types) noexcept
 	{
+		if (m_rst_id != ~0u)
+		{
+			spird::rst_type rtype = m_rst_type;
+
+			if (m_rtype_id != ~0u)
+			{
+				if (spvcpu::result rst = id_types.add(m_rst_id, m_rtype_id); rst != spvcpu::result::success)
+					return rst;
+			}
+			else
+			{
+				switch (m_rst_type)
+				{
+					
+				}
+			}
+		}
+
 		if (!str_print_rst_and_rtype())
 			return spvcpu::result::no_memory;
 
@@ -607,6 +1603,8 @@ public:
 		m_rst_id = ~0u;
 
 		m_rtype_id = ~0u;
+
+		m_rst_type = spird::rst_type::Auto;
 		
 		return spvcpu::result::success;
 	}
@@ -661,9 +1659,6 @@ static spvcpu::result check_header(const void* spirv) noexcept
 	return spvcpu::result::success;
 }
 
-
-// TODO: Handle bitmask enums
-// TODO: Handle enums with arguments
 __declspec(dllexport) spvcpu::result spvcpu::disassemble(
 	uint64_t spirv_bytes,
 	const void* spirv,
@@ -702,6 +1697,11 @@ __declspec(dllexport) spvcpu::result spvcpu::disassemble(
 	if (result rst = output.initialize(); rst != result::success)
 		return rst;
 
+	id_type_map id_types;
+
+	if (result rst = id_types.initialize(); rst != result::success)
+		return rst;
+
 	if (spirv_bytes & 3)
 		return result::shader_size_not_divisible_by_four;
 
@@ -730,7 +1730,7 @@ __declspec(dllexport) spvcpu::result spvcpu::disassemble(
 			if (result rst = output.print_arg(spird, op_data.arg_flags[arg], op_data.arg_types[arg], arg_word, word + wordcount); rst != result::success)
 				return rst;
 
-		if (result rst = output.end_line(); rst != result::success)
+		if (result rst = output.end_line(id_types); rst != result::success)
 			return rst;
 
 		if (arg_word != word + wordcount)
