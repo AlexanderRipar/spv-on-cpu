@@ -105,6 +105,9 @@ namespace spird
 		optional = 0x1,
 		variadic = 0x2,
 		id       = 0x4,
+		result   = 0x8,
+		constant = 0x10,
+		forward  = 0x20,
 	};
 
 	enum class enum_id : uint32_t
