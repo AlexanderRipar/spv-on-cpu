@@ -11,7 +11,7 @@ Instruction : [
 		name : "Undef"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 		]
 	}
 	{
@@ -19,7 +19,7 @@ Instruction : [
 		name : "Sizeof"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Pointer"
 		]
 		depends : Addresses
@@ -37,7 +37,7 @@ Instruction : [
 		name : "ExpectKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Value"
 			ID UNKNOWN "ExpectedValue"
 		]
@@ -88,7 +88,7 @@ Instruction : [
 		id : 7
 		name : "String"
 		args : [
-			RST
+			RST String
 			STR
 		]
 	}
@@ -137,7 +137,7 @@ Instruction : [
 		id : 73
 		name : "DecorationGroup"
 		args : [
-			RST
+			RST DecoGroup
 		]
 	}
 	{
@@ -194,7 +194,7 @@ Instruction : [
 		id : 11
 		name : "ExtInstImport"
 		args : [
-			RST
+			RST ExtInstSet
 			STR "InstructionName"
 		]
 	}
@@ -203,7 +203,7 @@ Instruction : [
 		name : "ExtInst"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Set"
 			INSTRUCTION
 			OPT VAR ARG
@@ -256,21 +256,21 @@ Instruction : [
 		id : 19
 		name : "TypeVoid"
 		args : [
-			RST
+			RST Void
 		]
 	}
 	{
 		id : 20
 		name : "TypeBool"
 		args : [
-			RST
+			RST Bool
 		]
 	}
 	{
 		id : 21
 		name : "TypeInt"
 		args : [
-			RST
+			RST Int
 			U32 "Width"
 			U32 "Signedness"
 		]
@@ -279,7 +279,7 @@ Instruction : [
 		id : 22
 		name : "TypeFloat"
 		args : [
-			RST
+			RST Float
 			U32 "Width"
 		]
 	}
@@ -287,7 +287,7 @@ Instruction : [
 		id : 23
 		name : "TypeVector"
 		args : [
-			RST
+			RST Vector
 			ID TYPE "ComponentType"
 			U32 "ComponentCount"
 		]
@@ -296,7 +296,7 @@ Instruction : [
 		id : 24
 		name : "TypeMatrix"
 		args : [
-			RST
+			RST Matrix
 			ID TYPE "ColumnType"
 			U32 "ColumnCount"
 		]
@@ -306,7 +306,7 @@ Instruction : [
 		id : 25
 		name : "TypeImage"
 		args : [
-			RST
+			RST Image
 			ID TYPE "SampledType"
 			DIM
 			U32 "Depth"
@@ -321,14 +321,14 @@ Instruction : [
 		id : 26
 		name : "TypeSampler"
 		args : [
-			RST
+			RST Sampler
 		]
 	}
 	{
 		id : 27
 		name : "TypeSampledImage"
 		args : [
-			RST
+			RST SampledImage
 			ID TYPE "ImageType"
 		]
 	}
@@ -336,7 +336,7 @@ Instruction : [
 		id : 28
 		name : "TypeArray"
 		args : [
-			RST
+			RST Array
 			ID TYPE "ElemType"
 			ID VALUE "Length"
 		]
@@ -345,7 +345,7 @@ Instruction : [
 		id : 29
 		name : "TypeRuntimeArray"
 		args : [
-			RST
+			RST RuntimeArray
 			ID TYPE "ElemType"
 		]
 		depends : Shader
@@ -354,7 +354,7 @@ Instruction : [
 		id : 30
 		name : "TypeStruct"
 		args : [
-			RST
+			RST Struct
 			OPT VAR ID TYPE "Members"
 		]
 	}
@@ -362,7 +362,7 @@ Instruction : [
 		id : 31
 		name : "TypeOpaque"
 		args : [
-			RST
+			RST Opaque
 			STR "TypeName"
 		]
 		depends : Kernel
@@ -371,7 +371,7 @@ Instruction : [
 		id : 32
 		name : "TypePointer"
 		args : [
-			RST
+			RST Pointer
 			STORAGECLASS
 			ID TYPE "Pointee"
 		]
@@ -380,7 +380,7 @@ Instruction : [
 		id : 33
 		name : "TypeFunction"
 		args : [
-			RST
+			RST Function
 			ID TYPE "ReturnType"
 			OPT VAR ID TYPE "ArgTypes"
 		]
@@ -389,7 +389,7 @@ Instruction : [
 		id : 34
 		name : "TypeEvent"
 		args : [
-			RST
+			RST Event
 		]
 		depends : Kernel
 	}
@@ -397,7 +397,7 @@ Instruction : [
 		id : 35
 		name : "TypeDeviceEvent"
 		args : [
-			RST
+			RST DeviceEvent
 		]
 		depends : DeviceEnqueue
 	}
@@ -405,7 +405,7 @@ Instruction : [
 		id : 36
 		name : "TypeReserveId"
 		args : [
-			RST
+			RST ReserveId
 		]
 		depends : Pipes
 	}
@@ -413,7 +413,7 @@ Instruction : [
 		id : 37
 		name : "TypeQueue"
 		args : [
-			RST
+			RST Queue
 		]
 		depends : DeviceEnqueue
 	}
@@ -421,7 +421,7 @@ Instruction : [
 		id : 38
 		name : "TypePipe"
 		args : [
-			RST
+			RST Pipe
 			ACCESSQUALIFIER
 		]
 		depends : Pipes
@@ -439,7 +439,7 @@ Instruction : [
 		id : 322
 		name : "TypePipeStorage"
 		args : [
-			RST
+			RST PipeStorage
 		]
 		depends : PipeStorage
 	}
@@ -447,7 +447,7 @@ Instruction : [
 		id : 327
 		name : "TypeNamedBarrier"
 		args : [
-			RST
+			RST NamedBarrier
 		]
 		depends : NamedBarrier
 	}
@@ -455,7 +455,7 @@ Instruction : [
 		id : 6086
 		name : "TypeBufferSurfaceINTEL"
 		args : [
-			RST
+			RST BufferSurfaceINTEL
 			ACCESSQUALIFIER
 		]
 		depends : VectorComputeINTEL
@@ -473,7 +473,7 @@ Instruction : [
 		name : "ConstantTrue"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 		]
 	}
 	{
@@ -481,7 +481,7 @@ Instruction : [
 		name : "ConstantFalse"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 		]
 	}
 	{
@@ -489,7 +489,7 @@ Instruction : [
 		name : "Constant"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			LITERAL "Value"
 		]
 	}
@@ -498,7 +498,7 @@ Instruction : [
 		name : "ConstantComposite"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			VAR ID VALUE "Constituents"
 		]
 	}
@@ -507,7 +507,7 @@ Instruction : [
 		name : "ConstantSampler"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			SAMPLERADDRESSINGMODE
 			U32 "Param"
 			SAMPLERFILTERMODE
@@ -519,7 +519,7 @@ Instruction : [
 		name : "ConstantNull"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 		]
 	}
 	{
@@ -527,7 +527,7 @@ Instruction : [
 		name : "SpecConstantTrue"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 		]
 	}
 	{
@@ -535,7 +535,7 @@ Instruction : [
 		name : "SpecConstantFalse"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 		]
 	}
 	{
@@ -543,7 +543,7 @@ Instruction : [
 		name : "SpecConstant"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			LITERAL "Value"
 		]
 	}
@@ -552,7 +552,7 @@ Instruction : [
 		name : "SpecConstantComposite"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			VAR ID VALUE "Constituents"
 		]
 	}
@@ -561,7 +561,7 @@ Instruction : [
 		name : "SpecConstantOp"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			U32 "Opcode"
 			OPT VAR ID UNKNOWN "Operands"
 		]
@@ -587,7 +587,7 @@ Instruction : [
 		name : "Variable"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			STORAGECLASS
 			OPT ID VALUE "Initializer"
 		]
@@ -597,7 +597,7 @@ Instruction : [
 		name : "ImageTexelPointer"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID TYPE "Image"
 			ID VALUE "Coordinate"
 			ID VALUE "Sample"
@@ -608,7 +608,7 @@ Instruction : [
 		name : "Load"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			OPT MEMORYOPERANDS
 		]
@@ -649,7 +649,7 @@ Instruction : [
 		name : "AcessChain"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Base"
 			VAR ID VALUE "Indices"
 		]
@@ -659,7 +659,7 @@ Instruction : [
 		name : "InBoundsAccessChain"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Base"
 			VAR ID VALUE "Indices"
 		]
@@ -669,7 +669,7 @@ Instruction : [
 		name : "OpPtrAcessChain"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Base"
 			ID VALUE "Element"
 			VAR ID VALUE "Indices"
@@ -681,7 +681,7 @@ Instruction : [
 		name : "ArrayLength"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID TYPE "Structure"
 			MEMBER
 		]
@@ -692,7 +692,7 @@ Instruction : [
 		name : "GenericPtrMemSemantics"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 		]
 		depends : Kernel
@@ -702,7 +702,7 @@ Instruction : [
 		name : "InBoundsPtrAccessChain"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Base"
 			ID VALUE "Element"
 			VAR ID VALUE "Indices"
@@ -714,7 +714,7 @@ Instruction : [
 		name : "PtrEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Operand1"
 			ID VALUE "Operand2"
 		]
@@ -724,7 +724,7 @@ Instruction : [
 		name : "PtrNotEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Operand1"
 			ID VALUE "Operand2"
 		]
@@ -734,7 +734,7 @@ Instruction : [
 		name : "PtrDiff"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Operand1"
 			ID VALUE "Operand2"
 		]
@@ -745,7 +745,7 @@ Instruction : [
 		name : "Function"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			FUNCTIONCONTROL
 			ID TYPE "FunctionType"
 		]
@@ -755,7 +755,7 @@ Instruction : [
 		name : "FunctionParameter"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 		]
 	}
 	{
@@ -769,7 +769,7 @@ Instruction : [
 		name : "FunctionCall"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Function"
 			OPT VAR ID VALUE "Args"
 		]
@@ -779,7 +779,7 @@ Instruction : [
 		name : "SampledImage"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 			ID VALUE "Sampler"
 		]
@@ -789,7 +789,7 @@ Instruction : [
 		name : "ImageSampleImplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
@@ -802,7 +802,7 @@ Instruction : [
 		name : "ImageSampleExplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			IMAGEOPERANDS
@@ -814,7 +814,7 @@ Instruction : [
 		name : "ImageSampleDrefImplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Dref"
@@ -828,7 +828,7 @@ Instruction : [
 		name : "ImageSampleDrefExplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Dref"
@@ -842,7 +842,7 @@ Instruction : [
 		name : "ImageSampleProjImplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
@@ -855,7 +855,7 @@ Instruction : [
 		name : "ImageSampleProjExplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			IMAGEOPERANDS
@@ -868,7 +868,7 @@ Instruction : [
 		name : "ImageSampleProjDrefImplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Dref"
@@ -882,7 +882,7 @@ Instruction : [
 		name : "ImageSampleProjDrefExplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Dref"
@@ -896,7 +896,7 @@ Instruction : [
 		name : "ImageFetch"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
@@ -908,7 +908,7 @@ Instruction : [
 		name : "ImageGather"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Component"
@@ -922,7 +922,7 @@ Instruction : [
 		name : "ImageDrefGather"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Dref"
@@ -936,7 +936,7 @@ Instruction : [
 		name : "ImageRead"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
@@ -959,7 +959,7 @@ Instruction : [
 		name : "Image"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 		]
 	}
@@ -968,7 +968,7 @@ Instruction : [
 		name : "ImageQueryFormat"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 		]
 		depends : Kernel
@@ -978,7 +978,7 @@ Instruction : [
 		name : "ImageQueryOrder"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 		]
 		depends : Kernel
@@ -988,7 +988,7 @@ Instruction : [
 		name : "ImageQuerySizeLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 			ID VALUE "Lod"
 		]
@@ -999,7 +999,7 @@ Instruction : [
 		name : "ImageQuerySize"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 		]
 		depends : [ Kernel ImageQuery ]
@@ -1009,7 +1009,7 @@ Instruction : [
 		name : "ImageQueryLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 		]
@@ -1020,7 +1020,7 @@ Instruction : [
 		name : "ImageQueryLevels"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 		]
 		depends : [ Kernel ImageQuery ]
@@ -1030,7 +1030,7 @@ Instruction : [
 		name : "ImageQuerySamples"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 		]
 		depends : [ Kernel ImageQuery ]
@@ -1040,7 +1040,7 @@ Instruction : [
 		name : "ImageSparseSampleImplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
@@ -1053,7 +1053,7 @@ Instruction : [
 		name : "ImageSparseSampleImplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			IMAGEOPERANDS
@@ -1066,7 +1066,7 @@ Instruction : [
 		name : "ImageSparseSampleDrefImplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Dref"
@@ -1080,7 +1080,7 @@ Instruction : [
 		name : "ImageSparseSampleDrefExplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Dref"
@@ -1094,7 +1094,7 @@ Instruction : [
 		name : "ImageSparseSampleProjImplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
@@ -1107,7 +1107,7 @@ Instruction : [
 		name : "ImageSparseSampleProjExplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			IMAGEOPERANDS
@@ -1120,7 +1120,7 @@ Instruction : [
 		name : "ImageSparseSampleProjDrefImplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Dref"
@@ -1134,7 +1134,7 @@ Instruction : [
 		name : "ImageSparseSampleProjDrefExplicitLod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Dref"
@@ -1148,7 +1148,7 @@ Instruction : [
 		name : "ImageSparseFetch"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
@@ -1161,7 +1161,7 @@ Instruction : [
 		name : "ImageSparseGather"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Component"
@@ -1175,7 +1175,7 @@ Instruction : [
 		name : "ImageSparseDrefGather"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Dref"
@@ -1189,7 +1189,7 @@ Instruction : [
 		name : "ImageSparseTexelResident"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "ResidentCode"
 		]
 		depends : SparseResidency
@@ -1199,7 +1199,7 @@ Instruction : [
 		name : "ImageSparseRead"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 			ID VALUE "Coordinate"
 			OPT IMAGEOPERANDS
@@ -1212,7 +1212,7 @@ Instruction : [
 		name : "ImageSampleFootprintNV"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SampledImage"
 			ID VALUE "Coordinate"
 			ID VALUE "Granularity"
@@ -1227,7 +1227,7 @@ Instruction : [
 		name : "ConvertFToU"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1236,7 +1236,7 @@ Instruction : [
 		name : "ConvertFToS"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1245,7 +1245,7 @@ Instruction : [
 		name : "ConvertSToF"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1254,7 +1254,7 @@ Instruction : [
 		name : "ConvertUToF"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1263,7 +1263,7 @@ Instruction : [
 		name : "UConvert"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1272,7 +1272,7 @@ Instruction : [
 		name : "SConvert"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1281,7 +1281,7 @@ Instruction : [
 		name : "FConvert"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1290,7 +1290,7 @@ Instruction : [
 		name : "QuantizeToF16"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : Shader
@@ -1300,7 +1300,7 @@ Instruction : [
 		name : "ConvertPtrToU"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : [ Addresses PhysicalStorageBufferAddresses ]
@@ -1310,7 +1310,7 @@ Instruction : [
 		name : "SatConvertSToU"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : Kernel
@@ -1320,7 +1320,7 @@ Instruction : [
 		name : "SatConvertUToS"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : Kernel
@@ -1330,7 +1330,7 @@ Instruction : [
 		name : "ConvertUToPtr"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : [ Addresses PhysicalStorageBufferAddresses ]
@@ -1340,7 +1340,7 @@ Instruction : [
 		name : "PtrCastToGeneric"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : Kernel
@@ -1350,7 +1350,7 @@ Instruction : [
 		name : "GenericCastToPtr"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : Kernel
@@ -1360,7 +1360,7 @@ Instruction : [
 		name : "GenericCastToPtrExplicit"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			STORAGECLASS
 		]
@@ -1371,7 +1371,7 @@ Instruction : [
 		name : "Bitcast"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1380,7 +1380,7 @@ Instruction : [
 		name : "VectorExtractDynamic"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Vector"
 			ID VALUE "Index"
 		]
@@ -1390,7 +1390,7 @@ Instruction : [
 		name : "VectorInsertDynamic"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Vector"
 			ID VALUE "Component"
 			ID VALUE "Index"
@@ -1401,7 +1401,7 @@ Instruction : [
 		name : "VectorShuffle"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Vector1"
 			ID VALUE "Vector2"
 			OPT VAR U32 "Components"
@@ -1412,7 +1412,7 @@ Instruction : [
 		name : "CompositeConstruct"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			OPT VAR ID VALUE "Constituents" 
 		]
 	}
@@ -1421,7 +1421,7 @@ Instruction : [
 		name : "CompositeExtract"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Composite"
 			VAR U32 "Indices"
 		]
@@ -1431,7 +1431,7 @@ Instruction : [
 		name : "CompositeInsert"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Object"
 			ID VALUE "Composite"
 			VAR U32 "Indices"
@@ -1442,7 +1442,7 @@ Instruction : [
 		name : "CpoyObject"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1451,7 +1451,7 @@ Instruction : [
 		name : "Transpose"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Matrix"
 		]
 		depends : Matrix
@@ -1461,7 +1461,7 @@ Instruction : [
 		name : "CopyLogical"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1470,7 +1470,7 @@ Instruction : [
 		name : "SNegate"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1479,7 +1479,7 @@ Instruction : [
 		name : "FNegate"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1488,7 +1488,7 @@ Instruction : [
 		name : "IAdd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1498,7 +1498,7 @@ Instruction : [
 		name : "FAdd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1508,7 +1508,7 @@ Instruction : [
 		name : "ISub"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1518,7 +1518,7 @@ Instruction : [
 		name : "FSub"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1528,7 +1528,7 @@ Instruction : [
 		name : "IMul"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1538,7 +1538,7 @@ Instruction : [
 		name : "FMul"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1548,7 +1548,7 @@ Instruction : [
 		name : "UDiv"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1558,7 +1558,7 @@ Instruction : [
 		name : "SDiv"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1568,7 +1568,7 @@ Instruction : [
 		name : "FDiv"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1578,7 +1578,7 @@ Instruction : [
 		name : "UMod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1588,7 +1588,7 @@ Instruction : [
 		name : "SRem"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1598,7 +1598,7 @@ Instruction : [
 		name : "SMod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1608,7 +1608,7 @@ Instruction : [
 		name : "FRem"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1618,7 +1618,7 @@ Instruction : [
 		name : "FMod"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1628,7 +1628,7 @@ Instruction : [
 		name : "VectorTimesScalar"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1638,7 +1638,7 @@ Instruction : [
 		name : "MatrixTimesScalar"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1649,7 +1649,7 @@ Instruction : [
 		name : "VectorTimesMatrix"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1660,7 +1660,7 @@ Instruction : [
 		name : "MatrixTimesVector"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1671,7 +1671,7 @@ Instruction : [
 		name : "MatrixTimesMatrix"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1682,7 +1682,7 @@ Instruction : [
 		name : "OuterProduct"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1693,7 +1693,7 @@ Instruction : [
 		name : "Dot"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1703,7 +1703,7 @@ Instruction : [
 		name : "IAddCarry"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1713,7 +1713,7 @@ Instruction : [
 		name : "ISubBorrow"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1723,7 +1723,7 @@ Instruction : [
 		name : "UMulExtended"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1733,7 +1733,7 @@ Instruction : [
 		name : "SMulExtended"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1743,7 +1743,7 @@ Instruction : [
 		name : "SDot"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 			OPT PACKEDVECTORFORMAT
@@ -1755,7 +1755,7 @@ Instruction : [
 		name : "UDot"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 			OPT PACKEDVECTORFORMAT
@@ -1767,7 +1767,7 @@ Instruction : [
 		name : "SUDot"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 			OPT PACKEDVECTORFORMAT
@@ -1779,7 +1779,7 @@ Instruction : [
 		name : "SDotAccSat"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 			ID VALUE "Accumulator"
@@ -1792,7 +1792,7 @@ Instruction : [
 		name : "UDotAccSat"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 			ID VALUE "Accumulator"
@@ -1805,7 +1805,7 @@ Instruction : [
 		name : "SUDotAccSat"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 			ID VALUE "Accumulator"
@@ -1818,7 +1818,7 @@ Instruction : [
 		name : "ShiftRightLogical"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1828,7 +1828,7 @@ Instruction : [
 		name : "ShiftRightArithmetic"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1838,7 +1838,7 @@ Instruction : [
 		name : "ShiftLeftLogical"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1848,7 +1848,7 @@ Instruction : [
 		name : "BitwiseOr"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1858,7 +1858,7 @@ Instruction : [
 		name : "BitwiseXor"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1868,7 +1868,7 @@ Instruction : [
 		name : "BitwiseAnd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -1878,7 +1878,7 @@ Instruction : [
 		name : "Not"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1887,7 +1887,7 @@ Instruction : [
 		name : "BitFieldInsert"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Base"
 			ID VALUE "Insert"
 			ID VALUE "Offset"
@@ -1900,7 +1900,7 @@ Instruction : [
 		name : "BitFieldSExtract"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Base"
 			ID VALUE "Offset"
 			ID VALUE "Count"
@@ -1912,7 +1912,7 @@ Instruction : [
 		name : "BitFieldUExtract"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Base"
 			ID VALUE "Offset"
 			ID VALUE "Count"
@@ -1924,7 +1924,7 @@ Instruction : [
 		name : "BitReverse"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : [ Shader BitInstructions ]
@@ -1934,7 +1934,7 @@ Instruction : [
 		name : "BitCount"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1943,7 +1943,7 @@ Instruction : [
 		name : "Any"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Vector"
 		]
 	}
@@ -1952,7 +1952,7 @@ Instruction : [
 		name : "All"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Vector"
 		]
 	}
@@ -1961,7 +1961,7 @@ Instruction : [
 		name : "IsNan"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1970,7 +1970,7 @@ Instruction : [
 		name : "IsInf"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -1979,7 +1979,7 @@ Instruction : [
 		name : "IsFinite"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : Kernel
@@ -1989,7 +1989,7 @@ Instruction : [
 		name : "IsNormal"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : Kernel
@@ -1999,7 +1999,7 @@ Instruction : [
 		name : "SignBitSet"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : Kernel
@@ -2009,7 +2009,7 @@ Instruction : [
 		name : "LessOrGreater"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2020,7 +2020,7 @@ Instruction : [
 		name : "Ordered"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2031,7 +2031,7 @@ Instruction : [
 		name : "Unordered"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2042,7 +2042,7 @@ Instruction : [
 		name : "LogicalEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2052,7 +2052,7 @@ Instruction : [
 		name : "LogicalNotEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2062,7 +2062,7 @@ Instruction : [
 		name : "LogicalOr"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2072,7 +2072,7 @@ Instruction : [
 		name : "LogicalAnd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2082,7 +2082,7 @@ Instruction : [
 		name : "LogicalNot"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 	}
@@ -2091,7 +2091,7 @@ Instruction : [
 		name : "Select"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Condition"
 			ID VALUE
 			ID VALUE
@@ -2102,7 +2102,7 @@ Instruction : [
 		name : "IEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2112,7 +2112,7 @@ Instruction : [
 		name : "INotEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2122,7 +2122,7 @@ Instruction : [
 		name : "UGreaterThan"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2132,7 +2132,7 @@ Instruction : [
 		name : "SGreaterThan"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2142,7 +2142,7 @@ Instruction : [
 		name : "UGreaterThanEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2152,7 +2152,7 @@ Instruction : [
 		name : "SGreaterThanEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2162,7 +2162,7 @@ Instruction : [
 		name : "ULessThan"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2172,7 +2172,7 @@ Instruction : [
 		name : "SLessThan"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2182,7 +2182,7 @@ Instruction : [
 		name : "ULessThanEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2192,7 +2192,7 @@ Instruction : [
 		name : "SLessThanEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2202,7 +2202,7 @@ Instruction : [
 		name : "FOrdEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2212,7 +2212,7 @@ Instruction : [
 		name : "FUnordEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2222,7 +2222,7 @@ Instruction : [
 		name : "FOrdNotEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2232,7 +2232,7 @@ Instruction : [
 		name : "FUnordNotEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2242,7 +2242,7 @@ Instruction : [
 		name : "FOrdLessThan"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2252,7 +2252,7 @@ Instruction : [
 		name : "FUnordLessThan"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2262,7 +2262,7 @@ Instruction : [
 		name : "FOrdGreaterThan"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2272,7 +2272,7 @@ Instruction : [
 		name : "FUnordGreaterThan"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2282,7 +2282,7 @@ Instruction : [
 		name : "FOrdLessThanEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2292,7 +2292,7 @@ Instruction : [
 		name : "FUnordLessThanEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2302,7 +2302,7 @@ Instruction : [
 		name : "FOrdGreaterThanEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2312,7 +2312,7 @@ Instruction : [
 		name : "FUnordGreaterThanEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -2322,7 +2322,7 @@ Instruction : [
 		name : "DPdx"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "P"
 		]
 		depends : Shader
@@ -2332,7 +2332,7 @@ Instruction : [
 		name : "DPdy"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "P"
 		]
 		depends : Shader
@@ -2342,7 +2342,7 @@ Instruction : [
 		name : "Fwidth"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "P"
 		]
 		depends : Shader
@@ -2352,7 +2352,7 @@ Instruction : [
 		name : "DPdxFine"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "P"
 		]
 		depends : DerivativeControl
@@ -2362,7 +2362,7 @@ Instruction : [
 		name : "DPdyFine"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "P"
 		]
 		depends : DerivativeControl
@@ -2372,7 +2372,7 @@ Instruction : [
 		name : "FwidthFine"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "P"
 		]
 		depends : DerivativeControl
@@ -2382,7 +2382,7 @@ Instruction : [
 		name : "DPdxCoarse"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "P"
 		]
 		depends : DerivativeControl
@@ -2392,7 +2392,7 @@ Instruction : [
 		name : "DPdyCoarse"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "P"
 		]
 		depends : DerivativeControl
@@ -2402,7 +2402,7 @@ Instruction : [
 		name : "FwidthCoarse"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "P"
 		]
 		depends : DerivativeControl
@@ -2412,7 +2412,7 @@ Instruction : [
 		name : "Phi"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			VAR IDIDPAIR #TODO
 		]
 	}
@@ -2438,7 +2438,7 @@ Instruction : [
 		id : 248
 		name : "Label"
 		args : [
-			RST
+			RST Label
 		]
 	}
 	{
@@ -2531,7 +2531,7 @@ Instruction : [
 		name : "AtomicLoad"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2552,7 +2552,7 @@ Instruction : [
 		name : "AtomicExchange"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2564,7 +2564,7 @@ Instruction : [
 		name : "AtomicCompareExchange"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS "Equal"
@@ -2578,7 +2578,7 @@ Instruction : [
 		name : "AtomicCompareExchangeWeak"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS "Equal"
@@ -2593,7 +2593,7 @@ Instruction : [
 		name : "AtomicIncrement"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2604,7 +2604,7 @@ Instruction : [
 		name : "AtomicDecrement"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2615,7 +2615,7 @@ Instruction : [
 		name : "AtomicIAdd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2627,7 +2627,7 @@ Instruction : [
 		name : "AtomicISub"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2639,7 +2639,7 @@ Instruction : [
 		name : "AtomicSMin"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2651,7 +2651,7 @@ Instruction : [
 		name : "AtomicUMin"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2663,7 +2663,7 @@ Instruction : [
 		name : "AtomicSMax"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2675,7 +2675,7 @@ Instruction : [
 		name : "AtomicUMax"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2687,7 +2687,7 @@ Instruction : [
 		name : "AtomicAnd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2699,7 +2699,7 @@ Instruction : [
 		name : "AtomicOr"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2711,7 +2711,7 @@ Instruction : [
 		name : "AtomicXor"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2723,7 +2723,7 @@ Instruction : [
 		name : "AtomicFlagTestAndSet"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2745,7 +2745,7 @@ Instruction : [
 		name : "AtomicFMinEXT"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2758,7 +2758,7 @@ Instruction : [
 		name : "AtomicFMaxEXT"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2771,7 +2771,7 @@ Instruction : [
 		name : "AtomicFAddEXT"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID SCOPE
 			ID MEMORYSEMANTICS
@@ -2831,7 +2831,7 @@ Instruction : [
 		name : "NamedBarrierInitialize"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SubgroupCount"
 		]
 		depends : NamedBarrier
@@ -2851,7 +2851,7 @@ Instruction : [
 		name : "GroupAsyncCopy"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID UNKNOWN "Destination"
 			ID UNKNOWN "Source"
@@ -2876,7 +2876,7 @@ Instruction : [
 		name : "GroupAll"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID UNKNOWN "Predicate"
 		]
@@ -2887,7 +2887,7 @@ Instruction : [
 		name : "GroupAny"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID UNKNOWN "Predicate"
 		]
@@ -2898,7 +2898,7 @@ Instruction : [
 		name : "GroupBroadcast"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 			ID VALUE "LocalId"
@@ -2910,7 +2910,7 @@ Instruction : [
 		name : "GroupIAdd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -2922,7 +2922,7 @@ Instruction : [
 		name : "GroupFAdd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -2934,7 +2934,7 @@ Instruction : [
 		name : "GroupFMin"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -2946,7 +2946,7 @@ Instruction : [
 		name : "GroupUMin"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -2958,7 +2958,7 @@ Instruction : [
 		name : "GroupSMin"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -2970,7 +2970,7 @@ Instruction : [
 		name : "GroupFMax"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -2982,7 +2982,7 @@ Instruction : [
 		name : "GroupUMax"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -2994,7 +2994,7 @@ Instruction : [
 		name : "GroupSMax"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3006,7 +3006,7 @@ Instruction : [
 		name : "SubgroupBallotKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Predicate"
 		]
 		depends : SubgroupBallotKHR
@@ -3016,7 +3016,7 @@ Instruction : [
 		name : "SubgroupFirstInvocationKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : SubgroupBallotKHR
@@ -3026,7 +3026,7 @@ Instruction : [
 		name : "SubgroupAllKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Predicate"
 		]
 		depends : SubgroupVoteKHR
@@ -3036,7 +3036,7 @@ Instruction : [
 		name : "SubgroupAnyKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Predicate"
 		]
 		depends : SubgroupVoteKHR
@@ -3046,7 +3046,7 @@ Instruction : [
 		name : "SubgroupAllEqualKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Predicate"
 		]
 		depends : SubgroupVoteKHR
@@ -3056,7 +3056,7 @@ Instruction : [
 		name : "SubgroupReadInvocationKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE "Index"
 		]
@@ -3067,7 +3067,7 @@ Instruction : [
 		name : "GroupIAddNonUniformAMD"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3079,7 +3079,7 @@ Instruction : [
 		name : "GroupFAddNonUniformAMD"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3091,7 +3091,7 @@ Instruction : [
 		name : "GroupFMinNonUniformAMD"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3103,7 +3103,7 @@ Instruction : [
 		name : "GroupUMinNonUniformAMD"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3115,7 +3115,7 @@ Instruction : [
 		name : "GroupSMinNonUniformAMD"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3127,7 +3127,7 @@ Instruction : [
 		name : "GroupFMaxNonUniformAMD"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3139,7 +3139,7 @@ Instruction : [
 		name : "GroupUMaxNonUniformAMD"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3151,7 +3151,7 @@ Instruction : [
 		name : "GroupSMaxNonUniformAMD"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3163,7 +3163,7 @@ Instruction : [
 		name : "SubgroupShuffleINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Data"
 			ID VALUE "InvocationId"
 		]
@@ -3174,7 +3174,7 @@ Instruction : [
 		name : "SubgroupShuffleDownINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Current"
 			ID VALUE "Next"
 			ID VALUE "Delta"
@@ -3186,7 +3186,7 @@ Instruction : [
 		name : "SubgroupShuffleUpINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Previous"
 			ID VALUE "Current"
 			ID VALUE "Delta"
@@ -3198,7 +3198,7 @@ Instruction : [
 		name : "SubgroupShuffleXorINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Data"
 			ID VALUE
 		]
@@ -3209,7 +3209,7 @@ Instruction : [
 		name : "SubgroupBlockReadINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 		]
 		depends : SubgroupBufferBlockIOINTEL
@@ -3228,7 +3228,7 @@ Instruction : [
 		name : "SubgroupImageBlockReadINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 			ID VALUE "Coordinate"
 		]
@@ -3249,7 +3249,7 @@ Instruction : [
 		name : "SubgroupImageMediaBlockReadINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 			ID VALUE "Coordinate"
 			ID VALUE "Width"
@@ -3274,7 +3274,7 @@ Instruction : [
 		name : "EnqueueMarker"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Queue"
 			ID VALUE "NumEvents"
 			ID VALUE "WaitEvents"
@@ -3287,7 +3287,7 @@ Instruction : [
 		name : "EnqueueKernel"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Queue"
 			ID KERNELENQUEUEFLAGS
 			ID UNKNOWN "NDrange"
@@ -3307,7 +3307,7 @@ Instruction : [
 		name : "GetKernelNDrangeSubGroupCount"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "NDrange"
 			ID VALUE "Invoke"
 			ID VALUE "Param"
@@ -3321,7 +3321,7 @@ Instruction : [
 		name : "GetKerlenNDrangeMaxSubGroupSize"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "NDrange"
 			ID VALUE "Invoke"
 			ID VALUE "Param"
@@ -3335,7 +3335,7 @@ Instruction : [
 		name : "GetKernelWorkGroupSize"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Invoke"
 			ID VALUE "Param"
 			ID VALUE "ParamSize"
@@ -3348,7 +3348,7 @@ Instruction : [
 		name : "GetKernelPreferredWorkGroupSizeMultiple"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Invoke"
 			ID VALUE "Param"
 			ID VALUE "ParamSize"
@@ -3377,7 +3377,7 @@ Instruction : [
 		name : "CreateUserEvent"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 		]
 		depends : DeviceEnqueue
 	}
@@ -3386,7 +3386,7 @@ Instruction : [
 		name : "IsValidEvent"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Event"
 		]
 		depends : DeviceEnqueue
@@ -3415,7 +3415,7 @@ Instruction : [
 		name : "GetDefaultQueue"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 		]
 		depends : DeviceEnqueue
 	}
@@ -3424,7 +3424,7 @@ Instruction : [
 		name : "BuildNDRange"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "GlobalWorkSize"
 			ID VALUE "LocalWorkSize"
 			ID VALUE "GloablWorkOffset"
@@ -3436,7 +3436,7 @@ Instruction : [
 		name : "GetKernelLocalSizeForSubgroupCount"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "SubgroupCount"
 			ID VALUE "Invoke"
 			ID VALUE "Param"
@@ -3450,7 +3450,7 @@ Instruction : [
 		name : "GetKernelMaxNumSubgroups"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Invoke"
 			ID VALUE "Param"
 			ID VALUE "ParamSize"
@@ -3463,7 +3463,7 @@ Instruction : [
 		name : "ReadPipe"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Pipe"
 			ID VALUE "Pointer"
 			ID VALUE "PacketSize"
@@ -3476,7 +3476,7 @@ Instruction : [
 		name : "WritePipe"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Pipe"
 			ID VALUE "Pointer"
 			ID VALUE "PacketSize"
@@ -3489,7 +3489,7 @@ Instruction : [
 		name : "ReservedReadPipe"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Pipe"
 			ID VALUE "ReservId"
 			ID VALUE "Index"
@@ -3504,7 +3504,7 @@ Instruction : [
 		name : "ReservedWritePipe"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Pipe"
 			ID VALUE "ReservId"
 			ID VALUE "Index"
@@ -3519,7 +3519,7 @@ Instruction : [
 		name : "ReserveReadPipePackets"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Pipe"
 			ID VALUE "NumPackets"
 			ID VALUE "PacketSize"
@@ -3532,7 +3532,7 @@ Instruction : [
 		name : "ReserveWritePipePackets"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Pipe"
 			ID VALUE "NumPackets"
 			ID VALUE "PacketSize"
@@ -3567,7 +3567,7 @@ Instruction : [
 		name : "IsValidReserveId"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : Pipes
@@ -3577,7 +3577,7 @@ Instruction : [
 		name : "GetNumPipePackets"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Pipe"
 			ID VALUE "PacketSize"
 			ID VALUE "PacketAlignment"
@@ -3589,7 +3589,7 @@ Instruction : [
 		name : "GetMaxPipePackets"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "Pipe"
 			ID VALUE "PacketSize"
 			ID VALUE "PacketAlignment"
@@ -3601,7 +3601,7 @@ Instruction : [
 		name : "GroupReserveReadPipePackets"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID UNKNOWN "Pipe"
 			ID VALUE "NumPackets"
@@ -3615,7 +3615,7 @@ Instruction : [
 		name : "GroupReserveWritePipePackets"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID UNKNOWN "Pipe"
 			ID VALUE "NumPackets"
@@ -3653,7 +3653,7 @@ Instruction : [
 		name : "ConstantPipeStorage"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			U32 "PacketSize"
 			U32 "PacketAlignment"
 			U32 "Capacity"
@@ -3665,7 +3665,7 @@ Instruction : [
 		name : "CreatePipeFromPipeStorage"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID UNKNOWN "PipeStorage"
 		]
 		depends : PipeStorage
@@ -3675,7 +3675,7 @@ Instruction : [
 		name : "ReadPipeBlockingINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "PacketSize"
 			ID VALUE "PacketAlignment"
 		]
@@ -3686,7 +3686,7 @@ Instruction : [
 		name : "WritePipeBlockingINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "PacketSize"
 			ID VALUE "PacketAlignment"
 		]
@@ -3697,7 +3697,7 @@ Instruction : [
 		name : "GroupNonUniformElect"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 		]
 		depends : GroupNonUniform
@@ -3707,7 +3707,7 @@ Instruction : [
 		name : "GroupNonUniformAll"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID UNKNOWN "Predicate"
 		]
@@ -3718,7 +3718,7 @@ Instruction : [
 		name : "GroupNonUniformAny"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID UNKNOWN "Predicate"
 		]
@@ -3729,7 +3729,7 @@ Instruction : [
 		name : "GroupNonUniformAllEqual"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 		]
@@ -3740,7 +3740,7 @@ Instruction : [
 		name : "GroupNonUniformBroadcast"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 			ID VALUE "InvocationId"
@@ -3752,7 +3752,7 @@ Instruction : [
 		name : "GroupNonUniformBroadcastFirst"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 		]
@@ -3763,7 +3763,7 @@ Instruction : [
 		name : "GroupNonUniformBallot"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID UNKNOWN "Predicate"
 		]
@@ -3774,7 +3774,7 @@ Instruction : [
 		name : "GroupNonUniformInverseBallot"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 		]
@@ -3785,7 +3785,7 @@ Instruction : [
 		name : "GroupNonUniformBallotBitExtract"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 			ID VALUE "Index"
@@ -3797,7 +3797,7 @@ Instruction : [
 		name : "GroupNonUniformBallotBitCount"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3809,7 +3809,7 @@ Instruction : [
 		name : "GroupNonUniformBallotFindLSB"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 		]
@@ -3820,7 +3820,7 @@ Instruction : [
 		name : "GroupNonUniformBallotFindMSB"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 		]
@@ -3831,7 +3831,7 @@ Instruction : [
 		name : "GroupNonUniformShuffle"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 			ID VALUE "InvocationId"
@@ -3843,7 +3843,7 @@ Instruction : [
 		name : "GroupNonUniformShuffleXor"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 			ID VALUE "Mask"
@@ -3855,7 +3855,7 @@ Instruction : [
 		name : "GroupNonUniformShuffleUp"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 			ID VALUE "Delta"
@@ -3867,7 +3867,7 @@ Instruction : [
 		name : "GroupNonUniformShuffleDown"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 			ID VALUE "Delta"
@@ -3879,7 +3879,7 @@ Instruction : [
 		name : "GroupNonUniformIAdd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3892,7 +3892,7 @@ Instruction : [
 		name : "GroupNonUniformFAdd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3905,7 +3905,7 @@ Instruction : [
 		name : "GroupNonUniformIMul"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3918,7 +3918,7 @@ Instruction : [
 		name : "GroupNonUniformFMul"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3931,7 +3931,7 @@ Instruction : [
 		name : "GroupNonUniformSMin"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3944,7 +3944,7 @@ Instruction : [
 		name : "GroupNonUniformUMin"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3957,7 +3957,7 @@ Instruction : [
 		name : "GroupNonUniformFMin"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3970,7 +3970,7 @@ Instruction : [
 		name : "GroupNonUniformSMax"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3983,7 +3983,7 @@ Instruction : [
 		name : "GroupNonUniformUMax"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -3996,7 +3996,7 @@ Instruction : [
 		name : "GroupNonUniformFMax"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -4009,7 +4009,7 @@ Instruction : [
 		name : "GroupNonUniformBitwiseAnd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -4022,7 +4022,7 @@ Instruction : [
 		name : "GroupNonUniformBitwiseOr"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -4035,7 +4035,7 @@ Instruction : [
 		name : "GroupNonUniformBitwiseXor"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -4048,7 +4048,7 @@ Instruction : [
 		name : "GroupNonUniformLogicalAnd"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -4061,7 +4061,7 @@ Instruction : [
 		name : "GroupNonUniformLogicalOr"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -4074,7 +4074,7 @@ Instruction : [
 		name : "GroupNonUniformLogicalXor"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -4087,7 +4087,7 @@ Instruction : [
 		name : "GroupNonUniformQuadBroadcast"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			GROUPOPERATION
 			ID VALUE
@@ -4100,7 +4100,7 @@ Instruction : [
 		name : "GroupNonUniformQuadSwap"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 			ID VALUE
 			ID VALUE "Direction"
@@ -4112,7 +4112,7 @@ Instruction : [
 		name : "GroupNonUniformPartitionNV"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : GroupNonUniformPartitionedNV
@@ -4154,7 +4154,7 @@ Instruction : [
 		name : "ConvertUToAccelerationStructureKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Accel"
 		]
 		depends : [ RayTracingKHR RayQueryKHR ]
@@ -4177,7 +4177,7 @@ Instruction : [
 		id : 4472
 		name : "TypeRayQueryKHR"
 		args : [
-			RST
+			RST RayQueryKHR
 		]
 		depends : RayQueryKHR
 	}
@@ -4226,7 +4226,7 @@ Instruction : [
 		name : "RayQueryProceedKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
@@ -4236,7 +4236,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionTypeKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4247,7 +4247,7 @@ Instruction : [
 		name : "FragmentMaskFetchAMD"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 			ID VALUE "Coordinate"
 		]
@@ -4258,7 +4258,7 @@ Instruction : [
 		name : "FragmentFetchAMD"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Image"
 			ID VALUE "Coordinate"
 			ID VALUE "FragmentIndex"
@@ -4270,7 +4270,7 @@ Instruction : [
 		name : "ReadClockKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID SCOPE
 		]
 		depends : ShaderClockKHR
@@ -4289,7 +4289,7 @@ Instruction : [
 		name : "ReportIntersectionKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Hit"
 			ID VALUE "HitKind"
 		]
@@ -4369,7 +4369,7 @@ Instruction : [
 		id : 5341
 		name : "TypeAccelerationStructureKHR"
 		args : [
-			RST
+			RST AccelerationStructureKHR
 		]
 		depends : [ RayTracingNV RayTracingKHR RayQueryKHR ]
 	}
@@ -4386,7 +4386,7 @@ Instruction : [
 		id : 5358
 		name : "TypeCooperativeMatrixNV"
 		args : [
-			RST
+			RST CooperativeMatrixNV
 			ID VALUE "ComponentType"
 			ID SCOPE
 			ID VALUE "Rows"
@@ -4399,7 +4399,7 @@ Instruction : [
 		name : "CooperativeMatrixLoadNV"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Pointer"
 			ID VALUE "Stride"
 			ID VALUE "ColumnMajor"
@@ -4424,7 +4424,7 @@ Instruction : [
 		name : "CooperativeMatrixMulAddNV"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "A"
 			ID VALUE "B"
 			ID VALUE "C"
@@ -4436,7 +4436,7 @@ Instruction : [
 		name : "CooperativeMatrixLengthNV"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID TYPE
 		]
 		depends : CooperativeMatrixNV
@@ -4468,7 +4468,7 @@ Instruction : [
 		name : "IsHelperInvocationEXT"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 		]
 		depends : DemoteToHelperInvocation
 	}
@@ -4477,7 +4477,7 @@ Instruction : [
 		name : "ConvertUToImageNV"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : BindlessTextureNV
@@ -4487,7 +4487,7 @@ Instruction : [
 		name : "ConvertUToSamplerNV"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : BindlessTextureNV
@@ -4497,7 +4497,7 @@ Instruction : [
 		name : "ConvertImageToUNV"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : BindlessTextureNV
@@ -4507,7 +4507,7 @@ Instruction : [
 		name : "ConvertSamplerToUNV"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : BindlessTextureNV
@@ -4517,7 +4517,7 @@ Instruction : [
 		name : "ConvertUToSampledImageNV"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : BindlessTextureNV
@@ -4527,7 +4527,7 @@ Instruction : [
 		name : "ConvertSampledImageToUNV"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : BindlessTextureNV
@@ -4545,7 +4545,7 @@ Instruction : [
 		name : "UCountLeadingZerosINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
@@ -4555,7 +4555,7 @@ Instruction : [
 		name : "UCountTrailingZerosINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 		]
 		depends : IntegerFunctions2INTEL
@@ -4565,7 +4565,7 @@ Instruction : [
 		name : "AbsISubINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4576,7 +4576,7 @@ Instruction : [
 		name : "AbsUSubINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4587,7 +4587,7 @@ Instruction : [
 		name : "IAddSatINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4598,7 +4598,7 @@ Instruction : [
 		name : "UAddSatINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4609,7 +4609,7 @@ Instruction : [
 		name : "IAverageINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4620,7 +4620,7 @@ Instruction : [
 		name : "UAverageINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4631,7 +4631,7 @@ Instruction : [
 		name : "IAverageRoundedINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4642,7 +4642,7 @@ Instruction : [
 		name : "UAverageRoundedINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4653,7 +4653,7 @@ Instruction : [
 		name : "ISubSatINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4664,7 +4664,7 @@ Instruction : [
 		name : "USubSatINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4675,7 +4675,7 @@ Instruction : [
 		name : "IMul32x16INTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4686,7 +4686,7 @@ Instruction : [
 		name : "UMul32x16INTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE
 			ID VALUE
 		]
@@ -4705,7 +4705,7 @@ Instruction : [
 		name : "FPGARegINTEL"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "Result"
 			ID VALUE "Input"
 		]
@@ -4716,7 +4716,7 @@ Instruction : [
 		name : "RayQueryGetRayTMinKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
@@ -4726,7 +4726,7 @@ Instruction : [
 		name : "RayQueryGetRayFlagsKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
@@ -4736,7 +4736,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionTKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4747,7 +4747,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionInstanceCustomIndexKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4758,7 +4758,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionInstanceIdKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4769,7 +4769,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionInstanceShaderBindingTableRecordOffsetKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4780,7 +4780,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionGeometryIndexKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4791,7 +4791,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionPrimitiveIndexKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4802,7 +4802,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionBarycentricsKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4813,7 +4813,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionFrontFaceKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4824,7 +4824,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionCandidateAABBOpaqueKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
@@ -4834,7 +4834,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionObjectRayDirectionKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4845,7 +4845,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionObjectRayOriginKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4856,7 +4856,7 @@ Instruction : [
 		name : "RayQueryGetWorldRayDirectionKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
@@ -4866,7 +4866,7 @@ Instruction : [
 		name : "RayQueryGetWorldRayOriginKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 		]
 		depends : RayQueryKHR
@@ -4876,7 +4876,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionObjectToWorldKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
@@ -4887,7 +4887,7 @@ Instruction : [
 		name : "RayQueryGetIntersectionWorldToObjectKHR"
 		args : [
 			RTYPE
-			RST
+			RST Auto
 			ID VALUE "RayQuery"
 			ID VALUE "Intersection"
 		]
