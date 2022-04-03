@@ -92,11 +92,7 @@ namespace spird
 		STR                           = 48,
 		ARG                           = 49,
 		MEMBER                        = 50,
-		U32IDPAIR                     = 51,
-		IDMEMBERPAIR                  = 52,
-		IDIDPAIR                      = 53,
-		IDU32PAIR                     = 54,
-		I64                           = 55,
+		I64                           = 51,
 	};
 
 	enum class arg_flags : uint8_t
@@ -108,6 +104,7 @@ namespace spird
 		result   = 0x8,
 		constant = 0x10,
 		forward  = 0x20,
+		pair     = 0x40,
 	};
 
 	enum class enum_id : uint32_t

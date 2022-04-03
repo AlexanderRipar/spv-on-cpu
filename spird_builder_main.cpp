@@ -83,10 +83,6 @@ static constexpr const char* argument_type_names[]{
 	"STR",
 	"ARG",
 	"MEMBER",
-	"U32IDPAIR",
-	"IDMEMBERPAIR",
-	"IDIDPAIR",
-	"IDU32PAIR",
 	"I64",
 };
 
@@ -154,6 +150,19 @@ static void* enum_data[256];
 static uint32_t enum_data_sizes[256];
 
 static uint64_t is_bitmask_enum[4];
+
+struct arg_data
+{
+	spird::arg_flags flags = spird::arg_flags::none;
+	spird::arg_type type = spird::arg_type::INSTRUCTION;
+};
+
+struct arg_state
+{
+	spird::arg_flags prev_flags;
+	spird::arg_type prev_type;
+	bool has_rtype;
+};
 
 struct output_data
 {
@@ -533,6 +542,131 @@ static bool token_equal(const char*& curr, const char* token) noexcept
 	return true;
 }
 
+static arg_data parse_arg_type(const char*& curr, arg_state* state) noexcept
+{
+	if ((state->prev_flags & (spird::arg_flags::variadic | spird::arg_flags::pair)) == spird::arg_flags::variadic)
+		panic("Line %d: Cannot have another argument after variadic argument.\n", line_number - 1);
+
+	uint32_t name_len;
+
+	arg_data data;
+
+	while (true)
+	{
+		name_len = 0;
+
+		while (!is_whitespace(curr[name_len]))
+			++name_len;
+
+		if (token_equal(curr, argument_optional_string))
+		{
+			if ((data.flags & spird::arg_flags::optional) == spird::arg_flags::optional)
+				panic("Line %d: '%s' specified more than once.\n", line_number, argument_optional_string);
+
+			data.flags |= spird::arg_flags::optional;
+		}
+		else if (token_equal(curr, argument_variadic_string))
+		{
+			if ((data.flags & spird::arg_flags::variadic) == spird::arg_flags::variadic)
+				panic("Line %d: '%s' specified more than once.\n", line_number, argument_variadic_string);
+
+			data.flags |= spird::arg_flags::variadic;
+		}
+		else if (token_equal(curr, argument_id_string))
+		{
+			if ((data.flags & spird::arg_flags::result) == spird::arg_flags::result)
+				panic("Line %d: Cannot combine RST and ID (RST implies ID).\n", line_number);
+
+			if ((data.flags & spird::arg_flags::id) == spird::arg_flags::id)
+				panic("Line %d: '%s' specified more than once.\n", line_number, argument_id_string);
+
+			data.flags |= spird::arg_flags::id;
+		}
+		else if (token_equal(curr, argument_result_string))
+		{
+			if ((data.flags & spird::arg_flags::result) == spird::arg_flags::result)
+				panic("Line %d: '%s' specified more than once.\n", line_number, argument_result_string);
+
+			if ((data.flags & spird::arg_flags::id) == spird::arg_flags::id)
+				panic("Line %d: Cannot combine RST and ID (RST implies ID).\n", line_number);
+
+			data.flags |= spird::arg_flags::result | spird::arg_flags::id;
+		}
+		else if (token_equal(curr, argument_pair_string))
+		{
+			if ((data.flags & spird::arg_flags::pair) == spird::arg_flags::pair)
+				panic("Line %d: '%s' specified more than once.\n", line_number, argument_pair_string);
+
+			data.flags |= spird::arg_flags::pair;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	if ((data.flags & spird::arg_flags::result) == spird::arg_flags::result && (data.flags & (spird::arg_flags::optional | spird::arg_flags::variadic)) != spird::arg_flags::none)
+		panic("Line %d: Cannot combine RST with other flags.\n", line_number);
+
+	if ((data.flags & spird::arg_flags::optional) != spird::arg_flags::optional &&
+		(state->prev_flags & (spird::arg_flags::optional | spird::arg_flags::pair)) == spird::arg_flags::optional)
+		panic("Line %d: Cannot have non-optional argument after optional argument.\n", line_number);
+
+	if (token_equal_no_advance(curr, argument_type_names[static_cast<uint32_t>(spird::arg_type::RTYPE)]))
+	{
+		if (state->has_rtype)
+			panic("Line %d: Cannot have more than one argument of type RTYPE.\n", line_number);
+
+		state->has_rtype = true;
+
+		data.flags |= spird::arg_flags::id;
+	}
+
+	if ((data.flags & spird::arg_flags::result) == spird::arg_flags::none)
+	{
+		bool found = false;
+
+		for (uint32_t i = 0; i != _countof(argument_type_names); ++i)
+			if (token_equal(curr, argument_type_names[i]))
+			{
+				found = true;
+
+				data.type = static_cast<spird::arg_type>(i);
+
+				break;
+			}
+			
+		if (!found)
+			parse_panic("argument-type", curr);
+	}
+	else
+	{
+		bool found = false;
+
+		for (uint32_t i = 0; i != _countof(result_type_names); ++i)
+			if (token_equal(curr, result_type_names[i]))
+			{
+				found = true;
+
+				if (static_cast<spird::rst_type>(i) == spird::rst_type::Auto && !state->has_rtype)
+					panic("Line %d: Cannot have result of type %s without RTYPE.\n", line_number, result_type_names[static_cast<uint32_t>(spird::rst_type::Auto)]);
+
+				data.type = static_cast<spird::arg_type>(i);
+
+				break;
+			}
+
+		if (!found)
+			parse_panic("result-type", curr);
+	}
+
+	state->prev_flags = data.flags;
+
+	state->prev_type = data.type;
+
+	return data;
+}
+
 int main(int argc, const char** argv)
 {
 	prog_name = argv[0];
@@ -587,13 +721,9 @@ int main(int argc, const char** argv)
 
 	output_data output;
 
-	bool prev_arg_was_optional;
-
-	bool prev_arg_was_variadic;
-
-	bool has_rtype;
-
 	uint32_t curr_enum_type;
+
+	arg_state elem_arg_state;
 
 	bool done = false;
 
@@ -657,11 +787,7 @@ int main(int argc, const char** argv)
 
 				curr_argc = 0;
 
-				prev_arg_was_optional = false;
-
-				prev_arg_was_variadic = false;
-
-				has_rtype = false;
+				elem_arg_state = {};
 
 				state = pstate::elem_id;
 			}
@@ -787,138 +913,19 @@ int main(int argc, const char** argv)
 		{
 			if (*curr != ']')
 			{
-				if (prev_arg_was_variadic)
-					panic("Line %d: Cannot have another argument after variadic argument.\n", line_number);
+				const bool is_pair_continued = (elem_arg_state.prev_flags & spird::arg_flags::pair) == spird::arg_flags::pair;
 
-				uint32_t name_len;
+				arg_data data = parse_arg_type(curr, &elem_arg_state);
 
-				bool flag_optional = false;
-
-				bool flag_variadic = false;
-
-				bool flag_id = false;
-
-				bool flag_result = false;
-
-				while (true)
+				if (is_pair_continued)
 				{
-					name_len = 0;
-
-					while (!is_whitespace(curr[name_len]))
-						++name_len;
-
-					if (token_equal(curr, argument_optional_string))
-					{
-						prev_arg_was_optional = true;
-
-						if (flag_optional)
-							panic("Line %d: '%s' specified more than once.\n", line_number, argument_optional_string);
-
-						flag_optional = true;
-					}
-					else if (token_equal(curr, argument_variadic_string))
-					{
-						prev_arg_was_variadic = true;
-
-						if (flag_variadic)
-							panic("Line %d: '%s' specified more than once.\n", line_number, argument_optional_string);
-
-						flag_variadic = true;
-					}
-					else if (token_equal(curr, argument_id_string))
-					{
-						if (flag_result)
-							panic("Line %d: Cannot combine RST and ID (RST implies ID).\n", line_number);
-
-						if (flag_id)
-							panic("Line %d: '%s' specified more than once.\n", line_number, argument_id_string);
-
-						flag_id = true;
-					}
-					else if (token_equal(curr, argument_result_string))
-					{
-						if (flag_result)
-							panic("Line %d: '%s' specified more than once.\n", line_number, argument_result_string);
-
-						if (flag_id)
-							panic("Line %d: Cannot combine RST and ID (RST implies ID).\n", line_number);
-
-						flag_id = true;
-
-						flag_result = true;
-					}
-					else
-					{
-						break;
-					}
+					if ((data.flags & (spird::arg_flags::optional | spird::arg_flags::variadic | spird::arg_flags::result | spird::arg_flags::pair)) != spird::arg_flags::none)
+						panic("Line %d: Second element of argument pair can only have ID, CONST or FORWARD flags set.\n", line_number);
 				}
 
-				if (flag_result && (flag_optional || flag_variadic))
-					panic("Cannot combine RST with other flags.\n");
+				output.append(static_cast<spird::arg_type>(data.flags));
 
-				if (!flag_optional && prev_arg_was_optional)
-					panic("Line %d: Cannot have non-optional argument after optional argument.\n", line_number);
-
-				spird::arg_flags flags = spird::arg_flags::none;
-
-				if (flag_optional)
-					flags |= spird::arg_flags::optional;
-
-				if (flag_variadic)
-					flags |= spird::arg_flags::variadic;
-
-				if (flag_id)
-					flags |= spird::arg_flags::id;
-
-				if (flag_result)
-					flags |= spird::arg_flags::result;
-
-				if (token_equal_no_advance(curr, argument_type_names[static_cast<uint32_t>(spird::arg_type::RTYPE)]))
-				{
-					has_rtype = true;
-
-					flags |= spird::arg_flags::id;
-				}
-
-				output.append(static_cast<spird::arg_type>(flags));
-
-				if (!flag_result)
-				{
-					bool found = false;
-
-					for (uint32_t i = 0; i != _countof(argument_type_names); ++i)
-						if (token_equal(curr, argument_type_names[i]))
-						{
-							found = true;
-
-							output.append(static_cast<spird::arg_type>(i));
-
-							break;
-						}
-						
-					if (!found)
-						parse_panic("argument-type", curr);
-				}
-				else
-				{
-					bool found = false;
-
-					for (uint32_t i = 0; i != _countof(result_type_names); ++i)
-						if (token_equal(curr, result_type_names[i]))
-						{
-							found = true;
-
-							if (static_cast<spird::rst_type>(i) == spird::rst_type::Auto && !has_rtype)
-								panic("Line %d: Cannot have result of type %s without RTYPE.\n", line_number, result_type_names[static_cast<uint32_t>(spird::rst_type::Auto)]);
-
-							output.append(static_cast<spird::arg_type>(i));
-
-							break;
-						}
-
-					if (!found)
-						parse_panic("result-type", curr);
-				}
+				output.append(data.type);
 
 				++curr_argc;
 
