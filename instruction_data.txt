@@ -152,7 +152,9 @@ Instruction : [
 		id : 75
 		name : "GroupMemberDecorate"
 		args : [
-			VAR IDMEMBERPAIR
+			VAR PAIR
+				ID TYPE
+				MEMBER
 		]
 	}
 	{
@@ -2413,7 +2415,9 @@ Instruction : [
 		args : [
 			RTYPE
 			RST Auto
-			VAR IDIDPAIR #TODO
+			VAR PAIR
+				ID UNKNOWN
+				ID UNKNOWN
 		]
 	}
 	{
@@ -2465,7 +2469,9 @@ Instruction : [
 		args : [
 			ID UNKNOWN "Selector"
 			ID UNKNOWN "Default"
-			OPT VAR U32IDPAIR "Targets"
+			OPT VAR PAIR
+				U32
+				ID UNKNOWN "Targets"
 		]
 	}
 	{
@@ -7532,7 +7538,9 @@ LoopControl@BITMASK : [
 		name : "DependencyArrayINTEL"
 		args : [
 			U32 "PairCount"
-			IDU32PAIR "VariableAndLoopIterations"
+			OPT VAR PAIR
+				ID UNKNOWN
+				U32 "VariableAndLoopIterations"
 		]
 		depends : FPGALoopControlsINTEL
 	}
