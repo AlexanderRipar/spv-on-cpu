@@ -30,12 +30,6 @@ namespace spird
 		uint32_t offset;
 	};
 	
-	static constexpr uint8_t insn_arg_optional_bit = 0x80;
-
-	static constexpr uint8_t insn_arg_variadic_bit = 0x40;
-
-	static constexpr uint8_t insn_argtype_mask     = 0x3F;
-	
 	static constexpr uint8_t enum_id_count = 41;
 
 	enum class arg_type : uint8_t
