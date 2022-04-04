@@ -557,9 +557,6 @@ private:
 		if (literal_end - literal_word < 1)
 			return spvcpu::result::instruction_wordcount_mismatch;
 
-		if (!print_char(' '))
-			return spvcpu::result::no_memory;
-
 		switch (data->m_type)
 		{
 		case spird::rst_type::Int:
@@ -961,8 +958,9 @@ private:
 
 		const bool is_result = (flags & spird::arg_flags::result) == spird::arg_flags::result;
 
-		if (!print_char(' '))
-			return spvcpu::result::no_memory;
+		if (!is_result && type != spird::arg_type::RTYPE)
+			if (!print_char(' '))
+				return spvcpu::result::no_memory;
 
 		if (is_result)
 		{
@@ -1033,7 +1031,7 @@ private:
 				}
 				else
 				{
-					if (!print_str(" [LIT ") || !print_u32(word_end - word) || !print_str("]"))
+					if (!print_str("[LIT ") || !print_u32(word_end - word) || !print_str("]"))
 						return spvcpu::result::no_memory;
 				}
 
@@ -1056,7 +1054,7 @@ private:
 				if (word + 1 > word_end)
 					return spvcpu::result::instruction_wordcount_mismatch;
 
-				if (!print_str(" ") || !print_u32(*word))
+				if (!print_u32(*word))
 					return spvcpu::result::no_memory;
 
 				++word; 
@@ -1072,7 +1070,7 @@ private:
 				if (word + str_words > word_end)
 					return spvcpu::result::instruction_wordcount_mismatch;
 
-				if (!print_str(" \"") || !print_str(str) || !print_str("\""))
+				if (!print_str("\"") || !print_str(str) || !print_str("\""))
 					return spvcpu::result::no_memory;
 
 				word += str_words;
@@ -1094,7 +1092,7 @@ private:
 				if (word + 1 > word_end)
 					return spvcpu::result::instruction_wordcount_mismatch;
 
-				if (!print_str(" ") || !print_member(*word))
+				if (!print_member(*word))
 					return spvcpu::result::no_memory;
 
 				++word;
@@ -1108,7 +1106,7 @@ private:
 
 				int64_t n = *word | (static_cast<int64_t>(word[1]) << 32); 
 
-				if (!print_str(" ") || !print_i64(n))
+				if (!print_i64(n))
 					return spvcpu::result::no_memory;
 
 				word += 2;
