@@ -27,3 +27,9 @@ target_compile_features(tests PRIVATE cxx_std_17)
 add_executable(spird-builder spird_builder_main.cpp spird_builder_strings.hpp spird_defs.hpp spird_hashing.cpp spird_hashing.hpp)
 
 target_compile_features(spird-builder PRIVATE cxx_std_17)
+
+
+
+add_executable(asm-test assembly_testing.cpp)
+
+target_compile_features(asm-test PRIVATE cxx_std_17)
