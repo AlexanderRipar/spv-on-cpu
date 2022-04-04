@@ -1153,54 +1153,6 @@ public:
 
 					break;
 				}
-				case spird::arg_type::U32IDPAIR:
-				{
-					if (word + 2 > word_end)
-						return spvcpu::result::instruction_wordcount_mismatch;
-
-					if (!print_str(" ") || !print_u32(*word) || !print_str(" ") || !print_id(word[1]))
-						return spvcpu::result::no_memory;
-
-					word += 2;
-
-					break;
-				}
-				case spird::arg_type::IDMEMBERPAIR:
-				{
-					if (word + 2 > word_end)
-						return spvcpu::result::instruction_wordcount_mismatch;
-
-					if (!print_str(" ") || !print_id(*word) || !print_str(" ") || !print_member(word[1]))
-						return spvcpu::result::no_memory;
-
-					word += 2;
-
-					break;
-				}
-				case spird::arg_type::IDIDPAIR:
-				{
-					if (word + 2 > word_end)
-						return spvcpu::result::instruction_wordcount_mismatch;
-
-					if (!print_str(" ") || !print_id(*word) || !print_str(" ") || !print_id(word[1]))
-						return spvcpu::result::no_memory;
-
-					word += 2;
-
-					break;
-				}
-				case spird::arg_type::IDU32PAIR:
-				{
-					if (word + 2 > word_end)
-						return spvcpu::result::instruction_wordcount_mismatch;
-
-					if (!print_str(" ") || !print_id(*word) || !print_str(" ") || !print_u32(word[1]))
-						return spvcpu::result::no_memory;
-
-					word += 2;
-
-					break;
-				}
 				case spird::arg_type::I64:
 				{
 					if (word + 2 > word_end)
