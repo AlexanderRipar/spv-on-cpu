@@ -995,8 +995,6 @@ public:
 
 		const bool is_result = (flags & spird::arg_flags::result) == spird::arg_flags::result;
 
-		type = static_cast<spird::arg_type>(static_cast<uint32_t>(type) & spird::insn_argtype_mask);
-
 		if (is_optional && word == word_end)
 			return spvcpu::result::success;
 
