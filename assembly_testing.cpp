@@ -233,9 +233,9 @@ EXCEPTION_DISPOSITION test_exception_handler(PEXCEPTION_RECORD exception_record,
 {
 	fprintf(stderr, "Caught ze heisse Kartoffel, ja!\n");
 
-	// context_record->Rip += 3;
+	context_record->Rip += 3;
 
-	return EXCEPTION_DISPOSITION::ExceptionContinueSearch;
+	return EXCEPTION_DISPOSITION::ExceptionContinueExecution;
 }
 
 LONG WINAPI test_top_level_unhandled_exception_filter(PEXCEPTION_POINTERS data)
