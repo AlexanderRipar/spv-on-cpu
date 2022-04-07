@@ -247,7 +247,7 @@ LONG WINAPI test_top_level_unhandled_exception_filter(PEXCEPTION_POINTERS data)
 	{
 		data->ContextRecord->Rip += 3;
 
-		fprintf(stderr, "Caught ze hot Kartoscke from ze Distanz!\n");
+		fprintf(stderr, "Caught ze hot Kartoschke from ze Distanz!\n");
 
 		return EXCEPTION_CONTINUE_EXECUTION;
 	}
