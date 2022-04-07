@@ -76,17 +76,18 @@ DWORD allocate_dynamic_code_range(size_t code_bytes, void** out_code_addr, bool 
 }
 
 DWORD finalize_dynamic_code_range(
-	size_t code_bytes,                       // Number of bytes passed to allocate_dynamic_code_range's code_bytes parameter
-	void* code_addr,                         // Pointer received in allocate_dynamic_code_range's out_code_range parameter
-	uint32_t func_cnt,                       // Number of (frame) functions written to the dynamic code range
-	const void* const * func_begs,           // const void*[func_cnt], indicating the begin address of each functions
-	const void* const * func_ends,           // const void*[func_cnt], indicating the end address of each functions (i.e. the byte after the last code byte)
-	const uint32_t* prolog_bytes,            // const uint32_t[func_cnt], indicating the number of bytes used by the function's prolog. Must not exceed 255.
-	const uint32_t* unwind_code_cnts,        // const uint32_t[func_cnt], indicating the number of unwind codes present for each function
-	const unwind_code* const * unwind_codes, // const unwind_code[func_cnt][unwind_code_cnt[i]], representing the unwind information for each functions
-	uint32_t exception_handler_cnt,          // Number of different exception handlers to install. 0 indicates no special exception handling will take place.
-	const void** exception_handlers,         // Pointer to 
-	const uint32_t* func_exception_handler_indices) noexcept
+	size_t code_bytes,                             // Number of bytes passed to allocate_dynamic_code_range's code_bytes parameter
+	void* code_addr,                               // Pointer received in allocate_dynamic_code_range's out_code_range parameter
+	uint32_t func_cnt,                             // Number of (frame) functions written to the dynamic code range
+	const void* const * func_begs,                 // const void*[func_cnt], indicating the begin address of each functions
+	const void* const * func_ends,                 // const void*[func_cnt], indicating the end address of each functions (i.e. the byte after the last code byte)
+	const uint32_t* prolog_bytes,                  // const uint32_t[func_cnt], indicating the number of bytes used by the function's prolog. Must not exceed 255.
+	const uint32_t* unwind_code_cnts,              // const uint32_t[func_cnt], indicating the number of unwind codes present for each function
+	const unwind_code* const * unwind_codes,       // const unwind_code[func_cnt][unwind_code_cnt[i]], representing the unwind information for each functions
+	uint32_t exception_handler_cnt,                // Number of different exception handlers to install. 0 indicates no special exception handling will take place.
+	const void** exception_handlers,               // const void*[exception_handler_cnt], pointing to the beginning of each exception handler. These must have the windows language specific exception handler signature. Can be nullptr if exception_handler_cnt is 0
+	const uint32_t* func_exception_handler_indices // const uint32_t[func_cnt], indicating the index into the exception_handlers array at which the function's handler is located. ~0u indicates that the function has no handler. Can be nullptr if exception_handler_cnt is 0
+) noexcept
 {
 	// Just to know the page size
 	SYSTEM_INFO sys_info;
