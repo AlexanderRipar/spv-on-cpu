@@ -648,7 +648,7 @@ Instruction : [
 	}
 	{
 		id : 65
-		name : "AcessChain"
+		name : "AccessChain"
 		args : [
 			RTYPE
 			RST Auto
