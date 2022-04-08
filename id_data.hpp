@@ -68,7 +68,7 @@ union raw_type_data
 
 		uint8_t depth;
 			
-		uint8_t arrayedness;
+		uint8_t arrayed;
 			
 		uint8_t ms;
 			

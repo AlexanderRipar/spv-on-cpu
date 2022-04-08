@@ -795,7 +795,7 @@ private:
 
 			data.m_data.image_data.depth = static_cast<uint8_t>(word[3]);
 
-			data.m_data.image_data.arrayedness = static_cast<uint8_t>(word[4]);
+			data.m_data.image_data.arrayed = static_cast<uint8_t>(word[4]);
 
 			data.m_data.image_data.ms = static_cast<uint8_t>(word[5]);
 
