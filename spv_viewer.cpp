@@ -36,6 +36,8 @@ private:
 
 	spird::rst_type m_rst_type;
 
+	bool m_print_type_info;
+
 	bool grow_string(size_t additional) noexcept
 	{
 		while (m_string_used + additional > m_string_capacity)
@@ -127,7 +129,13 @@ private:
 
 	bool print_typid(uint32_t typid) noexcept
 	{
-		if (!print_str("T$") || !grow_line(max_u32_chars))
+		if (!m_print_type_info)
+		{
+			if (!print_char('T'))
+				return false;
+		}
+
+		if (!print_char('$') || !grow_line(max_u32_chars))
 			return false;
 			
 			print_integer_to_buffer(m_line, m_line_used, typid, false);
@@ -219,7 +227,7 @@ private:
 		return true;
 	}
 
-	bool str_print_rst_and_rtype() noexcept
+	spvcpu::result str_print_rst_and_rtype() noexcept
 	{
 		// Factor in additional growth from writing rst and rtype or spaces.
 		// Since ids are limited to at most 4194303, it is safe to assume that
@@ -234,7 +242,7 @@ private:
 		constexpr uint32_t conservative_prefix_len = expected_prefix_len + 6;
 
 		if (!grow_string(conservative_prefix_len))
-			return false;
+			return spvcpu::result::no_memory;
 
 		memset(m_string + m_string_used, ' ', expected_prefix_len);
 
@@ -291,7 +299,7 @@ private:
 			m_string_used += 2;
 		}
 
-		return true;
+		return spvcpu::result::success;
 	}
 
 	spvcpu::result print_enum(const void* spird, spird::enum_id enum_id, const uint32_t*& word, const uint32_t* word_end) noexcept
@@ -540,12 +548,226 @@ private:
 
 			break;
 		}
+		case spird::rst_type::Image:
+		{
+			if (!print_str("Image"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::Sampler:
+		{
+			if (!print_str("Sampler"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::SampledImage:
+		{
+			if (!print_str("SampledImage"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::Array:
+		{
+			type_data* elem_data;
+
+			if (spvcpu::result rst = m_id_map.get(data->m_data.array_data.element_id, &elem_data); rst != spvcpu::result::success)
+				return rst;
+
+			if (spvcpu::result rst = print_type(elem_data); rst != spvcpu::result::success)
+				return rst;
+
+			if (!print_char('[') || !print_u64(elem_data->m_data.array_data.length) || !print_char(']'))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::RuntimeArray:
+		{
+			type_data* elem_data;
+
+			if (spvcpu::result rst = m_id_map.get(data->m_data.runtime_array_data.element_id, &elem_data); rst != spvcpu::result::success)
+				return rst;
+
+			if (spvcpu::result rst = print_type(elem_data); rst != spvcpu::result::success)
+				return rst;
+
+			if (!print_str("[]"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::Struct:
+		{
+			if (!print_str("Struct"))
+				return spvcpu::result::success;
+			
+			break;
+		}
+		case spird::rst_type::Opaque:
+		{
+			if (!print_str("Opaque"))
+				return spvcpu::result::success;
+			
+			break;
+		}
+		case spird::rst_type::Pointer:
+		{
+			type_data* pointee_data;
+
+			if (spvcpu::result rst = m_id_map.get(data->m_data.pointer_data.pointee_id, &pointee_data); rst != spvcpu::result::success)
+				return rst;
+
+			if (spvcpu::result rst = print_type(pointee_data); rst != spvcpu::result::success)
+				return rst;
+
+			if (!print_char('*'))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::Function:
+		{
+			type_data* arg_data;
+
+			if (spvcpu::result rst = m_id_map.get(data->m_data.function_data.return_type_id, &arg_data); rst != spvcpu::result::success)
+				return rst;
+
+			if (spvcpu::result rst = print_type(arg_data); rst != spvcpu::result::success)
+				return rst;
+
+			if (!print_str(" Func("))
+
+			for (uint8_t i = 0; i != data->m_data.function_data.argc; ++i)
+			{
+				if (spvcpu::result rst = m_id_map.get(data->m_data.function_data.argv_ids[i], &arg_data); rst != spvcpu::result::success)
+					return rst;
+
+				if (spvcpu::result rst = print_type(arg_data); rst != spvcpu::result::success)
+					return rst;
+
+				if (i != data->m_data.function_data.argc - 1)
+				{
+					if (!print_str(", "))
+						return spvcpu::result::no_memory;
+				}
+			}
+
+			if (!print_str(")"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::Event:
+		{
+			if (!print_str("Event"))
+				return spvcpu::result::no_memory;
+			
+			break;
+		}
+		case spird::rst_type::DeviceEvent:
+		{
+			if (!print_str("DeviceEvent"))
+				return spvcpu::result::no_memory;
+			
+			break;
+		}
+		case spird::rst_type::ReserveId:
+		{
+			if (!print_str("ReserveId"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::Queue:
+		{
+			if (!print_str("Queue"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::Pipe:
+		{
+			if (!print_str("Pipe"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::PipeStorage:
+		{
+			if (!print_str("PipeStorage"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::NamedBarrier:
+		{
+			if (!print_str("NamedBarrier"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::BufferSurfaceINTEL:
+		{
+			if (!print_str("BufferSurfaceINTEL"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::RayQueryKHR:
+		{
+			if (!print_str("RayQueryKHR"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::AccelerationStructureKHR:
+		{
+			if (!print_str("AccelerationStructureKHR"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::CooperativeMatrixNV:
+		{
+			if (!print_str("CooperativeMatrixNV"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::String:
+		{
+			if (!print_str("String \"") || !print_str(data->m_data.string_data.string) || !print_str("\""))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::ExtInstSet:
+		{
+			if (!print_str("ExtInstSet") || !print_str(data->m_data.ext_inst_set_data.name))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::Label:
+		{
+			if (!print_str("Label"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
+		case spird::rst_type::DecoGroup:
+		{
+			if (!print_str("DecoGroup"))
+				return spvcpu::result::no_memory;
+
+			break;
+		}
 		default:
 		{
-			// TODO: This is just a placeholder return value to
-			// easily find this spot again. This function should
-			// really handle all (!) result types.
-			return spvcpu::result::wrong_magic;
+			return spvcpu::result::unknown_rsttype;
 		}
 		}
 
@@ -1000,6 +1222,32 @@ private:
 			{
 				if (!print_typid(*word))
 					return spvcpu::result::no_memory;
+
+				if (m_print_type_info)
+				{
+					type_data* data;
+
+					if (spvcpu::result rst = m_id_map.get(*word, &data); rst == spvcpu::result::success)
+					{
+						if (!print_char('('))
+							return spvcpu::result::no_memory;
+
+						if (spvcpu::result rst = print_type(data); rst != spvcpu::result::success)
+							return rst;
+
+						if (!print_char(')'))
+							return spvcpu::result::no_memory;
+					}
+					else if (rst == spvcpu::result::id_not_found)
+					{
+						if (!print_str("(?)"))
+							return spvcpu::result::no_memory;
+					}
+					else
+					{
+						return rst;
+					}
+				}
 			}
 			else
 			{
@@ -1132,7 +1380,7 @@ public:
 		free(m_string);
 	}
 
-	spvcpu::result initialize() noexcept
+	spvcpu::result initialize(bool print_type_info) noexcept
 	{
 		m_string = static_cast<char*>(malloc(4096));
 
@@ -1155,6 +1403,8 @@ public:
 		m_rst_id = ~0u;
 
 		m_rtype_id = ~0u;
+
+		m_print_type_info = print_type_info;
 
 		return m_id_map.initialize();
 	}
@@ -1218,7 +1468,7 @@ public:
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result end_line(id_type_map& id_types) noexcept
+	spvcpu::result end_line() noexcept
 	{
 		if (m_rst_id != ~0u)
 		{
@@ -1226,7 +1476,7 @@ public:
 
 			if (m_rtype_id != ~0u)
 			{
-				if (spvcpu::result rst = id_types.add(m_rst_id, m_rtype_id); rst != spvcpu::result::success)
+				if (spvcpu::result rst = m_id_map.add(m_rst_id, m_rtype_id); rst != spvcpu::result::success)
 					return rst;
 			}
 			else
@@ -1238,8 +1488,8 @@ public:
 			}
 		}
 
-		if (!str_print_rst_and_rtype())
-			return spvcpu::result::no_memory;
+		if (spvcpu::result rst = str_print_rst_and_rtype(); rst != spvcpu::result::success)
+			return rst;
 
 		// Don't forget to reserve space for the trailing '\n'
 		if (!grow_string(m_line_used + 1))
@@ -1316,6 +1566,7 @@ __declspec(dllexport) spvcpu::result spvcpu::disassemble(
 	uint64_t spirv_bytes,
 	const void* spirv,
 	const void* spird,
+	bool print_type_info,
 	uint64_t* out_disassembly_bytes,
 	char** out_disassembly
 ) noexcept
@@ -1347,12 +1598,7 @@ __declspec(dllexport) spvcpu::result spvcpu::disassemble(
 
 	output_buffer output;
 
-	if (result rst = output.initialize(); rst != result::success)
-		return rst;
-
-	id_type_map id_types;
-
-	if (result rst = id_types.initialize(); rst != result::success)
+	if (result rst = output.initialize(print_type_info); rst != result::success)
 		return rst;
 
 	if (spirv_bytes & 3)
@@ -1398,7 +1644,7 @@ __declspec(dllexport) spvcpu::result spvcpu::disassemble(
 				return rst;
 		}
 
-		if (result rst = output.end_line(id_types); rst != result::success)
+		if (result rst = output.end_line(); rst != result::success)
 			return rst;
 
 		if (arg_word != word + wordcount)

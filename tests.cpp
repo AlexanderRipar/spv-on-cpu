@@ -742,11 +742,22 @@ int cycle(int argc, const char** argv) noexcept
 
 int disasm(int argc, const char** argv) noexcept
 {
-	if (argc != 3 && argc != 4)
+	if (argc < 3 && argc > 5)
 	{
-		printf("Usage: %s shader-file spird-file [output-file]\n", argv[0]);
+		printf("Usage: %s [--types] shader-file spird-file [output-file]\n", argv[0]);
 
 		return 0;
+	}
+
+	bool print_type_info = false;
+
+	uint32_t curr_arg = 1;
+
+	if (strcmp(argv[1], "--types") == 0)
+	{
+		print_type_info = true;
+
+		curr_arg = 2;
 	}
 
 	FILE* output_file = stdout;
@@ -760,15 +771,15 @@ int disasm(int argc, const char** argv) noexcept
 
 	void* spird_data;
 
-	if (!get_file_content(argv[1], &shader_data, &shader_bytes))
+	if (!get_file_content(argv[curr_arg++], &shader_data, &shader_bytes))
 		return 1;
 
-	if (!get_file_content(argv[2], &spird_data, &spird_bytes))
+	if (!get_file_content(argv[curr_arg++], &spird_data, &spird_bytes))
 		return 1;
 
-	if (argc == 4)
+	if (curr_arg != argc)
 	{
-		if (fopen_s(&output_file, argv[3], "w") != 0)
+		if (fopen_s(&output_file, argv[curr_arg], "w") != 0)
 		{
 			fprintf(stderr, "Could not open file %s for writing.\n", argv[2]);
 
@@ -780,7 +791,7 @@ int disasm(int argc, const char** argv) noexcept
 
 	uint64_t disassembly_bytes;
 
-	if (spvcpu::result rst = spvcpu::disassemble(shader_bytes, shader_data, spird_data, &disassembly_bytes, &disassembly); rst != spvcpu::result::success)
+	if (spvcpu::result rst = spvcpu::disassemble(shader_bytes, shader_data, spird_data, print_type_info, &disassembly_bytes, &disassembly); rst != spvcpu::result::success)
 	{
 		fprintf(stderr, "spvcpu::disassemble failed with error %d.\n", static_cast<uint32_t>(rst));
 
