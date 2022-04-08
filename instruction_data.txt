@@ -668,7 +668,7 @@ Instruction : [
 	}
 	{
 		id : 67
-		name : "OpPtrAcessChain"
+		name : "PtrAcessChain"
 		args : [
 			RTYPE
 			RST Auto
