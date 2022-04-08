@@ -600,7 +600,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST Auto
-			ID TYPE "Image"
+			ID VALUE "Image"
 			ID VALUE "Coordinate"
 			ID VALUE "Sample"
 		]
