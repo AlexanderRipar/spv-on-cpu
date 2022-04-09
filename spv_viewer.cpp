@@ -227,7 +227,7 @@ private:
 		return true;
 	}
 
-	spvcpu::result str_print_rst_and_rtype() noexcept
+	spvcpu::result str_print_rst_and_rtype(uint32_t* out_used) noexcept
 	{
 		// Factor in additional growth from writing rst and rtype or spaces.
 		// Since ids are limited to at most 4194303, it is safe to assume that
@@ -243,6 +243,8 @@ private:
 
 		if (!grow_string(conservative_prefix_len))
 			return spvcpu::result::no_memory;
+
+		uint32_t prev_string_used = m_string_used;
 
 		memset(m_string + m_string_used, ' ', expected_prefix_len);
 
@@ -268,36 +270,15 @@ private:
 
 		if (m_rtype_id != ~0u)
 		{
-			m_string[m_string_used++] = 'T';
+			if (!m_print_type_info)
+				m_string[m_string_used++] = 'T';
 
 			m_string[m_string_used++] = '$';
 
-			uint32_t rtype_used = m_string_used;
-
-			print_integer_to_buffer(m_string, rtype_used, m_rtype_id, false);
-
-			if (rtype_used < m_string_used + 7)
-				rtype_used = m_string_used + 7;
-
-			m_string_used = rtype_used;
-
-			m_string[m_string_used++] = ' ';
-		}
-		else
-		{
-			m_string_used += 10;
+			print_integer_to_buffer(m_string, m_string_used, m_rtype_id, false);
 		}
 
-		if (m_rst_id != ~0u)
-		{
-			m_string[m_string_used++] = '=';
-
-			m_string[m_string_used++] = ' ';
-		}
-		else
-		{
-			m_string_used += 2;
-		}
+		*out_used = m_string_used - prev_string_used;
 
 		return spvcpu::result::success;
 	}
@@ -1470,32 +1451,82 @@ public:
 
 	spvcpu::result end_line() noexcept
 	{
-		if (m_rst_id != ~0u)
-		{
-			spird::rst_type rtype = m_rst_type;
+		uint32_t result_used;
 
-			if (m_rtype_id != ~0u)
+		if (spvcpu::result rst = str_print_rst_and_rtype(&result_used); rst != spvcpu::result::success)
+			return rst;
+
+		const uint32_t actual_line_used = m_line_used;
+
+		if (m_print_type_info && m_rtype_id != ~0u)
+		{
+			type_data* rtype_data;
+
+			if (spvcpu::result rst = m_id_map.get(m_rtype_id, &rtype_data); rst == spvcpu::result::success)
 			{
-				if (spvcpu::result rst = m_id_map.add(m_rst_id, m_rtype_id); rst != spvcpu::result::success)
+				if (!print_char('('))
+					return spvcpu::result::no_memory;
+
+				if (spvcpu::result rst = print_type(rtype_data); rst != spvcpu::result::success)
 					return rst;
+
+				if (!print_char(')'))
+					return spvcpu::result::no_memory;
+			}
+			else if (rst == spvcpu::result::id_not_found)
+			{
+				if (!print_str("(?)"))
+					return spvcpu::result::no_memory;
 			}
 			else
 			{
-				switch (m_rst_type)
-				{
-					
-				}
+				return rst;
 			}
+
+			const uint32_t rtype_used = m_line_used - actual_line_used;
+
+			if (!grow_string(rtype_used))
+				return spvcpu::result::no_memory;
+
+			memcpy(m_string + m_string_used, m_line + actual_line_used, rtype_used);
+
+			m_string_used += rtype_used;
+
+			m_line_used -= rtype_used;
+
+			result_used += rtype_used;
 		}
 
-		if (spvcpu::result rst = str_print_rst_and_rtype(); rst != spvcpu::result::success)
-			return rst;
+		if (result_used < 21)
+		{
+			if (!grow_string(21 - result_used))
+				return spvcpu::result::no_memory;
+
+			for (uint32_t i = 0; i != 21 - result_used; ++i)
+				m_string[m_string_used++] = ' ';
+		}
+
+		if (!grow_string(3))
+			return spvcpu::result::no_memory;
+
+		if (m_rst_id != ~0u)
+		{
+			m_string[m_string_used++] = ' ';
+			m_string[m_string_used++] = '=';
+			m_string[m_string_used++] = ' ';
+		}
+		else
+		{
+			m_string[m_string_used++] = ' ';
+			m_string[m_string_used++] = ' ';
+			m_string[m_string_used++] = ' ';
+		}
 
 		// Don't forget to reserve space for the trailing '\n'
 		if (!grow_string(m_line_used + 1))
 			return spvcpu::result::no_memory;
 
-		memcpy(m_string + m_string_used, m_line, m_line_used);
+		memcpy(m_string + m_string_used, m_line, actual_line_used);
 
 		m_string_used += m_line_used + 1;
 
