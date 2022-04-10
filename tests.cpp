@@ -549,6 +549,8 @@ int cycle(int argc, const char** argv) noexcept
 	if (argc != 2 && argc != 3)
 	{
 		fprintf(stderr, "Usage: %s input-file [output-file]\n", argv[0]);
+
+		return 0;
 	}
 
 	FILE* input_file;
