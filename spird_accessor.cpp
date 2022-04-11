@@ -201,3 +201,31 @@ spvcpu::result spird::get_enum_data(const void* spird, const spird::enum_locatio
 
 	return spvcpu::result::success;
 }
+
+spvcpu::result spird::get_named_enum_data(const void* spird, spird::named_enum_data* out_data) noexcept
+{
+	const spird::file_header* file_header = static_cast<const spird::file_header*>(spird);
+
+	const char* curr_name = static_cast<const char*>(spird) + sizeof(spird::file_header);
+
+	uint32_t name_count = 0;
+
+	while (curr_name < static_cast<const char*>(spird) + file_header->first_table_header_byte)
+	{
+		if (name_count >= spird::max_named_enum_count)
+			return spvcpu::result::spirv_data_too_many_names;
+
+		if (*curr_name == '\0') // Reached padding; no more names
+			break;
+
+		out_data->names[name_count] = curr_name;
+
+		curr_name += strlen(curr_name) + 1;
+
+		++name_count;
+	}
+
+	out_data->name_count = name_count;
+
+	return spvcpu::result::success;
+}

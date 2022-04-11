@@ -50,6 +50,13 @@ namespace spird
 		spird::enum_flags flags;
 	};
 	
+	struct named_enum_data
+	{
+		uint32_t name_count;
+
+		const char* names[spird::max_named_enum_count];
+	};
+
 	spvcpu::result get_enum_location(const void* spird, enum_id enum_id, enum_location* out_location) noexcept;
 
 	spvcpu::result get_enum_location(const void* spird, const char* enum_name, enum_location* out_location) noexcept;
@@ -57,6 +64,8 @@ namespace spird
 	spvcpu::result get_elem_data(const void* spird, const enum_location& location, uint32_t elem_id, elem_data* out_data) noexcept;
 
 	spvcpu::result get_enum_data(const void* spird, const enum_location& location, enum_data* out_data) noexcept;
+
+	spvcpu::result get_named_enum_data(const void* spird, named_enum_data* out_data) noexcept;
 }
 
 #endif // SPV_DATA_ACCESSOR_HPP_INCLUDE_GUARD
