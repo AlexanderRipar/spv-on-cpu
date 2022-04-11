@@ -904,7 +904,7 @@ void write_output(const char* output_filename) noexcept
 	if (fwrite(table_name_buf, 1, table_name_idx, output_file) != table_name_idx)
 		panic("Could not write to file %s.\n", output_filename);
 
-	uint32_t hashtable_offset = sizeof(spird::file_header) + sizeof(spird::table_header) * enum_count + table_name_idx;
+	uint32_t hashtable_offset = sizeof(spird::file_header) + sizeof(spird::table_header) * (enum_count + s_named_enum_count) + table_name_idx;
 
 	spird::table_header table_headers[spird::enum_id_count + spird::max_named_enum_count];
 	
@@ -935,7 +935,7 @@ void write_output(const char* output_filename) noexcept
 		hashtable_offset += table_headers[enum_count + i].size * sizeof(spird::elem_index);
 	}
 
-	if (fwrite(table_headers, 1, enum_count * sizeof(spird::table_header), output_file) != enum_count * sizeof(spird::table_header))
+	if (fwrite(table_headers, 1, (enum_count + s_named_enum_count) * sizeof(spird::table_header), output_file) != (enum_count + s_named_enum_count) * sizeof(spird::table_header))
 		panic("Could not write to file %s.\n", output_filename);
 
 	const uint32_t data_offset = hashtable_offset;
