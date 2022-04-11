@@ -32,7 +32,9 @@ namespace spird
 		uint32_t offset;
 	};
 	
-	static constexpr uint8_t enum_id_count = 41;
+	static constexpr uint32_t enum_id_count = 41;
+
+	static constexpr uint32_t max_named_enum_count = 64;
 
 	enum class arg_type : uint8_t
 	{

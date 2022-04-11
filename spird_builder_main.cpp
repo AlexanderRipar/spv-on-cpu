@@ -146,15 +146,13 @@ struct enum_info
 
 
 
-static constexpr uint32_t max_named_enums = 64;
-
 static spird::elem_index s_data_indices[65536];
 
-static enum_info s_enum_infos[spird::enum_id_count + max_named_enums];
+static enum_info s_enum_infos[spird::enum_id_count + spird::max_named_enum_count];
 
 static output_data s_output;
 
-static const char* s_enum_names[max_named_enums];
+static const char* s_enum_names[spird::max_named_enum_count];
 
 static uint32_t s_named_enum_count = 0;
 
@@ -741,8 +739,8 @@ void parse_enum(const char*& curr) noexcept
 
 	if ((flags & spird::enum_flags::named) == spird::enum_flags::named)
 	{
-		if (s_named_enum_count >= max_named_enums)
-			panic("Too many named enums defined. Maximum is %d.\n", max_named_enums);
+		if (s_named_enum_count >= spird::max_named_enum_count)
+			panic("Too many named enums defined. Maximum is %d.\n", spird::max_named_enum_count);
 
 		s_enum_names[s_named_enum_count] = enum_name;
 
@@ -867,7 +865,7 @@ void write_output(const char* output_filename) noexcept
 			break;
 		}
 
-	char table_name_buf[max_named_enums * 256];
+	char table_name_buf[spird::max_named_enum_count * 256];
 
 	uint32_t table_name_idx = 0;
 
@@ -908,7 +906,7 @@ void write_output(const char* output_filename) noexcept
 
 	uint32_t hashtable_offset = sizeof(spird::file_header) + sizeof(spird::table_header) * enum_count + table_name_idx;
 
-	spird::table_header table_headers[spird::enum_id_count + max_named_enums];
+	spird::table_header table_headers[spird::enum_id_count + spird::max_named_enum_count];
 	
 	memset(table_headers, 0x00, sizeof(table_headers));
 
