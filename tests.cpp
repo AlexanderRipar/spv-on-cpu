@@ -610,9 +610,18 @@ int cycle(int argc, const char** argv) noexcept
 
 	for (uint32_t t = 0; t != table_cnt; ++t)
 	{
+		spird::enum_location enum_loc;
+
+		if (spvcpu::result rst = spird::get_enum_location(spv_data, static_cast<spird::enum_id>(t), &enum_loc); rst != spvcpu::result::success)
+		{
+			fprintf(stderr, "Could not locate enumeration %d. (Error %d)\n", t, rst);
+
+			return 1;
+		}
+
 		spird::enum_data enum_data;
 
-		if (spvcpu::result rst = spird::get_enum_data(spv_data, static_cast<spird::enum_id>(t), &enum_data); rst != spvcpu::result::success)
+		if (spvcpu::result rst = spird::get_enum_data(spv_data, enum_loc, &enum_data); rst != spvcpu::result::success)
 		{
 			fprintf(stderr, "Could not get data for enumeration %d. (Error %d)\n", t, rst);
 
@@ -638,14 +647,14 @@ int cycle(int argc, const char** argv) noexcept
 
 			spird::elem_data elem_data;
 
-			if (spvcpu::result rst = spird::get_elem_data(spv_data, static_cast<spird::enum_id>(t), id, &elem_data); rst != spvcpu::result::success)
+			if (spvcpu::result rst = spird::get_elem_data(spv_data, enum_loc, id, &elem_data); rst != spvcpu::result::success)
 			{
 				fprintf(stderr, "Could not get data for element %d of enumeration '%s' (%d). (Error %d)\n", id, enum_data.name, t, rst);
 
 				return 1;
 			}
 
-			if ((enum_data.header->flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask)
+			if ((enum_data.flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask)
 				fprintf(output_file, "\t{\n\t\tid : 0x%x", id);
 			else
 				fprintf(output_file, "\t{\n\t\tid : %d", id);

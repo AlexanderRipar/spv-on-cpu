@@ -49,10 +49,8 @@ static constexpr const char* const enum_name_strings[]
 	"PackedVectorFormat",
 };
 
-spvcpu::result spird::get_elem_data(const void* spird, spird::enum_id enum_id, uint32_t id, spird::elem_data* out_data) noexcept
+spvcpu::result spird::get_enum_location(const void* spird, spird::enum_id enum_id, spird::enum_location* out_location) noexcept
 {
-	const uint32_t enum_id_uint = static_cast<uint32_t>(enum_id);
-
 	const uint8_t* raw_data = static_cast<const uint8_t*>(spird);
 
 	const spird::file_header* file_header = static_cast<const spird::file_header*>(spird);
@@ -60,18 +58,61 @@ spvcpu::result spird::get_elem_data(const void* spird, spird::enum_id enum_id, u
 	if (file_header->version != 17)
 		return spvcpu::result::spirv_data_unknown_version;
 
-	const uint32_t mode_bits = file_header->version - 10;
-
-	const bool has_implies_and_depends = mode_bits >= 3;
-
-	if (enum_id_uint > file_header->unnamed_table_count)
+	if (static_cast<uint32_t>(enum_id) >= file_header->unnamed_table_count)
 		return spvcpu::result::spirv_data_enumeration_not_found;
 
-	const spird::table_header* table_header = reinterpret_cast<const spird::table_header*>(raw_data + file_header->first_table_header_byte) + enum_id_uint;
+	out_location->m_name_beg = 0;
 
-	const spird::elem_index* table = reinterpret_cast<const spird::elem_index*>(raw_data + table_header->offset);
+	out_location->m_table_header_beg = file_header->first_table_header_byte + static_cast<uint32_t>(enum_id) * sizeof(spird::table_header);
 
-	uint32_t hash = hash_knuth(id, table_header->size);
+	out_location->m_table_header = *reinterpret_cast<const spird::table_header*>(raw_data + out_location->m_table_header_beg);
+
+	return spvcpu::result::success;
+}
+
+spvcpu::result spird::get_enum_location(const void* spird, const char* enum_name, spird::enum_location* out_location) noexcept
+{
+	const uint8_t* raw_data = static_cast<const uint8_t*>(spird);
+
+	const spird::file_header* file_header = static_cast<const spird::file_header*>(spird);
+
+	if (file_header->version != 17)
+		return spvcpu::result::spirv_data_unknown_version;
+
+	const char* curr_name = static_cast<const char*>(spird) + sizeof(spird::file_header);
+
+	uint32_t enum_index = 0;
+
+	while (curr_name < static_cast<const char*>(spird) + file_header->first_table_header_byte)
+	{
+		if (strcmp(enum_name, curr_name) == 0)
+			goto FOUND;
+
+		++enum_index;
+
+		curr_name += strlen(curr_name) + 1;
+	}
+
+	return spvcpu::result::spirv_data_enumeration_not_found;
+
+	FOUND:
+
+	out_location->m_name_beg = curr_name - static_cast<const char*>(spird);
+
+	out_location->m_table_header_beg = file_header->first_table_header_byte + (file_header->unnamed_table_count + enum_index) * sizeof(spird::table_header);
+
+	out_location->m_table_header = *reinterpret_cast<const spird::table_header*>(raw_data + out_location->m_table_header_beg);
+
+	return spvcpu::result::success;
+}
+
+spvcpu::result spird::get_elem_data(const void* spird, const spird::enum_location& location, uint32_t id, spird::elem_data* out_data) noexcept
+{
+	const uint8_t* raw_data = static_cast<const uint8_t*>(spird);
+
+	const spird::elem_index* table = reinterpret_cast<const spird::elem_index*>(raw_data + location.m_table_header.offset);
+
+	uint32_t hash = hash_knuth(id, location.m_table_header.size);
 
 	const uint32_t initial_hash = hash;
 
@@ -79,8 +120,8 @@ spvcpu::result spird::get_elem_data(const void* spird, spird::enum_id enum_id, u
 	{
 		++hash;
 
-		if (hash >= table_header->size)
-			hash -= table_header->size;
+		if (hash >= location.m_table_header.size)
+			hash -= location.m_table_header.size;
 
 		if (hash == initial_hash)
 			return spvcpu::result::unknown_opcode;
@@ -139,28 +180,24 @@ spvcpu::result spird::get_elem_data(const void* spird, spird::enum_id enum_id, u
 	return spvcpu::result::success;
 }
 
-spvcpu::result spird::get_enum_data(const void* spird, spird::enum_id enum_id, spird::enum_data* out_data) noexcept
+spvcpu::result spird::get_enum_data(const void* spird, const spird::enum_location& location, spird::enum_data* out_data) noexcept
 {
-	const uint32_t enum_id_uint = static_cast<uint32_t>(enum_id);
-
-	const uint8_t* raw_data = static_cast<const uint8_t*>(spird);
-
-	const spird::file_header* file_header = static_cast<const spird::file_header*>(spird);
-
-	if (file_header->version != 17)
-		return spvcpu::result::spirv_data_unknown_version;
-
-	if (enum_id_uint > file_header->unnamed_table_count)
-		return spvcpu::result::spirv_data_enumeration_not_found;
-
-	const spird::table_header* table_header = reinterpret_cast<const spird::table_header*>(raw_data + file_header->first_table_header_byte) + enum_id_uint;
-
-	if (enum_id_uint > spird::enum_id_count)
-		out_data->name = "<Unknown>";
+	if (location.m_name_beg != 0)
+		out_data->name = static_cast<const char*>(spird) + location.m_name_beg;
 	else
-		out_data->name = enum_name_strings[enum_id_uint];
+	{
+		const spird::file_header* file_header = static_cast<const spird::file_header*>(spird);
 
-	out_data->header = table_header;
+		const uint32_t enum_id = (location.m_table_header_beg - file_header->first_table_header_byte) / sizeof(spird::table_header);
+
+		if (enum_id < file_header->unnamed_table_count)
+			out_data->name = enum_name_strings[enum_id];
+		else
+			out_data->name = "<Unknown>";
+
+	}
+	
+	out_data->flags = location.m_table_header.flags;
 
 	return spvcpu::result::success;
 }

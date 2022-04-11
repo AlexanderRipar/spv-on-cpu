@@ -15,6 +15,15 @@ namespace spird
 		implies = 2,
 	};
 
+	struct enum_location
+	{
+		spird::table_header m_table_header;
+
+		uint32_t m_name_beg;
+
+		uint32_t m_table_header_beg;
+	};
+
 	struct elem_data
 	{
 		const char* name;
@@ -38,12 +47,16 @@ namespace spird
 	{
 		const char* name;
 
-		const spird::table_header* header;
+		spird::enum_flags flags;
 	};
 	
-	spvcpu::result get_elem_data(const void* spird, spird::enum_id enum_id, uint32_t id, spird::elem_data* out_data) noexcept;
+	spvcpu::result get_enum_location(const void* spird, enum_id enum_id, enum_location* out_location) noexcept;
 
-	spvcpu::result get_enum_data(const void* spird, spird::enum_id enum_id, spird::enum_data* out_data) noexcept;
+	spvcpu::result get_enum_location(const void* spird, const char* enum_name, enum_location* out_location) noexcept;
+
+	spvcpu::result get_elem_data(const void* spird, const enum_location& location, uint32_t elem_id, elem_data* out_data) noexcept;
+
+	spvcpu::result get_enum_data(const void* spird, const enum_location& location, enum_data* out_data) noexcept;
 }
 
 #endif // SPV_DATA_ACCESSOR_HPP_INCLUDE_GUARD

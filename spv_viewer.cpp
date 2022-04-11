@@ -290,14 +290,19 @@ private:
 
 		const uint32_t* tmp_word = word + 1;
 
+		spird::enum_location enum_loc;
+
+		if (spvcpu::result rst = spird::get_enum_location(spird, enum_id, &enum_loc); rst != spvcpu::result::success)
+			return rst;
+
 		spird::enum_data enum_data;
 		
-		if (spvcpu::result rst = spird::get_enum_data(spird, enum_id, &enum_data); rst != spvcpu::result::success)
+		if (spvcpu::result rst = spird::get_enum_data(spird, enum_loc, &enum_data); rst != spvcpu::result::success)
 			return rst;
 		
 		const uint32_t elem_id = *word;
 
-		if ((enum_data.header->flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask)
+		if ((enum_data.flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask)
 		{
 			uint32_t elem_id_bits = elem_id;
 
@@ -309,7 +314,7 @@ private:
 
 				spird::elem_data elem_data;
 
-				if (spvcpu::result rst = spird::get_elem_data(spird, enum_id, lsb, &elem_data); rst != spvcpu::result::success)
+				if (spvcpu::result rst = spird::get_elem_data(spird, enum_loc, lsb, &elem_data); rst != spvcpu::result::success)
 					return rst;
 
 				if (!print_str(elem_data.name))
@@ -326,7 +331,7 @@ private:
 
 				spird::elem_data elem_data;
 
-				if (spvcpu::result rst = spird::get_elem_data(spird, enum_id, lsb, &elem_data); rst != spvcpu::result::success)
+				if (spvcpu::result rst = spird::get_elem_data(spird, enum_loc, lsb, &elem_data); rst != spvcpu::result::success)
 					return rst;
 
 				for (uint32_t arg = 0; arg != elem_data.argc; ++arg)
@@ -353,7 +358,7 @@ private:
 		{
 			spird::elem_data elem_data;
 
-			if (spvcpu::result rst = spird::get_elem_data(spird, enum_id, elem_id, &elem_data); rst != spvcpu::result::success)
+			if (spvcpu::result rst = spird::get_elem_data(spird, enum_loc, elem_id, &elem_data); rst != spvcpu::result::success)
 				return rst;
 
 			if (!print_str(elem_data.name))
@@ -1637,6 +1642,11 @@ __declspec(dllexport) spvcpu::result spvcpu::disassemble(
 
 	const uint32_t* word_end = shader_words + (spirv_bytes >> 2);
 
+	spird::enum_location insn_enum_loc;
+
+	if (spvcpu::result rst = spird::get_enum_location(spird, spird::enum_id::Instruction, &insn_enum_loc); rst != spvcpu::result::success)
+		return rst;
+
 	for(const uint32_t* word = shader_words + 5; word < word_end;)
 	{
 		uint32_t wordcount = *word >> 16;
@@ -1648,7 +1658,7 @@ __declspec(dllexport) spvcpu::result spvcpu::disassemble(
 
 		spird::elem_data op_data;
 
-		if (result rst = spird::get_elem_data(spird, spird::enum_id::Instruction, static_cast<uint32_t>(opcode), &op_data); rst != result::success)
+		if (result rst = spird::get_elem_data(spird, insn_enum_loc, static_cast<uint32_t>(opcode), &op_data); rst != result::success)
 			return rst;
 
 		if (result rst = output.print_instruction_name(op_data.name); rst != result::success)
