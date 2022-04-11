@@ -62,8 +62,6 @@ spvcpu::result spird::get_elem_data(const void* spv_data, spird::enum_id enum_id
 
 	const uint32_t mode_bits = file_header->version - 10;
 
-	const spird::data_mode mode = static_cast<spird::data_mode>(mode_bits >= 3 ? mode_bits - 3 : mode_bits);
-
 	const bool has_implies_and_depends = mode_bits >= 3;
 
 	if (enum_id_uint > file_header->table_count)
@@ -97,16 +95,9 @@ spvcpu::result spird::get_elem_data(const void* spv_data, spird::enum_id enum_id
 	if (argc > 256)
 		return spvcpu::result::too_many_instruction_args;
 
-	if (mode == spird::data_mode::all || mode == spird::data_mode::disassembly)
-	{
-		out_data->name = reinterpret_cast<const char*>(entry);
+	out_data->name = reinterpret_cast<const char*>(entry);
 
-		entry += strlen(entry) + 1;
-	}
-	else
-	{
-		out_data->name = nullptr;
-	}
+	entry += strlen(entry) + 1;
 
 	out_data->argc = argc;
 
@@ -116,47 +107,33 @@ spvcpu::result spird::get_elem_data(const void* spv_data, spird::enum_id enum_id
 
 		out_data->arg_types[i] = static_cast<spird::arg_type>(*entry++);
 
-		if (mode == spird::data_mode::all || mode == spird::data_mode::disassembly)
-		{
-			out_data->arg_names[i] = entry[0] == '\0' ? nullptr : entry;
+		out_data->arg_names[i] = entry[0] == '\0' ? nullptr : entry;
 
-			entry += strlen(entry) + 1;
-		}
-		else
-		{
-			out_data->arg_names[i] = nullptr;
-		}
+		entry += strlen(entry) + 1;
 	}
 
-	if (has_implies_and_depends)
+	uint8_t cnt = *entry++;
+
+	if (cnt == 0)
 	{
-		uint8_t cnt = *entry++;
-
-		if (cnt == 0)
-		{
-			out_data->implies_or_depends = implies_or_depends_mode::none;
-		}
-		else
-		{
-			out_data->implies_or_depends = cnt & 0x80 ? implies_or_depends_mode::implies : implies_or_depends_mode::depends;
-
-			cnt &= 0x7F;
-
-			out_data->capability_cnt = cnt;
-
-			for (uint8_t i = 0; i != cnt; ++i)
-			{
-				uint16_t lo = static_cast<uint8_t>(*entry++);
-
-				uint16_t hi = static_cast<uint8_t>(*entry++);
-
-				out_data->capabilities[i] = lo | (hi << 8);
-			}
-		}
+		out_data->implies_or_depends = implies_or_depends_mode::none;
 	}
 	else
 	{
-		out_data->implies_or_depends = implies_or_depends_mode::none;
+		out_data->implies_or_depends = cnt & 0x80 ? implies_or_depends_mode::implies : implies_or_depends_mode::depends;
+
+		cnt &= 0x7F;
+
+		out_data->capability_cnt = cnt;
+
+		for (uint8_t i = 0; i != cnt; ++i)
+		{
+			uint16_t lo = static_cast<uint8_t>(*entry++);
+
+			uint16_t hi = static_cast<uint8_t>(*entry++);
+
+			out_data->capabilities[i] = lo | (hi << 8);
+		}
 	}
 
 	return spvcpu::result::success;

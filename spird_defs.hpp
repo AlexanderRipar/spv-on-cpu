@@ -152,16 +152,6 @@ namespace spird
 		bitmask = 0x1
 	};
 
-	enum class data_mode : uint32_t
-	{
-		all,
-		disassembly,
-		debugging,
-		all_no_implies_and_depends,
-		disassembly_no_implies_and_depends,
-		debugging_no_implies_and_depends,
-	};
-
 	enum class rst_type : uint8_t
 	{
 		Auto                     = 0,

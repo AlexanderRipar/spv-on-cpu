@@ -297,13 +297,10 @@ static bool parse_args(
 	const char** argv,
 	const char** out_input_filename,
 	const char** out_output_filename,
-	spird::data_mode* out_mode,
 	bool* out_no_implies_and_depends
 )
 {
 	*out_input_filename = *out_output_filename = nullptr;
-
-	*out_mode = spird::data_mode::all;
 
 	*out_no_implies_and_depends = false;
 
@@ -393,12 +390,8 @@ static bool parse_args(
 
 	*out_output_filename = output_filename;
 
-	uint8_t mode = mode_index == ~0u ? static_cast<uint8_t>(spird::data_mode::all) : mode_index;
-
 	if (no_implies_and_depends)
 		*out_no_implies_and_depends = true;
-
-	*out_mode = static_cast<spird::data_mode>(mode);
 
 	return true;
 }
@@ -785,7 +778,7 @@ void parse_elem(const char*& curr, elem_info* out_info) noexcept
 		parse_panic("}", curr);
 }
 
-void parse_enum(const char*& curr, spird::data_mode mode) noexcept
+void parse_enum(const char*& curr) noexcept
 {
 	uint32_t enum_id = ~0u;
 
@@ -988,11 +981,9 @@ int main(int argc, const char** argv)
 
 	const char* input_filename, * output_filename;
 
-	spird::data_mode mode;
-
 	bool no_implies_and_depends;
 
-	if (!parse_args(argc, argv, &input_filename, &output_filename, &mode, &no_implies_and_depends))
+	if (!parse_args(argc, argv, &input_filename, &output_filename, &no_implies_and_depends))
 		return 1;
 
 	char* input_data = read_input(input_filename);
@@ -1000,7 +991,7 @@ int main(int argc, const char** argv)
 	const char* curr = skip_whitespace(input_data);
 
 	while(*curr != '\0')
-		parse_enum(curr, mode);
+		parse_enum(curr);
 
 	write_output(output_filename);
 
