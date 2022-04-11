@@ -606,7 +606,7 @@ int cycle(int argc, const char** argv) noexcept
 		}
 	}
 
-	uint32_t table_cnt = reinterpret_cast<const spird::file_header*>(spv_data)->table_count;
+	uint32_t table_cnt = reinterpret_cast<const spird::file_header*>(spv_data)->unnamed_table_count;
 
 	for (uint32_t t = 0; t != table_cnt; ++t)
 	{

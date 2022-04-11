@@ -57,17 +57,17 @@ spvcpu::result spird::get_elem_data(const void* spv_data, spird::enum_id enum_id
 
 	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
 
-	if (file_header->version < 10 || file_header->version > 15)
+	if (file_header->version != 17)
 		return spvcpu::result::spirv_data_unknown_version;
 
 	const uint32_t mode_bits = file_header->version - 10;
 
 	const bool has_implies_and_depends = mode_bits >= 3;
 
-	if (enum_id_uint > file_header->table_count)
+	if (enum_id_uint > file_header->unnamed_table_count)
 		return spvcpu::result::spirv_data_enumeration_not_found;
 
-	const spird::table_header* table_header = reinterpret_cast<const spird::table_header*>(raw_data + sizeof(spird::file_header)) + enum_id_uint;
+	const spird::table_header* table_header = reinterpret_cast<const spird::table_header*>(raw_data + file_header->first_table_header_byte) + enum_id_uint;
 
 	const spird::elem_index* table = reinterpret_cast<const spird::elem_index*>(raw_data + table_header->offset);
 
@@ -147,13 +147,13 @@ spvcpu::result spird::get_enum_data(const void* spv_data, spird::enum_id enum_id
 
 	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
 
-	if (file_header->version < 4 || file_header->version > 15)
+	if (file_header->version != 17)
 		return spvcpu::result::spirv_data_unknown_version;
 
-	if (enum_id_uint > file_header->table_count)
+	if (enum_id_uint > file_header->unnamed_table_count)
 		return spvcpu::result::spirv_data_enumeration_not_found;
 
-	const spird::table_header* table_header = reinterpret_cast<const spird::table_header*>(raw_data + sizeof(spird::file_header)) + enum_id_uint;
+	const spird::table_header* table_header = reinterpret_cast<const spird::table_header*>(raw_data + file_header->first_table_header_byte) + enum_id_uint;
 
 	if (enum_id_uint > spird::enum_id_count)
 		out_data->name = "<Unknown>";

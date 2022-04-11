@@ -18,7 +18,9 @@ namespace spird
 	{
 		uint32_t version;
 
-		uint32_t table_count;
+		uint16_t unnamed_table_count;
+
+		uint16_t first_table_header_byte;
 	};
 
 	struct table_header
@@ -148,8 +150,9 @@ namespace spird
 
 	enum class enum_flags : uint16_t
 	{
-		none = 0x0,
-		bitmask = 0x1
+		none    = 0x0,
+		bitmask = 0x1,
+		named   = 0x2,
 	};
 
 	enum class rst_type : uint8_t

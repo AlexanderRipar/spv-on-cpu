@@ -146,11 +146,17 @@ struct enum_info
 
 
 
+static constexpr uint32_t max_named_enums = 64;
+
 static spird::elem_index s_data_indices[65536];
 
-static enum_info s_enum_infos[spird::enum_id_count];
+static enum_info s_enum_infos[spird::enum_id_count + max_named_enums];
 
 static output_data s_output;
+
+static const char* s_enum_names[max_named_enums];
+
+static uint32_t s_named_enum_count = 0;
 
 uint32_t s_line_number = 1;
 
@@ -699,6 +705,8 @@ void parse_enum(const char*& curr) noexcept
 {
 	uint32_t enum_id = ~0u;
 
+	const char* enum_name = curr;
+
 	for (uint32_t i = 0; i != _countof(enum_name_strings); ++i)
 		if(token_equal(curr, enum_name_strings[i]))
 		{
@@ -707,14 +715,15 @@ void parse_enum(const char*& curr) noexcept
 			break;
 		}
 
-	if (enum_id == ~0u)
-		parse_panic("enum-name", curr);
+	// Delay check for valid name to after having parsed a possible @NAMED flag
 
-	enum_info& out_info = s_enum_infos[enum_id];
+	if (enum_id == ~0u)
+		while(*curr != enum_flag_char && *curr != '\0' && !is_whitespace(*curr))
+			++curr;
 
 	spird::enum_flags flags = spird::enum_flags::none;
 
-	if (*curr == '@')
+	if (*curr == enum_flag_char)
 	{
 		++curr;
 
@@ -729,6 +738,23 @@ void parse_enum(const char*& curr) noexcept
 		if (flags == spird::enum_flags::none)
 			parse_panic("enum-flag", curr);
 	}
+
+	if ((flags & spird::enum_flags::named) == spird::enum_flags::named)
+	{
+		if (s_named_enum_count >= max_named_enums)
+			panic("Too many named enums defined. Maximum is %d.\n", max_named_enums);
+
+		s_enum_names[s_named_enum_count] = enum_name;
+
+		enum_id = spird::enum_id_count + s_named_enum_count;
+
+		++s_named_enum_count;
+	}
+
+	if (enum_id == ~0u)
+		parse_panic("enum-name", curr);
+
+	enum_info& out_info = s_enum_infos[enum_id];
 
 	out_info.flags = flags;
 
@@ -833,7 +859,7 @@ void write_output(const char* output_filename) noexcept
 
 	uint32_t enum_count = 0;
 
-	for (uint32_t i = _countof(s_enum_infos); i != 0; --i)
+	for (uint32_t i = spird::enum_id_count; i != 0; --i)
 		if (s_enum_infos[i - 1].hashtable_entries != 0)
 		{
 			enum_count = i;
@@ -841,16 +867,40 @@ void write_output(const char* output_filename) noexcept
 			break;
 		}
 
+	char table_name_buf[max_named_enums * 256];
+
+	uint32_t table_name_idx = 0;
+
+	for (uint32_t i = 0; i != s_named_enum_count; ++i)
+	{
+		for (uint32_t j = 0; !is_whitespace(s_enum_names[i][j]) && s_enum_names[i][j] != '\0' && s_enum_names[i][j] != enum_flag_char; ++j)
+		{
+			if (table_name_idx >= sizeof(table_name_buf))
+				panic("Total table name characters exceed maximum of %d.\n", sizeof(table_name_buf));
+
+			table_name_buf[table_name_idx++] = s_enum_names[i][j];
+		}
+
+		if (table_name_idx >= sizeof(table_name_buf))
+			panic("Total table name characters exceed maximum of %d.\n", sizeof(table_name_buf));
+
+		table_name_buf[table_name_idx++] = '\0';
+	}
+
 	spird::file_header file_header;
-	file_header.version = 13;
-	file_header.table_count = enum_count;
+	file_header.version = 17;
+	file_header.unnamed_table_count = enum_count;
+	file_header.first_table_header_byte = table_name_idx + sizeof(spird::file_header);
 
 	if (fwrite(&file_header, 1, sizeof(file_header), output_file) != sizeof(file_header))
 		panic("Could not write to file %s.\n", output_filename);
 
-	uint32_t hashtable_offset = sizeof(spird::file_header) + sizeof(spird::table_header) * enum_count;
+	if (fwrite(table_name_buf, 1, table_name_idx, output_file) != table_name_idx)
+		panic("Could not write to file %s.\n", output_filename);
 
-	spird::table_header table_headers[spird::enum_id_count];
+	uint32_t hashtable_offset = sizeof(spird::file_header) + sizeof(spird::table_header) * enum_count + table_name_idx;
+
+	spird::table_header table_headers[spird::enum_id_count + max_named_enums];
 	
 	memset(table_headers, 0x00, sizeof(table_headers));
 
@@ -867,11 +917,22 @@ void write_output(const char* output_filename) noexcept
 			hashtable_offset += table_headers[i].size * sizeof(spird::elem_index);
 		}
 	}
+	
+	for (uint32_t i = 0; i != s_named_enum_count; ++i)
+	{
+		table_headers[enum_count + i].flags = s_enum_infos[spird::enum_id_count + i].flags;
+
+		table_headers[enum_count + i].offset = hashtable_offset;
+
+		table_headers[enum_count + i].size = s_enum_infos[spird::enum_id_count + i].hashtable_entries;
+
+		hashtable_offset += table_headers[enum_count + i].size * sizeof(spird::elem_index);
+	}
 
 	if (fwrite(table_headers, 1, enum_count * sizeof(spird::table_header), output_file) != enum_count * sizeof(spird::table_header))
 		panic("Could not write to file %s.\n", output_filename);
 
-	uint32_t data_offset = hashtable_offset;
+	const uint32_t data_offset = hashtable_offset;
 
 	for (uint32_t i = 0; i != enum_count; ++i)
 	{
@@ -883,6 +944,16 @@ void write_output(const char* output_filename) noexcept
 				s_enum_infos[i].hashtable[j].byte_offset += data_offset;
 
 		if (fwrite(s_enum_infos[i].hashtable, 1, s_enum_infos[i].hashtable_entries * sizeof(spird::elem_index), output_file) != s_enum_infos[i].hashtable_entries * sizeof(spird::elem_index))
+			panic("Could not write to file %s.\n", output_filename);
+	}
+
+	for (uint32_t i = 0; i != s_named_enum_count; ++i)
+	{
+		for (uint32_t j = 0; j != s_enum_infos[spird::enum_id_count + i].hashtable_entries; ++j)
+			if (s_enum_infos[spird::enum_id_count + i].hashtable[j].id != ~0u)
+				s_enum_infos[spird::enum_id_count + i].hashtable[j].byte_offset += data_offset;
+
+		if (fwrite(s_enum_infos[spird::enum_id_count + i].hashtable, 1, s_enum_infos[spird::enum_id_count + i].hashtable_entries * sizeof(spird::elem_index), output_file) != s_enum_infos[spird::enum_id_count + i].hashtable_entries * sizeof(spird::elem_index))
 			panic("Could not write to file %s.\n", output_filename);
 	}
 
