@@ -887,6 +887,14 @@ void write_output(const char* output_filename) noexcept
 		table_name_buf[table_name_idx++] = '\0';
 	}
 
+	while (table_name_idx & 0x7)
+	{
+		if (table_name_idx >= sizeof(table_name_buf))
+			panic("Total table name characters exceed maximum of %d.\n", sizeof(table_name_buf));
+
+		table_name_buf[table_name_idx++] = '\0';
+	}
+
 	spird::file_header file_header;
 	file_header.version = 17;
 	file_header.unnamed_table_count = enum_count;
