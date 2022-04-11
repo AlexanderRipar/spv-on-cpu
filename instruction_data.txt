@@ -8947,3 +8947,732 @@ PackedVectorFormat : [
 		name : "PackedVectorFormat4x8Bit"
 	}
 ]
+
+###############################################################################
+###############################   Named enums   ###############################
+###############################################################################
+
+GLSL.std.450@NAMED : [
+	{
+		id : 1
+		name : "Round"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 2
+		name : "RoundEven"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 3
+		name : "Trunc"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 4
+		name : "FAbs"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 5
+		name : "SAbs"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 6
+		name : "FSign"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 7
+		name : "SSign"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 8
+		name : "Floor"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 9
+		name : "Ceil"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 10
+		name : "Fract"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 11
+		name : "Radians"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 12
+		name : "Degrees"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 13
+		name : "Sin"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 14
+		name : "Cos"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 15
+		name : "Tan"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 16
+		name : "Asin"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 17
+		name : "Acos"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 18
+		name : "Atan"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 19
+		name : "Sinh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 20
+		name : "Cosh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 21
+		name : "Tanh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 22
+		name : "Asinh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 23
+		name : "Acosh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 24
+		name : "Atanh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 25
+		name : "Atan2"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 26
+		name : "Pow"
+		args : [
+			ID VALUE "Base"
+			ID VALUE "Exp"
+		]
+	}
+	{
+		id : 27
+		name : "Exp"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 28
+		name : "Log"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 29
+		name : "Exp2"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 30
+		name : "Log2"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 31
+		name : "Sqrt"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 32
+		name : "InverseSqrt"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 33
+		name : "Determinant"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 34
+		name : "MatrixInverse"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 35
+		name : "Modf"
+		args : [
+			ID VALUE
+			ID VALUE "IntegralPart"
+		]
+	}
+	{
+		id : 36
+		name : "ModfStruct"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 37
+		name : "FMin"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 38
+		name : "UMin"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 39
+		name : "SMin"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 40
+		name : "FMax"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 41
+		name : "UMax"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 42
+		name : "SMax"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 43
+		name : "FClamp"
+		args : [
+			ID VALUE
+			ID VALUE "Min"
+			ID VALUE "Max"
+		]
+	}
+	{
+		id : 44
+		name : "UClamp"
+		args : [
+			ID VALUE
+			ID VALUE "Min"
+			ID VALUE "Max"
+		]
+	}
+	{
+		id : 45
+		name : "SClamp"
+		args : [
+			ID VALUE
+			ID VALUE "Min"
+			ID VALUE "Max"
+		]
+	}
+	{
+		id : 46
+		name : "FMix"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE "Interpolant"
+		]
+	}
+	{
+		id : 48
+		name : "Step"
+		args : [
+			ID VALUE "Edge"
+			ID VALUE
+		]
+	}
+	{
+		id : 49
+		name : "SmoothStep"
+		args : [
+			ID VALUE "Edge0"
+			ID VALUE "Edge1"
+			ID VALUE
+		]
+	}
+	{
+		id : 50
+		name : "Fma"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 51
+		name : "Frexp"
+		args : [
+			ID VALUE
+			ID VALUE "Exp"
+		]
+	}
+	{
+		id : 52
+		name : "FrexpStruct"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 53
+		name : "Ldexp"
+		args : [
+			ID VALUE
+			ID VALUE "Exp"
+		]
+	}
+	{
+		id : 54
+		name : "PackSnorm4x8"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 55
+		name : "PackUnorm4x8"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 56
+		name : "PackSnorm2x16"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 57
+		name : "PackUnorm2x16"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 58
+		name : "PackHalf2x16"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 59
+		name : "PackDouble2x32"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 60
+		name : "UnpackSnorm2x16"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 61
+		name : "UnpackUnorm2x16"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 62
+		name : "UnpackHalf2x16"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 63
+		name : "UnpackSnorm4x8"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 64
+		name : "UnpackUnorm4x8"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 65
+		name : "UnpackDouble2x32"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 66
+		name : "Length"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 67
+		name : "Distance"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 68
+		name : "Cross"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 69
+		name : "Normalize"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 70
+		name : "FaceForward"
+		args : [
+			ID VALUE "N"
+			ID VALUE "I"
+			ID VALUE "Nref"
+		]
+	}
+	{
+		id : 71
+		name : "Reflect"
+		args : [
+			ID VALUE "I"
+			ID VALUE "N"
+		]
+	}
+	{
+		id : 72
+		name : "Refract"
+		args : [
+			ID VALUE "I"
+			ID VALUE "N"
+			ID VALUE "Eta"
+		]
+	}
+	{
+		id : 73
+		name : "FindILsb"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 74
+		name : "FindSMsb"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 75
+		name : "FindUMsb"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 76
+		name : "InterpolateAtCentroid"
+		args : [
+			ID VALUE "Interpolant"
+		]
+	}
+	{
+		id : 77
+		name : "InterpolateAtSample"
+		args : [
+			ID VALUE "Interpolant"
+			ID VALUE "Sample"
+		]
+	}
+	{
+		id : 78
+		name : "InterpolateAtOffset"
+		args : [
+			ID VALUE "Interpolant"
+			ID VALUE "Offset"
+		]
+	}
+	{
+		id : 79
+		name : "NMin"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 80
+		name : "NMax"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 81
+		name : "NClamp"
+		args : [
+			ID VALUE
+			ID VALUE "Min"
+			ID VALUE "Max"
+		]
+	}
+]
+
+OpenCL.std@NAMED : [
+
+]
+
+SPV_AMD_shader_explicit_vertex_parameter@NAMED : [
+	{
+		id : 1
+		name : "InterpolateAtVertexAMD"
+		args : [
+			ID VALUE "Interpolant"
+			ID VALUE "VertexIndex"
+		]
+	}
+]
+
+SPV_AMD_shader_trinary_minmax@NAMED : [
+	{
+		id : 1
+		name : "FMin3AMD"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 2
+		name : "UMin3AMD"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 3
+		name : "SMin3AMD"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 4
+		name : "FMax3AMD"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 5
+		name : "UMax3AMD"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 6
+		name : "SMax3AMD"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 7
+		name : "FMid3AMD"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 8
+		name : "UMid3AMD"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 9
+		name : "SMid3AMD"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+]
+
+SPV_AMD_gcn_shader@NAMED : [
+	{
+		id : 1
+		name : "CubeFaceIndexAMD"
+		args : [
+			RTYPE
+			ID VALUE "P"
+		]
+	}
+	{
+		id : 2
+		name : "CubeFaceCoordAMD"
+		args : [
+			RTYPE
+			ID VALUE "P"
+		]
+	}
+	{
+		id : 3
+		name : "TimeAMD"
+		args : [
+			RTYPE
+		]
+	}
+]
