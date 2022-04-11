@@ -30,139 +30,7 @@ __declspec(noreturn) static void panic(const char* msg, ...) noexcept
 	exit(1);
 }
 
-static constexpr const char* argument_type_names[]{
-	"INSTRUCTION",
-	"SOURCELANGUAGE",
-	"EXECUTIONMODEL",
-	"ADDRESSINGMODEL",
-	"MEMORYMODEL",
-	"EXECUTIONMODE",
-	"STORAGECLASS",
-	"DIM",
-	"SAMPLERADDRESSINGMODE",
-	"SAMPLERFILTERMODE",
-	"IMAGEFORMAT",
-	"IMAGECHANNELORDER",
-	"IMAGECHANNELDATATYPE",
-	"IMAGEOPERANDS",
-	"FPFASTMATHMODE",
-	"FPROUNDINGMODE",
-	"LINKAGETYPE",
-	"ACCESSQUALIFIER",
-	"FUNCTIONPARAMETERATTRIBUTE",
-	"DECORATION",
-	"BUILTIN",
-	"SELECTIONCONTROL",
-	"LOOPCONTROL",
-	"FUNCTIONCONTROL",
-	"MEMORYSEMANTICS",
-	"MEMORYOPERANDS",
-	"SCOPE",
-	"GROUPOPERATION",
-	"KERNELENQUEUEFLAGS",
-	"KERNELPROFILINGINFO",
-	"CAPABILITY",
-	"RESERVEDRAYFLAGS",
-	"RESERVEDRAYQUERYINTERSECTION",
-	"RESERVEDRAYQUERYCOMMITTEDTYPE",
-	"RESERVEDRAYQUERYCANDIDATETYPE",
-	"RESERVEDFRAGMENTSHADINGRATE",
-	"RESERVEDFPDENORMMODE",
-	"RESERVEDFPOPERATIONMODE",
-	"QUANTIZATIONMODE",
-	"OVERFLOWMODE",
-	"PACKEDVECTORFORMAT",
 
-	"RST",
-	"RTYPE",
-	"LITERAL",
-	"VALUE",
-	"TYPE",
-	"UNKNOWN",
-	"U32",
-	"STR",
-	"ARG",
-	"MEMBER",
-	"I64",
-};
-
-static constexpr const char* result_type_names[]{
-	"Auto",
-	"Void",
-	"Bool",
-	"Int",
-	"Float",
-	"Vector",
-	"Matrix",
-	"Image",
-	"Sampler",
-	"SampledImage",
-	"Array",
-	"RuntimeArray",
-	"Struct",
-	"Opaque",
-	"Pointer",
-	"Function",
-	"Event",
-	"DeviceEvent",
-	"ReserveId",
-	"Queue",
-	"Pipe",
-	"PipeStorage",
-	"NamedBarrier",
-	"BufferSurfaceINTEL",
-	"RayQueryKHR",
-	"AccelerationStructureKHR",
-	"CooperativeMatrixNV",
-	"String",
-	"ExtInstSet",
-	"Label",
-	"DecoGroup",
-};
-
-enum class pstate
-{
-	enum_open,
-	elem_open,
-	elem_id,
-	elem_name,
-	args_open,
-	args_type,
-	args_name,
-	elem_depends,
-	elem_implies,
-	elem_close,
-	enum_close,
-};
-
-
-
-static uint32_t instruction_index_count = 0;
-
-static spird::elem_index instruction_indices[65536];
-
-static spird::table_header table_headers[256];
-
-static spird::elem_index* hashtables[256];
-
-static void* enum_data[256];
-
-static uint32_t enum_data_sizes[256];
-
-static uint64_t is_bitmask_enum[4];
-
-struct arg_data
-{
-	spird::arg_flags flags = spird::arg_flags::none;
-	spird::arg_type type = spird::arg_type::INSTRUCTION;
-};
-
-struct arg_state
-{
-	spird::arg_flags prev_flags;
-	spird::arg_type prev_type;
-	bool has_rtype;
-};
 
 struct output_data
 {
@@ -189,63 +57,31 @@ public:
 
 	output_data() noexcept : m_data{ static_cast<uint8_t*>(malloc(4096)) }, m_used{ 0 }, m_capacity{ 4096 } { if (m_data == nullptr) panic("malloc failed.\n"); }
 
-	void* steal(uint32_t* bytes) noexcept
-	{
-		uint8_t* prev = m_data;
-
-		m_data = static_cast<uint8_t*>(malloc(4096));
-
-		*bytes = m_used;
-
-		m_used = 0;
-
-		m_capacity = 4096;
-
-		if (m_data == nullptr)
-			panic("malloc failed.\n");
-
-		return prev;
-	}
-
-	void append(const char* str, uint32_t len) noexcept
-	{
-		grow(len + 1);
-
-		memcpy(m_data + m_used, str, len);
-
-		m_used += len + 1;
-
-		m_data[m_used - 1] = '\0';
-	}
-
-	void append(spird::arg_type type) noexcept
+	void append_u8(uint8_t v) noexcept
 	{
 		grow(1);
 
-		m_data[m_used++] = static_cast<uint8_t>(type);
+		m_data[m_used++] = v;
 	}
 
-	void append(uint16_t capability_id) noexcept
+	void append_u16(uint16_t v) noexcept
 	{
 		grow(2);
 
-		m_data[m_used++] = static_cast<uint8_t>(capability_id);
+		m_data[m_used++] = static_cast<uint8_t>(v);
 
-		m_data[m_used++] = static_cast<uint8_t>(capability_id >> 8);
+		m_data[m_used++] = static_cast<uint8_t>(v >> 8);
 	}
 
-	void overwrite(uint32_t index, uint8_t data) noexcept
+	void append_str(const char* str, uint8_t bytes) noexcept
 	{
-		m_data[index] = data;
-	}
+		grow(bytes + 1);
 
-	uint32_t reserve_byte() noexcept
-	{
-		grow(1);
+		memcpy(m_data + m_used, str, bytes);
 
-		m_data[m_used] = '?';
+		m_used += bytes + 1;
 
-		return m_used++;
+		m_data[m_used - 1] = '\0';
 	}
 
 	uint32_t size() const noexcept
@@ -259,7 +95,66 @@ public:
 	}
 };
 
-uint32_t line_number = 1;
+struct arg_data
+{
+	spird::arg_flags flags = spird::arg_flags::none;
+	spird::arg_type type = spird::arg_type::INSTRUCTION;
+};
+
+struct arg_state
+{
+	spird::arg_flags prev_flags;
+	spird::arg_type prev_type;
+	bool has_rtype;
+};
+
+struct elem_info
+{
+	uint32_t id;
+
+	const char* name;
+	
+	uint8_t name_bytes;
+
+	uint8_t argc;
+
+	spird::arg_flags arg_flags[32];
+
+	spird::arg_type arg_types[32];
+
+	const char* arg_names[32];
+
+	uint8_t arg_name_bytes[32];
+
+	uint32_t implies_or_depends_count;
+
+	uint8_t implies_or_depends[127];
+};
+
+struct enum_info
+{
+	spird::enum_flags flags;
+
+	uint16_t hashtable_entries;
+
+	uint32_t data_bytes;
+
+	spird::elem_index* hashtable;
+	
+	const void* data;
+};
+
+
+
+static spird::elem_index s_data_indices[65536];
+
+static enum_info s_enum_infos[spird::enum_id_count];
+
+static output_data s_output;
+
+uint32_t s_line_number = 1;
+
+
 
 static const char* isolate_token_for_panic(const char* str) noexcept
 {
@@ -292,7 +187,7 @@ static const char* isolate_token_for_panic(const char* str) noexcept
 
 __declspec(noreturn) static void parse_panic(const char* expected, const char* instead) noexcept
 {
-	panic("Line %d:Expected '%s'. Found '%s' instead.\n", line_number, expected, isolate_token_for_panic(instead));
+	panic("Line %d:Expected '%s'. Found '%s' instead.\n", s_line_number, expected, isolate_token_for_panic(instead));
 }
 
 static bool is_whitespace(char c) noexcept
@@ -311,11 +206,11 @@ static const char* skip_whitespace(const char* str) noexcept
 		}
 
 		if (*str == '\n')
-			++line_number;
+			++s_line_number;
 
 		if (*str == '\r')
 		{
-			++line_number;
+			++s_line_number;
 
 			if (str[1] == '\n')
 				++str;
@@ -328,12 +223,12 @@ static const char* skip_whitespace(const char* str) noexcept
 
 }
 
-static void create_hashtable(uint16_t* out_table_size, spird::elem_index** out_table) noexcept
+static void create_hashtable(uint16_t elem_count, const spird::elem_index* elems, uint16_t* out_table_size, spird::elem_index** out_table) noexcept
 {
-	uint32_t table_size = (instruction_index_count * 3) >> 1;
+	uint32_t table_size = (elem_count * 3) >> 1;
 
 	if (table_size > 0xFFFF)
-		panic("Size of table is greater than maximum of 0xFFFFFF.\n");
+		panic("Size of table is greater than maximum of 0xFFFF.\n");
 
 	spird::elem_index* table = static_cast<spird::elem_index*>(malloc(table_size * sizeof(spird::elem_index)));
 
@@ -349,9 +244,9 @@ static void create_hashtable(uint16_t* out_table_size, spird::elem_index** out_t
 
 	memset(offsets, 0x00, table_size * sizeof(uint16_t));
 
-	for (uint32_t i = 0; i != instruction_index_count; ++i)
+	for (uint32_t i = 0; i != elem_count; ++i)
 	{
-		spird::elem_index elem = instruction_indices[i];
+		spird::elem_index elem = elems[i];
 
 		uint32_t hash = hash_knuth(elem.id, table_size);
 
@@ -398,11 +293,11 @@ static void print_usage() noexcept
 }
 
 static bool parse_args(
-	int argc, 
-	const char** argv, 
-	const char** out_input_filename, 
-	const char** out_output_filename, 
-	spird::data_mode* out_mode, 
+	int argc,
+	const char** argv,
+	const char** out_input_filename,
+	const char** out_output_filename,
+	spird::data_mode* out_mode,
 	bool* out_no_implies_and_depends
 )
 {
@@ -545,7 +440,7 @@ static bool token_equal(const char*& curr, const char* token) noexcept
 static arg_data parse_arg_type(const char*& curr, arg_state* state) noexcept
 {
 	if ((state->prev_flags & (spird::arg_flags::variadic | spird::arg_flags::pair)) == spird::arg_flags::variadic)
-		panic("Line %d: Cannot have another argument after variadic argument.\n", line_number - 1);
+		panic("Line %d: Cannot have another argument after variadic argument.\n", s_line_number - 1);
 
 	uint32_t name_len;
 
@@ -561,41 +456,41 @@ static arg_data parse_arg_type(const char*& curr, arg_state* state) noexcept
 		if (token_equal(curr, argument_optional_string))
 		{
 			if ((data.flags & spird::arg_flags::optional) == spird::arg_flags::optional)
-				panic("Line %d: '%s' specified more than once.\n", line_number, argument_optional_string);
+				panic("Line %d: '%s' specified more than once.\n", s_line_number, argument_optional_string);
 
 			data.flags |= spird::arg_flags::optional;
 		}
 		else if (token_equal(curr, argument_variadic_string))
 		{
 			if ((data.flags & spird::arg_flags::variadic) == spird::arg_flags::variadic)
-				panic("Line %d: '%s' specified more than once.\n", line_number, argument_variadic_string);
+				panic("Line %d: '%s' specified more than once.\n", s_line_number, argument_variadic_string);
 
 			data.flags |= spird::arg_flags::variadic;
 		}
 		else if (token_equal(curr, argument_id_string))
 		{
 			if ((data.flags & spird::arg_flags::result) == spird::arg_flags::result)
-				panic("Line %d: Cannot combine RST and ID (RST implies ID).\n", line_number);
+				panic("Line %d: Cannot combine RST and ID (RST implies ID).\n", s_line_number);
 
 			if ((data.flags & spird::arg_flags::id) == spird::arg_flags::id)
-				panic("Line %d: '%s' specified more than once.\n", line_number, argument_id_string);
+				panic("Line %d: '%s' specified more than once.\n", s_line_number, argument_id_string);
 
 			data.flags |= spird::arg_flags::id;
 		}
 		else if (token_equal(curr, argument_result_string))
 		{
 			if ((data.flags & spird::arg_flags::result) == spird::arg_flags::result)
-				panic("Line %d: '%s' specified more than once.\n", line_number, argument_result_string);
+				panic("Line %d: '%s' specified more than once.\n", s_line_number, argument_result_string);
 
 			if ((data.flags & spird::arg_flags::id) == spird::arg_flags::id)
-				panic("Line %d: Cannot combine RST and ID (RST implies ID).\n", line_number);
+				panic("Line %d: Cannot combine RST and ID (RST implies ID).\n", s_line_number);
 
 			data.flags |= spird::arg_flags::result | spird::arg_flags::id;
 		}
 		else if (token_equal(curr, argument_pair_string))
 		{
 			if ((data.flags & spird::arg_flags::pair) == spird::arg_flags::pair)
-				panic("Line %d: '%s' specified more than once.\n", line_number, argument_pair_string);
+				panic("Line %d: '%s' specified more than once.\n", s_line_number, argument_pair_string);
 
 			data.flags |= spird::arg_flags::pair;
 		}
@@ -606,16 +501,16 @@ static arg_data parse_arg_type(const char*& curr, arg_state* state) noexcept
 	}
 
 	if ((data.flags & spird::arg_flags::result) == spird::arg_flags::result && (data.flags & (spird::arg_flags::optional | spird::arg_flags::variadic)) != spird::arg_flags::none)
-		panic("Line %d: Cannot combine RST with other flags.\n", line_number);
+		panic("Line %d: Cannot combine RST with other flags.\n", s_line_number);
 
 	if ((data.flags & spird::arg_flags::optional) != spird::arg_flags::optional &&
 		(state->prev_flags & (spird::arg_flags::optional | spird::arg_flags::pair)) == spird::arg_flags::optional)
-		panic("Line %d: Cannot have non-optional argument after optional argument.\n", line_number);
+		panic("Line %d: Cannot have non-optional argument after optional argument.\n", s_line_number);
 
 	if (token_equal_no_advance(curr, argument_type_names[static_cast<uint32_t>(spird::arg_type::RTYPE)]))
 	{
 		if (state->has_rtype)
-			panic("Line %d: Cannot have more than one argument of type RTYPE.\n", line_number);
+			panic("Line %d: Cannot have more than one argument of type RTYPE.\n", s_line_number);
 
 		state->has_rtype = true;
 
@@ -649,7 +544,7 @@ static arg_data parse_arg_type(const char*& curr, arg_state* state) noexcept
 				found = true;
 
 				if (static_cast<spird::rst_type>(i) == spird::rst_type::Auto && !state->has_rtype)
-					panic("Line %d: Cannot have result of type %s without RTYPE.\n", line_number, result_type_names[static_cast<uint32_t>(spird::rst_type::Auto)]);
+					panic("Line %d: Cannot have result of type %s without RTYPE.\n", s_line_number, result_type_names[static_cast<uint32_t>(spird::rst_type::Auto)]);
 
 				data.type = static_cast<spird::arg_type>(i);
 
@@ -667,6 +562,426 @@ static arg_data parse_arg_type(const char*& curr, arg_state* state) noexcept
 	return data;
 }
 
+void parse_elem(const char*& curr, elem_info* out_info) noexcept
+{
+	if (!token_equal(curr, "{"))
+		parse_panic("{", curr);
+
+	if (!token_equal(curr, elem_id_string))
+		parse_panic(elem_id_string, curr);
+
+	if (*curr != ':')
+		parse_panic(":", curr);
+
+	curr = skip_whitespace(curr + 1);
+
+	uint32_t id = 0;
+
+	if (*curr == '0' && curr[1] == 'x' || curr[1] == 'X')
+	{
+		curr += 2;
+
+		if ((*curr < '0' || *curr > '9') && (*curr < 'a' || *curr > 'f') && (*curr < 'A' || *curr > 'F'))
+			parse_panic("0x[0-9a-fA-F]+", curr - 2);
+
+		while(true)
+		{
+			if (*curr >= '0' && *curr <= '9')
+				id = id * 16 + *curr++ - '0';
+			else if (*curr >= 'a' && *curr <= 'f')
+				id = id * 16 + *curr++ - 'a' + 10;
+			else if (*curr >= 'A' && *curr <= 'F')
+				id = id * 16 + *curr++ - 'A' + 10;
+			else
+				break;
+		}
+	}
+	else
+	{
+		if (*curr < '0' || *curr > '9')
+			parse_panic("[0-9]+", curr);
+
+		while(*curr >= '0' && *curr <= '9')
+			id = id * 10 + *curr++ - '0';
+	}
+
+	out_info->id = id;
+
+	curr = skip_whitespace(curr);
+
+	if (!token_equal(curr, elem_name_string))
+		parse_panic(elem_name_string, curr);
+
+	if (*curr != ':')
+		parse_panic(":", curr);
+
+	curr = skip_whitespace(curr + 1);
+
+	if (*curr != '"')
+		parse_panic("\"elem-name\"", curr);
+
+	out_info->name = curr + 1;
+
+	uint32_t name_bytes = 0;
+
+	for (; curr[name_bytes + 1] != '"'; ++name_bytes)
+	{
+		if (curr[name_bytes + 1] == '\r' || curr[name_bytes + 1] == '\n' || curr[name_bytes + 1] == '\0')
+			parse_panic("\"elem-name\"", curr);
+	}
+
+	if (name_bytes == 0)
+		parse_panic("\"elem-name\"", curr);
+
+	if (name_bytes > 255)
+		panic("Line %d: Name exceeds maximum of 255 bytes (%d bytes).\n", s_line_number, name_bytes);
+
+	out_info->name_bytes = name_bytes;
+
+	curr = skip_whitespace(curr + name_bytes + 2);
+
+	if (token_equal(curr, elem_args_string))
+	{
+		if (*curr != ':')
+			parse_panic(":", curr);
+
+		curr = skip_whitespace(curr + 1);
+
+		if (!token_equal(curr, "["))
+			parse_panic("[", curr);
+
+		arg_state state{};
+
+		uint32_t argc = 0;
+
+		while(!token_equal(curr, "]"))
+		{
+			if (argc >= _countof(elem_info::arg_types))
+				panic("Line %d: Element has more than %d arguments.\n", _countof(elem_info::arg_types));
+
+			const bool is_pair_continued = (state.prev_flags & spird::arg_flags::pair) == spird::arg_flags::pair;
+
+			arg_data arg = parse_arg_type(curr, &state);
+
+			if (is_pair_continued)
+			{
+				if ((arg.flags & (spird::arg_flags::optional | spird::arg_flags::variadic | spird::arg_flags::result | spird::arg_flags::pair)) != spird::arg_flags::none)
+					panic("Line %d: Second element of argument pair can only have ID, CONST or FORWARD flags set.\n", s_line_number);
+			}
+
+			out_info->arg_flags[argc] = arg.flags;
+
+			out_info->arg_types[argc] = arg.type;
+
+			if (*curr == '"')
+			{
+				out_info->arg_names[argc] = curr + 1;
+
+				uint32_t arg_name_bytes = 0;
+
+				for (; curr[arg_name_bytes + 1] != '"'; ++arg_name_bytes)
+				{
+					if (curr[arg_name_bytes + 1] == '\r' || curr[arg_name_bytes + 1] == '\n' || curr[arg_name_bytes + 1] == '\0')
+						parse_panic("\"arg-name\"", curr);
+				}
+
+				if (arg_name_bytes == 0)
+					parse_panic("\"arg-name\"", curr);
+
+				if (name_bytes > 255)
+					panic("Line %d: Name exceeds maximum of 255 bytes (%d bytes).\n", s_line_number, name_bytes);
+
+				out_info->arg_name_bytes[argc] = arg_name_bytes;
+
+				curr = skip_whitespace(curr + arg_name_bytes + 2);
+			}
+			else
+			{
+				out_info->arg_names[argc] = ""; // Not nullptr for memcpy
+
+				out_info->arg_name_bytes[argc] = 0;
+			}
+
+			++argc;
+		}
+
+		out_info->argc = argc;
+	}
+	else
+	{
+		out_info->argc = 0;
+	}
+
+	bool has_depends = false, has_implies = false;
+
+	if (token_equal(curr, elem_depends_string))
+	{
+		has_depends = true;
+	}
+	else if (token_equal(curr, elem_implies_string))
+	{
+		has_implies = true;
+	}
+
+	if (has_depends || has_implies)
+	{
+		if (*curr != ':')
+			parse_panic(":", curr);
+
+		curr = skip_whitespace(curr + 1);
+
+		bool has_multiple_elems = false;
+
+		if (*curr == '[')
+		{
+			has_multiple_elems = true;
+
+			curr = skip_whitespace(curr + 1);
+		}
+
+		uint32_t implies_or_depends_count = 0;
+
+		do {
+			if (implies_or_depends_count > 127)
+				panic("Line %d: More than 127 elements in 'depends' array (%d elements).\n", s_line_number, implies_or_depends_count);
+
+			uint32_t capability_id = ~0u;
+
+			for (uint32_t i = 0; i != _countof(capability_name_strings); ++i)
+			{
+				if (token_equal(curr, capability_name_strings[i]))
+				{
+					capability_id = capability_ids[i];
+
+					break;
+				}
+			}
+
+			if (capability_id == ~0u)
+				parse_panic("capability-name", curr);
+
+			out_info->implies_or_depends[implies_or_depends_count] = capability_id;
+
+			++implies_or_depends_count;
+		}
+		while(has_multiple_elems && *curr != ']');
+
+		if (has_multiple_elems)
+			curr = skip_whitespace(curr + 1);
+
+		out_info->implies_or_depends_count = implies_or_depends_count;
+	}
+	else
+	{
+		out_info->implies_or_depends_count = 0;
+	}
+
+	if (has_implies && out_info->implies_or_depends_count != 0)
+	{
+		out_info->implies_or_depends_count |= 0x80;
+	}
+
+	if (!token_equal(curr, "}"))
+		parse_panic("}", curr);
+}
+
+void parse_enum(const char*& curr, spird::data_mode mode) noexcept
+{
+	uint32_t enum_id = ~0u;
+
+	for (uint32_t i = 0; i != _countof(enum_name_strings); ++i)
+		if(token_equal(curr, enum_name_strings[i]))
+		{
+			enum_id = i;
+
+			break;
+		}
+
+	if (enum_id == ~0u)
+		parse_panic("enum-name", curr);
+
+	enum_info& out_info = s_enum_infos[enum_id];
+
+	spird::enum_flags flags = spird::enum_flags::none;
+
+	if (*curr == '@')
+	{
+		++curr;
+
+		for (uint32_t i = 0; i != _countof(enum_flag_strings); ++i)
+			if (token_equal(curr, enum_flag_strings[i]))
+			{
+				flags = static_cast<spird::enum_flags>(i + 1);				
+
+				break;
+			}
+
+		if (flags == spird::enum_flags::none)
+			parse_panic("enum-flag", curr);
+	}
+
+	out_info.flags = flags;
+
+	out_info.data_bytes = 0;
+	
+	if (*curr != ':')
+		parse_panic(":", curr);
+
+	curr = skip_whitespace(curr + 1);
+
+	if (!token_equal(curr, "["))
+		parse_panic("[", curr);
+
+	out_info.data = s_output.data() + s_output.size();
+
+	uint32_t index_count = 0;
+
+	while(*curr != ']')
+	{
+		if (index_count >= _countof(s_data_indices))
+			panic("Line %d: Exceeded maximum of %d elements in enumeration %s.\n", s_line_number, _countof(s_data_indices), enum_name_strings[enum_id]);
+
+		elem_info elem;
+
+		parse_elem(curr, &elem);
+
+		s_data_indices[index_count].id = elem.id;
+
+		s_data_indices[index_count].byte_offset = s_output.size();
+
+		index_count++;
+
+		s_output.append_u8(elem.argc);
+
+		s_output.append_str(elem.name, elem.name_bytes);
+
+		for (uint8_t i = 0; i != elem.argc; ++i)
+		{
+			s_output.append_u8(static_cast<uint8_t>(elem.arg_flags[i]));
+
+			s_output.append_u8(static_cast<uint8_t>(elem.arg_types[i]));
+
+			s_output.append_str(elem.arg_names[i], elem.arg_name_bytes[i]);
+		}
+
+		s_output.append_u8(elem.implies_or_depends_count);
+
+		for (uint8_t i = 0; i != (elem.implies_or_depends_count & 0x7F); ++i)
+			s_output.append_u16(elem.implies_or_depends[i]);
+	}
+
+	curr = skip_whitespace(curr + 1);
+
+	out_info.data_bytes = s_output.data() + s_output.size() - out_info.data;
+
+	create_hashtable(index_count, s_data_indices, &out_info.hashtable_entries, &out_info.hashtable);
+}
+
+char* read_input(const char* input_filename) noexcept
+{
+	FILE* input_file;
+
+	if (fopen_s(&input_file, input_filename, "rb") != 0)
+		panic("Could not open file %s for reading.\n", input_filename);
+
+	if (fseek(input_file, 0, SEEK_END) != 0)
+		panic("Could not seek to end of input file %s.\n", input_file);
+
+	size_t input_bytes = ftell(input_file);
+
+	if (input_bytes < 0)
+		panic("Could not determine size of input file %s.\n", input_file);
+
+	if (fseek(input_file, 0, SEEK_SET) != 0)
+		panic("Could not seek to start of input file %s.\n", input_file);
+
+	char* input = static_cast<char*>(malloc(static_cast<size_t>(input_bytes + 1)));
+
+	if (input == nullptr)
+		panic("malloc failed\n");
+
+	size_t actual_bytes_read = fread(input, 1, input_bytes, input_file);
+
+	fclose(input_file);
+
+	if (actual_bytes_read != input_bytes)
+		panic("Failed to read from file %s.", input_filename);
+
+	input[input_bytes] = '\0';
+
+	return input;
+}
+
+void write_output(const char* output_filename) noexcept
+{
+	output_data& od = s_output;
+
+	FILE* output_file;
+
+	if (fopen_s(&output_file, output_filename, "wb") != 0)
+		panic("Could not open file %s for writing.\n", output_filename);
+
+	uint32_t enum_count = 0;
+
+	for (uint32_t i = _countof(s_enum_infos); i != 0; --i)
+		if (s_enum_infos[i - 1].hashtable_entries != 0)
+		{
+			enum_count = i;
+
+			break;
+		}
+
+	spird::file_header file_header;
+	file_header.version = 13;
+	file_header.table_count = enum_count;
+
+	if (fwrite(&file_header, 1, sizeof(file_header), output_file) != sizeof(file_header))
+		panic("Could not write to file %s.\n", output_filename);
+
+	uint32_t hashtable_offset = sizeof(spird::file_header) + sizeof(spird::table_header) * enum_count;
+
+	spird::table_header table_headers[spird::enum_id_count];
+	
+	memset(table_headers, 0x00, sizeof(table_headers));
+
+	for (uint32_t i = 0; i != enum_count; ++i)
+	{
+		if (s_enum_infos[i].hashtable_entries != 0)
+		{
+			table_headers[i].flags = s_enum_infos[i].flags;
+
+			table_headers[i].offset = hashtable_offset;
+
+			table_headers[i].size = s_enum_infos[i].hashtable_entries;
+
+			hashtable_offset += table_headers[i].size * sizeof(spird::elem_index);
+		}
+	}
+
+	if (fwrite(table_headers, 1, enum_count * sizeof(spird::table_header), output_file) != enum_count * sizeof(spird::table_header))
+		panic("Could not write to file %s.\n", output_filename);
+
+	uint32_t data_offset = hashtable_offset;
+
+	for (uint32_t i = 0; i != enum_count; ++i)
+	{
+		if (s_enum_infos[i].hashtable_entries == 0)
+			continue;
+
+		for (uint32_t j = 0; j != s_enum_infos[i].hashtable_entries; ++j)
+			if (s_enum_infos[i].hashtable[j].id != ~0u)
+				s_enum_infos[i].hashtable[j].byte_offset += data_offset;
+
+		if (fwrite(s_enum_infos[i].hashtable, 1, s_enum_infos[i].hashtable_entries * sizeof(spird::elem_index), output_file) != s_enum_infos[i].hashtable_entries * sizeof(spird::elem_index))
+			panic("Could not write to file %s.\n", output_filename);
+	}
+
+	if (fwrite(s_output.data(), 1, s_output.size(), output_file) != s_output.size())
+		panic("Could not write to file %s.\n", output_filename);
+
+	fclose(output_file);
+}
+
 int main(int argc, const char** argv)
 {
 	prog_name = argv[0];
@@ -680,536 +995,14 @@ int main(int argc, const char** argv)
 	if (!parse_args(argc, argv, &input_filename, &output_filename, &mode, &no_implies_and_depends))
 		return 1;
 
-	FILE* input_file;
+	char* input_data = read_input(input_filename);
 
-	if (fopen_s(&input_file, argv[1], "rb") != 0)
-		panic("Could not open file %s for reading.\n", argv[1]);
+	const char* curr = skip_whitespace(input_data);
 
-	if (fseek(input_file, 0, SEEK_END) != 0)
-		panic("Could not seek to end of input file.\n");
+	while(*curr != '\0')
+		parse_enum(curr, mode);
 
-	size_t input_bytes = ftell(input_file);
-
-	if (input_bytes < 0)
-		panic("Could not determine size of input file.\n");
-
-	if (fseek(input_file, 0, SEEK_SET) != 0)
-		panic("Could not seek to start of input file.\n");
-
-	char* input = static_cast<char*>(malloc(static_cast<size_t>(input_bytes + 1)));
-
-	if (input == nullptr)
-		panic("malloc failed\n");
-
-	size_t actual_bytes_read = fread(input, 1, input_bytes, input_file);
-
-	fclose(input_file);
-
-	if (actual_bytes_read != input_bytes)
-		panic("Failed to read from file %s.", argv[1]);
-
-	input[input_bytes] = '\0';
-
-	// Find start array
-	const char* curr = skip_whitespace(input);
-
-	pstate state = pstate::enum_open;
-
-	spird::elem_index curr_index;
-
-	uint8_t curr_argc;
-
-	output_data output;
-
-	uint32_t curr_enum_type;
-
-	arg_state elem_arg_state;
-
-	bool done = false;
-
-	while (!done)
-	{
-		switch (state)
-		{
-		case pstate::enum_open:
-		{
-			if (*curr == '\0')
-			{
-				done = true;
-
-				break;
-			}
-
-			uint32_t table_index = ~0u;
-
-			for (uint32_t i = 0; i != _countof(enum_name_strings); ++i)
-				if (token_equal(curr, enum_name_strings[i]))
-				{
-					table_index = i;
-
-					break;
-				}
-
-			if (table_index == ~0u)
-				parse_panic("enum-name", curr);
-
-			curr_enum_type = table_index;
-
-			if (*curr == enum_flag_char)
-			{
-				++curr;
-
-				if (!token_equal(curr, enum_flag_bitmask_string))
-					parse_panic("BITMASK", curr);
-
-				is_bitmask_enum[curr_enum_type >> 6] |= 1ui64 << (curr_enum_type & 63);
-			}
-
-			if (*curr != ':')
-				parse_panic(":", curr);
-
-			curr = skip_whitespace(curr + 1);
-
-			if (*curr != '[')
-				parse_panic("[", curr);
-
-			curr = skip_whitespace(curr + 1);
-
-			state = pstate::elem_open;
-
-			break;
-		}
-		case pstate::elem_open:
-		{
-			if (*curr == '{')
-			{
-				curr_index.byte_offset = output.reserve_byte();
-
-				curr_argc = 0;
-
-				elem_arg_state = {};
-
-				state = pstate::elem_id;
-			}
-			else if (*curr == ']')
-			{
-				state = pstate::enum_close;
-			}
-			else
-			{
-				parse_panic("{|]", curr);
-			}
-
-			curr = skip_whitespace(curr + 1);
-
-			break;
-		}
-		case pstate::elem_id:
-		{
-			if (!token_equal(curr, elem_id_string))
-				parse_panic(elem_id_string, curr);
-
-			if (*curr != ':')
-				parse_panic(":", curr);
-
-			curr = skip_whitespace(curr + 1);
-
-			uint32_t id = 0;
-
-			if (*curr < '0' || *curr > '9')
-				parse_panic("[0-9]", curr);
-
-			if (curr[1] == 'x')
-			{
-				curr += 2;
-
-				while (true)
-				{
-					if (*curr >= '0' && *curr <= '9')
-						id = id * 16 + *curr - '0';
-					else if (*curr >= 'a' && *curr <= 'f')
-						id = id * 16 + *curr - 'a';
-					else if (*curr >= 'A' && *curr <= 'F')
-						id = id * 16 + *curr - 'A';
-					else
-						break;
-
-					++curr;
-				}
-			}
-			else
-			{
-				while (*curr >= '0' && *curr <= '9')
-					id = id * 10 + *(curr++) - '0';
-
-			}
-
-			curr_index.id = id;
-
-			curr = skip_whitespace(curr);
-
-			state = pstate::elem_name;
-
-			break;
-		}
-		case pstate::elem_name:
-		{
-			if (!token_equal(curr, elem_name_string))
-				parse_panic(elem_name_string, curr);
-
-			if (*curr != ':')
-				parse_panic(":", curr);
-
-			curr = skip_whitespace(curr + 1);
-
-			if (*curr != '"')
-				parse_panic("\"instruction-name\"", curr);
-
-			++curr;
-
-			uint32_t i = 0;
-
-			while (curr[i] != '"')
-			{
-				if (curr[i] == '\0' || curr[i] == '\r' || curr[i] == '\n')
-					parse_panic("\"instruction-name\"", curr);
-
-				++i;
-			}
-
-			if (mode == spird::data_mode::all || mode == spird::data_mode::disassembly)
-				output.append(curr, i);
-
-			curr = skip_whitespace(curr + i + 1);
-
-			state = pstate::args_open;
-
-			break;
-		}
-		case pstate::args_open:
-		{
-			if (token_equal(curr, elem_args_string))
-			{
-				if (*curr != ':')
-					parse_panic(":", curr);
-
-				curr = skip_whitespace(curr + 1);
-
-				if (*curr != '[')
-					parse_panic("[", curr);
-
-				curr = skip_whitespace(curr + 1);
-
-				state = pstate::args_type;
-			}
-			else
-			{
-				state = pstate::elem_depends;
-			}
-
-			break;
-		}
-		case pstate::args_type:
-		{
-			if (*curr != ']')
-			{
-				const bool is_pair_continued = (elem_arg_state.prev_flags & spird::arg_flags::pair) == spird::arg_flags::pair;
-
-				arg_data data = parse_arg_type(curr, &elem_arg_state);
-
-				if (is_pair_continued)
-				{
-					if ((data.flags & (spird::arg_flags::optional | spird::arg_flags::variadic | spird::arg_flags::result | spird::arg_flags::pair)) != spird::arg_flags::none)
-						panic("Line %d: Second element of argument pair can only have ID, CONST or FORWARD flags set.\n", line_number);
-				}
-
-				output.append(static_cast<spird::arg_type>(data.flags));
-
-				output.append(data.type);
-
-				++curr_argc;
-
-				state = pstate::args_name;
-			}
-			else
-			{
-				curr = skip_whitespace(curr + 1);
-
-				state = pstate::elem_depends;
-			}
-
-			break;
-		}
-		case pstate::args_name:
-		{
-			if (*curr == '"')
-			{
-				++curr;
-
-				uint32_t i = 0;
-
-				while (curr[i] != '"')
-				{
-					if (curr[i] == '\0' || curr[i] == '\r' || curr[i] == '\n')
-						parse_panic("\"argument-name\"", curr);
-
-					++i;
-				}
-
-				if (mode == spird::data_mode::all || mode == spird::data_mode::disassembly)
-					output.append(curr, i);
-
-				curr = skip_whitespace(curr + i + 1);
-			}
-			else
-			{
-				char c = '\0';
-
-				if (mode == spird::data_mode::all || mode == spird::data_mode::disassembly)
-					output.append(&c, 0);
-			}
-
-			state = pstate::args_type;
-
-			break;
-		}
-		case pstate::elem_depends:
-		{
-			if (token_equal(curr, elem_depends_string))
-			{
-				if (*curr != ':')
-					parse_panic(":", curr);
-
-				curr = skip_whitespace(curr + 1);
-
-				bool has_multiple_elems = false;
-
-				if (*curr == '[')
-				{
-					has_multiple_elems = true;
-
-					curr = skip_whitespace(curr + 1);
-				}
-
-				uint32_t dependency_count_idx = ~0u;
-
-				if (!no_implies_and_depends)
-					dependency_count_idx = output.reserve_byte();
-
-				uint32_t dependency_count = 0;
-
-				do {
-					uint32_t capability_id = ~0u;
-
-					for (uint32_t i = 0; i != _countof(capability_name_strings); ++i)
-					{
-						if (token_equal(curr, capability_name_strings[i]))
-						{
-							capability_id = capability_ids[i];
-
-							break;
-						}
-					}
-
-					if (capability_id == ~0u)
-						parse_panic("capability-name", curr);
-
-					if (!no_implies_and_depends)
-						output.append(static_cast<uint16_t>(capability_id));
-
-					++dependency_count;
-				}
-				while(has_multiple_elems && *curr != ']');
-
-				if (has_multiple_elems)
-					curr = skip_whitespace(curr + 1);
-
-				if (dependency_count > 127)
-					panic("More than 127 elements in 'depends' array (%d elements).\n", dependency_count);
-				
-				if (!no_implies_and_depends)
-					output.overwrite(dependency_count_idx, dependency_count);
-
-				state = pstate::elem_close;
-			}
-			else
-			{
-				state = pstate::elem_implies;
-			}
-
-			break;
-		}
-		case pstate::elem_implies:
-		{
-			if (token_equal(curr, elem_implies_string))
-			{
-				if (*curr != ':')
-					parse_panic(":", curr);
-
-				curr = skip_whitespace(curr + 1);
-
-				bool has_multiple_elems = false;
-
-				if (*curr == '[')
-				{
-					has_multiple_elems = true;
-
-					curr = skip_whitespace(curr + 1);
-				}
-
-				uint32_t dependency_count_idx = ~0u;
-
-				if (!no_implies_and_depends)
-					dependency_count_idx = output.reserve_byte();
-
-				uint32_t dependency_count = 0;
-
-				do {
-					uint32_t capability_id = ~0u;
-
-					for (uint32_t i = 0; i != _countof(capability_name_strings); ++i)
-					{
-						if (token_equal(curr, capability_name_strings[i]))
-						{
-							capability_id = capability_ids[i];
-
-							break;
-						}
-					}
-
-					if (capability_id == ~0u)
-						parse_panic("capability-name", curr);
-
-					if (!no_implies_and_depends)
-						output.append(static_cast<uint16_t>(capability_id));
-
-					++dependency_count;
-				}
-				while(has_multiple_elems && *curr != ']');
-
-				if (has_multiple_elems)
-					curr = skip_whitespace(curr + 1);
-
-				if (dependency_count > 127)
-					panic("More than 127 elements in 'depends' array (%d elements).\n", dependency_count);
-
-				if (!no_implies_and_depends)
-					output.overwrite(dependency_count_idx, dependency_count | 0x80);
-			}
-			else
-			{
-				if (!no_implies_and_depends)
-				{
-					uint32_t idx = output.reserve_byte();
-
-					output.overwrite(idx, 0);
-				}
-			}
-
-			state = pstate::elem_close;
-
-			break;
-		}
-		case pstate::elem_close:
-		{
-			if (*curr != '}')
-				parse_panic("}", curr);
-
-			output.overwrite(curr_index.byte_offset, curr_argc);
-
-			instruction_indices[instruction_index_count++] = curr_index;
-
-			curr = skip_whitespace(curr + 1);
-
-			state = pstate::elem_open;
-
-			break;
-		}
-		case pstate::enum_close:
-		{
-			if (instruction_index_count != 0)
-			{
-				create_hashtable(&table_headers[curr_enum_type].size, &hashtables[curr_enum_type]);
-
-				enum_data[curr_enum_type] = output.steal(&enum_data_sizes[curr_enum_type]);
-
-				instruction_index_count = 0;
-			}
-
-			state = pstate::enum_open;
-
-			break;
-		}
-		}
-	}
-
-	FILE* output_file;
-
-	if (fopen_s(&output_file, argv[2], "wb") != 0)
-		panic("Could not open file %s for writing.\n", argv[2]);
-
-	uint32_t enum_count = 0;
-
-	for (uint32_t i = _countof(table_headers); i != 0; --i)
-		if (table_headers[i - 1].size != 0)
-		{
-			enum_count = i;
-
-			break;
-		}
-
-	spird::file_header file_header;
-	file_header.version = 10 + static_cast<uint32_t>(mode) + (no_implies_and_depends ? 0 : 3);
-	file_header.table_count = enum_count;
-
-	if (fwrite(&file_header, 1, sizeof(file_header), output_file) != sizeof(file_header))
-		panic("Could not write to file %s.\n", argv[2]);
-
-	uint32_t table_offset = sizeof(file_header) + sizeof(table_headers[0]) * enum_count;
-
-	for (uint32_t i = 0; i != enum_count; ++i)
-	{
-		if (table_headers[i].size == 0)
-			continue;
-
-		if (is_bitmask_enum[i >> 6] & (1ui64 << (i & 63)))
-			table_headers[i].flags |= spird::enum_flags::bitmask;
-
-		table_headers[i].offset = table_offset;
-
-		table_offset += table_headers[i].size * sizeof(spird::elem_index);
-	}
-
-	if (fwrite(table_headers, 1, enum_count * sizeof(table_headers[0]), output_file) != enum_count * sizeof(table_headers[0]))
-		panic("Could not write to file %s.\n", argv[2]);
-
-	uint32_t enum_offset = table_offset;
-
-	for (uint32_t i = 0; i != enum_count; ++i)
-	{
-		if (hashtables[i] == nullptr)
-			continue;
-
-		for (uint32_t j = 0; j != table_headers[i].size; ++j)
-			if (hashtables[i][j].id != ~0u)
-				hashtables[i][j].byte_offset += enum_offset;
-
-		enum_offset += enum_data_sizes[i];
-
-		if (fwrite(hashtables[i], 1, table_headers[i].size * sizeof(spird::elem_index), output_file) != table_headers[i].size * sizeof(spird::elem_index))
-			panic("Could not write to file %s.\n", argv[2]);
-	}
-
-	for (uint32_t i = 0; i != enum_count; ++i)
-	{
-		if (enum_data[i] == nullptr)
-			continue;
-
-		if (fwrite(enum_data[i], 1, enum_data_sizes[i], output_file) != enum_data_sizes[i])
-			panic("Could not write to file %s.\n", argv[2]);
-	}
-
-	fclose(output_file);
+	write_output(output_filename);
 
 	return 0;
 }
