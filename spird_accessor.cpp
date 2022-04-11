@@ -49,13 +49,13 @@ static constexpr const char* const enum_name_strings[]
 	"PackedVectorFormat",
 };
 
-spvcpu::result spird::get_elem_data(const void* spv_data, spird::enum_id enum_id, uint32_t id, spird::elem_data* out_data) noexcept
+spvcpu::result spird::get_elem_data(const void* spird, spird::enum_id enum_id, uint32_t id, spird::elem_data* out_data) noexcept
 {
 	const uint32_t enum_id_uint = static_cast<uint32_t>(enum_id);
 
-	const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
+	const uint8_t* raw_data = static_cast<const uint8_t*>(spird);
 
-	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
+	const spird::file_header* file_header = static_cast<const spird::file_header*>(spird);
 
 	if (file_header->version != 17)
 		return spvcpu::result::spirv_data_unknown_version;
@@ -139,13 +139,13 @@ spvcpu::result spird::get_elem_data(const void* spv_data, spird::enum_id enum_id
 	return spvcpu::result::success;
 }
 
-spvcpu::result spird::get_enum_data(const void* spv_data, spird::enum_id enum_id, spird::enum_data* out_data) noexcept
+spvcpu::result spird::get_enum_data(const void* spird, spird::enum_id enum_id, spird::enum_data* out_data) noexcept
 {
 	const uint32_t enum_id_uint = static_cast<uint32_t>(enum_id);
 
-	const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
+	const uint8_t* raw_data = static_cast<const uint8_t*>(spird);
 
-	const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
+	const spird::file_header* file_header = static_cast<const spird::file_header*>(spird);
 
 	if (file_header->version != 17)
 		return spvcpu::result::spirv_data_unknown_version;

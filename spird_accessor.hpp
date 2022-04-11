@@ -41,9 +41,9 @@ namespace spird
 		const spird::table_header* header;
 	};
 	
-	spvcpu::result get_elem_data(const void* spv_data, spird::enum_id enum_id, uint32_t id, spird::elem_data* out_data) noexcept;
+	spvcpu::result get_elem_data(const void* spird, spird::enum_id enum_id, uint32_t id, spird::elem_data* out_data) noexcept;
 
-	spvcpu::result get_enum_data(const void* spv_data, spird::enum_id enum_id, spird::enum_data* out_data) noexcept;
+	spvcpu::result get_enum_data(const void* spird, spird::enum_id enum_id, spird::enum_data* out_data) noexcept;
 }
 
 #endif // SPV_DATA_ACCESSOR_HPP_INCLUDE_GUARD
