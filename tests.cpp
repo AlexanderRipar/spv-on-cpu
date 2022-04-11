@@ -72,6 +72,40 @@ static constexpr const char* argument_type_names[]
 	"I64",
 };
 
+static constexpr const char* const result_type_names[]{
+	"Auto",
+	"Void",
+	"Bool",
+	"Int",
+	"Float",
+	"Vector",
+	"Matrix",
+	"Image",
+	"Sampler",
+	"SampledImage",
+	"Array",
+	"RuntimeArray",
+	"Struct",
+	"Opaque",
+	"Pointer",
+	"Function",
+	"Event",
+	"DeviceEvent",
+	"ReserveId",
+	"Queue",
+	"Pipe",
+	"PipeStorage",
+	"NamedBarrier",
+	"BufferSurfaceINTEL",
+	"RayQueryKHR",
+	"AccelerationStructureKHR",
+	"CooperativeMatrixNV",
+	"String",
+	"ExtInstSet",
+	"Label",
+	"DecoGroup",
+};
+
 static constexpr uint16_t capability_ids[]
 {
 	0,
@@ -553,48 +587,14 @@ int cycle(int argc, const char** argv) noexcept
 		return 0;
 	}
 
-	FILE* input_file;
+	void* spird;
 
+	uint64_t spird_bytes;
+
+	if (!get_file_content(argv[1], &spird, &spird_bytes))
+		return 1;
+		
 	FILE* output_file = stdout;
-
-	if (errno_t err = fopen_s(&input_file, argv[1], "rb"); err != 0)
-	{
-		fprintf(stderr, "Could not open file %s for reading (Error %d).\n", argv[1], err);
-
-		return 1;
-	}
-
-	if (fseek(input_file, 0, SEEK_END) != 0)
-	{
-		fprintf(stderr, "Could not seek in file.\n");
-
-		return 1;
-	}
-
-	size_t input_bytes = ftell(input_file);
-
-	if (input_bytes < 0)
-	{
-		fprintf(stderr, "Could not ftell file.\n");
-
-		return 1;
-	}
-
-	if (fseek(input_file, 0, SEEK_SET) != 0)
-	{
-		fprintf(stderr, "Could not seek in file.\n");
-
-		return 1;
-	}
-
-	void* spv_data = malloc(input_bytes);
-
-	if (fread(spv_data, 1, input_bytes, input_file) != input_bytes)
-	{
-		fprintf(stderr, "Could not read from file.\n");
-
-		return 1;
-	}
 
 	if (argc == 3)
 	{
@@ -606,39 +606,73 @@ int cycle(int argc, const char** argv) noexcept
 		}
 	}
 
-	uint32_t table_cnt = reinterpret_cast<const spird::file_header*>(spv_data)->unnamed_table_count;
+	spird::named_enum_data named_data;
+
+	if (spvcpu::result rst = spird::get_named_enum_data(spird, &named_data); rst != spvcpu::result::success)
+	{
+		fprintf(stderr, "Could not get data on named enumerations. (Error %d)\n", rst);
+
+		return 1;
+	}
+
+	const uint32_t unnamed_table_cnt = reinterpret_cast<const spird::file_header*>(spird)->unnamed_table_count;
+
+	const uint32_t named_table_cnt = named_data.name_count;
+
+	// This works because the headers for unnamed and named tables are located directly after each other
+	const uint32_t table_cnt = unnamed_table_cnt + named_table_cnt;
 
 	for (uint32_t t = 0; t != table_cnt; ++t)
 	{
 		spird::enum_location enum_loc;
 
-		if (spvcpu::result rst = spird::get_enum_location(spv_data, static_cast<spird::enum_id>(t), &enum_loc); rst != spvcpu::result::success)
+		if (t < unnamed_table_cnt)
 		{
-			fprintf(stderr, "Could not locate enumeration %d. (Error %d)\n", t, rst);
+			if (spvcpu::result rst = spird::get_enum_location(spird, static_cast<spird::enum_id>(t), &enum_loc); rst != spvcpu::result::success)
+			{
+				fprintf(stderr, "Could not locate enumeration %d. (Error %d)\n", t, rst);
 
-			return 1;
+				return 1;
+			}
+		}
+		else
+		{
+			if (spvcpu::result rst = spird::get_enum_location(spird, named_data.names[t - unnamed_table_cnt], &enum_loc); rst != spvcpu::result::success)
+			{
+				fprintf(stderr, "Could not locate enumeration %s. (Error %d)\n", named_data.names[t - unnamed_table_cnt], rst);
+
+				return 1;
+			}
 		}
 
 		spird::enum_data enum_data;
 
-		if (spvcpu::result rst = spird::get_enum_data(spv_data, enum_loc, &enum_data); rst != spvcpu::result::success)
+		if (spvcpu::result rst = spird::get_enum_data(spird, enum_loc, &enum_data); rst != spvcpu::result::success)
 		{
 			fprintf(stderr, "Could not get data for enumeration %d. (Error %d)\n", t, rst);
 
 			return 1;
 		}
 
-		const spird::table_header* header = reinterpret_cast<const spird::table_header*>(static_cast<const uint8_t*>(spv_data) + sizeof(spird::file_header)) + t;
+		fprintf(output_file, "\n%s", enum_data.name);
 
-		fprintf(output_file, "\n%s%s : [\n", enum_data.name, (header->flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask ? "@BITMASK" : "");
+		if ((enum_data.flags & spird::enum_flags::bitmask) == spird::enum_flags::bitmask)
+			fprintf(output_file, "@BITMASK");
 
-		const uint8_t* raw_data = static_cast<const uint8_t*>(spv_data);
+		if ((enum_data.flags & spird::enum_flags::named) == spird::enum_flags::named)
+			fprintf(output_file, "@NAMED");
 
-		const spird::file_header* file_header = static_cast<const spird::file_header*>(spv_data);
+		fprintf(output_file, " : [\n");
 
-		const spird::elem_index* indices = reinterpret_cast<const spird::elem_index*>(raw_data + header->offset);
+		const uint8_t* raw_data = static_cast<const uint8_t*>(spird);
 
-		for (uint32_t i = 0; i != header->size; ++i)
+		const spird::file_header* file_header = static_cast<const spird::file_header*>(spird);
+
+		const spird::table_header* table_header = reinterpret_cast<const spird::table_header*>(raw_data + file_header->first_table_header_byte) + t;
+
+		const spird::elem_index* indices = reinterpret_cast<const spird::elem_index*>(raw_data + table_header->offset);
+
+		for (uint32_t i = 0; i != table_header->size; ++i)
 		{
 			uint32_t id = indices[i].id;
 
@@ -647,7 +681,7 @@ int cycle(int argc, const char** argv) noexcept
 
 			spird::elem_data elem_data;
 
-			if (spvcpu::result rst = spird::get_elem_data(spv_data, enum_loc, id, &elem_data); rst != spvcpu::result::success)
+			if (spvcpu::result rst = spird::get_elem_data(spird, enum_loc, id, &elem_data); rst != spvcpu::result::success)
 			{
 				fprintf(stderr, "Could not get data for element %d of enumeration '%s' (%d). (Error %d)\n", id, enum_data.name, t, rst);
 
@@ -676,6 +710,8 @@ int cycle(int argc, const char** argv) noexcept
 
 				const char* idstr = "";
 
+				const char* pairstr = "";
+
 				if ((arg_flags & spird::arg_flags::optional) == spird::arg_flags::optional)
 					optstr = "OPT ";
 
@@ -685,17 +721,27 @@ int cycle(int argc, const char** argv) noexcept
 				if ((arg_flags & spird::arg_flags::id) == spird::arg_flags::id)
 					idstr = "ID ";
 
-				const char* argtypename = "<Invalid>";
+				if ((arg_flags & spird::arg_flags::pair) == spird::arg_flags::pair)
+					pairstr = "PAIR ";
 
-				if (static_cast<uint8_t>(arg_type) < _countof(argument_type_names))
-					argtypename = argument_type_names[static_cast<uint8_t>(arg_type)];
-
-				fprintf(output_file, "\t\t\t%s%s%s%s", optstr, varstr, idstr, argtypename);
-
-				if (elem_data.arg_names[i] == nullptr)
-					fprintf(output_file, "\n");
+				if ((arg_flags & spird::arg_flags::result) == spird::arg_flags::result)
+				{
+					fprintf(output_file, "\t\t\tRST %s\n", result_type_names[static_cast<uint8_t>(arg_type)]);
+				}
 				else
-					fprintf(output_file, " \"%s\"\n", elem_data.arg_names[i]);
+				{
+					const char* argtypename = "<Invalid>";
+
+					if (static_cast<uint8_t>(arg_type) < _countof(argument_type_names))
+						argtypename = argument_type_names[static_cast<uint8_t>(arg_type)];
+
+					fprintf(output_file, "\t\t\t%s%s%s%s", optstr, varstr, idstr, argtypename);
+
+					if (elem_data.arg_names[i] == nullptr)
+						fprintf(output_file, "\n");
+					else
+						fprintf(output_file, " \"%s\"\n", elem_data.arg_names[i]);
+				}
 			}
 
 			if (elem_data.argc > 0)
