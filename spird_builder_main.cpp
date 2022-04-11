@@ -292,23 +292,9 @@ static void print_usage() noexcept
 	fprintf(stderr, "Usage: %s [--ignore=info[;info...]] inputfile outputfile\n", prog_name);
 }
 
-static bool parse_args(
-	int argc,
-	const char** argv,
-	const char** out_input_filename,
-	const char** out_output_filename,
-	bool* out_no_implies_and_depends
-)
+static bool parse_args(int argc, const char** argv, const char** out_input_filename, const char** out_output_filename) noexcept
 {
-	*out_input_filename = *out_output_filename = nullptr;
-
-	*out_no_implies_and_depends = false;
-
-	const char* input_filename = nullptr, * output_filename = nullptr;
-
-	uint8_t ignore_mask = 0;
-
-	if (argc < 3)
+	if (argc != 3)
 	{
 		print_usage();
 
@@ -320,78 +306,9 @@ static bool parse_args(
 		return false;
 	}
 
-	uint32_t mode_index = ~0u;
+	*out_input_filename = argv[1];
 
-	bool no_implies_and_depends = false;
-
-	for (uint32_t i = 1; i != argc; ++i)
-	{
-		if (argv[i][0] == '-')
-		{
-			for (uint32_t j = 0; j != _countof(data_type_strings); ++j)
-			{
-				if (strcmp(argv[i], data_type_strings[j]) == 0)
-				{
-					if (mode_index != ~0u)
-					{
-						fprintf(stderr, "More than one of --for-[all|disassembly|debugging] specified.\n");
-
-						return false;
-					}
-
-					mode_index = j;
-
-					break;
-				}
-			}
-
-			if (mode_index != ~0)
-				continue;
-
-			if (strcmp(argv[i], data_type_no_implies_and_depends_string))
-			{
-				if (no_implies_and_depends)
-				{
-					fprintf(stderr, "%s specified more than once.\n", data_type_no_implies_and_depends_string);
-
-					return false;
-				}
-
-				no_implies_and_depends = true;
-			}
-			else
-			{
-				fprintf(stderr, "Unknown option '%s'.\n", argv[i]);
-
-				print_usage();
-
-				return false;
-			}
-		}
-		else if (input_filename == nullptr)
-		{
-			input_filename = argv[i];
-		}
-		else if (output_filename == nullptr)
-		{
-			output_filename = argv[i];
-		}
-		else
-		{
-			fprintf(stderr, "Too many arguments specified (Did not expect '%s').\n", argv[i]);
-
-			print_usage();
-
-			return false;
-		}
-	}
-
-	*out_input_filename = input_filename;
-
-	*out_output_filename = output_filename;
-
-	if (no_implies_and_depends)
-		*out_no_implies_and_depends = true;
+	*out_output_filename = argv[2];
 
 	return true;
 }
@@ -983,7 +900,7 @@ int main(int argc, const char** argv)
 
 	bool no_implies_and_depends;
 
-	if (!parse_args(argc, argv, &input_filename, &output_filename, &no_implies_and_depends))
+	if (!parse_args(argc, argv, &input_filename, &output_filename))
 		return 1;
 
 	char* input_data = read_input(input_filename);
