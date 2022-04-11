@@ -165,7 +165,6 @@ static constexpr const char* const enum_name_strings[]
 	"QuantizationMode",
 	"OverflowMode",
 	"PackedVectorFormat",
-	"ExtendedInstructionSets",
 };
 
 static constexpr const char* const capability_name_strings[]
@@ -563,15 +562,6 @@ static constexpr uint16_t capability_ids[]
 	6095,
 	6114,
 };
-
-static constexpr const char* const data_type_strings[]
-{
-	"--for-all",
-	"--for-disassembly",
-	"--for-debugging",
-};
-
-static constexpr const char* const data_type_no_implies_and_depends_string = "--no-implies-and-depends";
 
 static constexpr const char enum_flag_char = '@';
 
