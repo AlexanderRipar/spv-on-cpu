@@ -559,27 +559,31 @@ private:
 		}
 		case spird::arg_type::ARRAY:
 		{
-			type_data* elem_data;
+			type_data* typ_data;
 
-			if (spvcpu::result rst = m_id_map.get(data->m_data.array_data.element_id, &elem_data); rst != spvcpu::result::success)
+			constant_data* cns_data;
+
+			if (spvcpu::result rst = m_id_map.get(data->m_data.array_data.element_id, &typ_data, &cns_data); rst != spvcpu::result::success)
 				return rst;
 
-			if (spvcpu::result rst = print_type(elem_data); rst != spvcpu::result::success)
+			if (spvcpu::result rst = print_type(typ_data); rst != spvcpu::result::success)
 				return rst;
 
-			if (!print_char('[') || !print_u64(elem_data->m_data.array_data.length) || !print_char(']'))
+			if (!print_char('[') || !print_u64(data->m_data.array_data.length) || !print_char(']'))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
 		case spird::arg_type::RUNTIMEARRAY:
 		{
-			type_data* elem_data;
+			type_data* typ_data;
 
-			if (spvcpu::result rst = m_id_map.get(data->m_data.runtime_array_data.element_id, &elem_data); rst != spvcpu::result::success)
+			constant_data* cns_data;
+
+			if (spvcpu::result rst = m_id_map.get(data->m_data.runtime_array_data.element_id, &typ_data, &cns_data); rst != spvcpu::result::success)
 				return rst;
 
-			if (spvcpu::result rst = print_type(elem_data); rst != spvcpu::result::success)
+			if (spvcpu::result rst = print_type(typ_data); rst != spvcpu::result::success)
 				return rst;
 
 			if (!print_str("[]"))
@@ -603,12 +607,14 @@ private:
 		}
 		case spird::arg_type::POINTER:
 		{
-			type_data* pointee_data;
+			type_data* pointee_type_data;
 
-			if (spvcpu::result rst = m_id_map.get(data->m_data.pointer_data.pointee_id, &pointee_data); rst != spvcpu::result::success)
+			constant_data* pointee_constant_data;
+
+			if (spvcpu::result rst = m_id_map.get(data->m_data.pointer_data.pointee_id, &pointee_type_data, &pointee_constant_data); rst != spvcpu::result::success)
 				return rst;
 
-			if (spvcpu::result rst = print_type(pointee_data); rst != spvcpu::result::success)
+			if (spvcpu::result rst = print_type(pointee_type_data); rst != spvcpu::result::success)
 				return rst;
 
 			if (!print_char('*'))
@@ -618,22 +624,24 @@ private:
 		}
 		case spird::arg_type::FUNCTION:
 		{
-			type_data* arg_data;
+			type_data* arg_type_data;
 
-			if (spvcpu::result rst = m_id_map.get(data->m_data.function_data.return_type_id, &arg_data); rst != spvcpu::result::success)
+			constant_data* arg_constant_data;
+
+			if (spvcpu::result rst = m_id_map.get(data->m_data.function_data.return_type_id, &arg_type_data, &arg_constant_data); rst != spvcpu::result::success)
 				return rst;
 
-			if (spvcpu::result rst = print_type(arg_data); rst != spvcpu::result::success)
+			if (spvcpu::result rst = print_type(arg_type_data); rst != spvcpu::result::success)
 				return rst;
 
 			if (!print_str(" Func("))
 
 			for (uint8_t i = 0; i != data->m_data.function_data.argc; ++i)
 			{
-				if (spvcpu::result rst = m_id_map.get(data->m_data.function_data.argv_ids[i], &arg_data); rst != spvcpu::result::success)
+				if (spvcpu::result rst = m_id_map.get(data->m_data.function_data.argv_ids[i], &arg_type_data, &arg_constant_data); rst != spvcpu::result::success)
 					return rst;
 
-				if (spvcpu::result rst = print_type(arg_data); rst != spvcpu::result::success)
+				if (spvcpu::result rst = print_type(arg_type_data); rst != spvcpu::result::success)
 					return rst;
 
 				if (i != data->m_data.function_data.argc - 1)
@@ -921,7 +929,9 @@ private:
 
 			type_data* component_type;
 
-			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
+			constant_data* component_value;
+
+			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type, &component_value); rst != spvcpu::result::success)
 				return rst;
 
 			if (component_type->m_type == spird::arg_type::BOOL)
@@ -955,7 +965,9 @@ private:
 
 			type_data* component_type;
 
-			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
+			constant_data* component_value;
+
+			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type, &component_value); rst != spvcpu::result::success)
 				return rst;
 
 			if (component_type->m_type == spird::arg_type::VECTOR)
@@ -977,7 +989,9 @@ private:
 
 			type_data* component_type;
 
-			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
+			constant_data* component_value;
+
+			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type, &component_value); rst != spvcpu::result::success)
 				return rst;
 
 			if (component_type->m_type == spird::arg_type::VOID)
@@ -1026,7 +1040,8 @@ private:
 
 			type_data* component_type;
 
-			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
+			constant_data* component_value;
+			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type, &component_value); rst != spvcpu::result::success)
 				return rst;
 
 			if (component_type->m_type == spird::arg_type::IMAGE)
@@ -1042,7 +1057,17 @@ private:
 
 			uint32_t length_id = word[2];
 
-			data.m_data.array_data.length = 0;
+			type_data* length_type;
+
+			constant_data* length_value;
+
+			if (spvcpu::result rst = m_id_map.get(length_id, &length_type, &length_value); rst != spvcpu::result::success)
+				return rst;
+
+			if (length_value == nullptr)
+				return spvcpu::result::expected_constant;
+
+			data.m_data.array_data.length = length_value->int_data.value;
 
 			break;
 		}
@@ -1107,7 +1132,9 @@ private:
 
 			type_data* component_type;
 
-			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
+			constant_data* component_value;
+
+			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type, &component_value); rst != spvcpu::result::success)
 				return rst;
 
 			if (component_type->m_type == spird::arg_type::INT)
@@ -1162,6 +1189,77 @@ private:
 		return m_id_map.add(*word, data);
 	}
 
+	spvcpu::result extract_id_constant(spird::arg_type type, const uint32_t* word, const uint32_t* word_end, constant_data* out_data) noexcept
+	{
+		const Op opcode = static_cast<Op>(word[-2] & 0xFFFF);
+
+		switch(opcode)
+		{
+		case Op::ConstantTrue:
+		case Op::SpecConstantTrue:
+		{
+			out_data->bool_data.value = true;
+
+			break;
+		}
+		case Op::ConstantFalse:
+		case Op::SpecConstantFalse:
+		{
+			out_data->bool_data.value = false;
+
+			break;
+		}
+		case Op::Constant:
+		case Op::SpecConstant:
+		{
+			out_data->int_data.value = word[1];
+
+			if (word + 2 < word_end)
+				out_data->int_data.value |= static_cast<uint64_t>(word[2]) << 32;
+			else if (word + 3 < word_end)
+				return spvcpu::result::instruction_wordcount_mismatch;
+
+			break;
+		}
+		case Op::ConstantComposite:
+		case Op::SpecConstantComposite:
+		{
+			out_data->composite_data.component_ids = word + 1;
+
+			break;
+		}
+		case Op::ConstantSampler:
+		{
+			out_data->sampler_data.addressing_mode = word[1];
+
+			out_data->sampler_data.is_normalized = word[2];
+
+			out_data->sampler_data.filter_mode = word[3];
+
+			break;
+		}
+		case Op::ConstantNull:
+		{
+			memset(out_data, 0, sizeof(*out_data));
+
+			break;
+		}
+		case Op::SpecConstantOp:
+		{
+			// TODO
+			memset(out_data, 0, sizeof(*out_data));
+
+			break;
+		}
+		default:
+		{
+			return spvcpu::result::unknown_constant_instruction;
+		}
+		}
+
+		return spvcpu::result::success;
+	}
+
 	spvcpu::result print_single_arg(const void* spird, spird::arg_flags flags, spird::arg_type type, const uint32_t*& word, const uint32_t* word_end) noexcept
 	{
 		const bool is_id = (flags & spird::arg_flags::id) == spird::arg_flags::id;
@@ -1181,6 +1279,18 @@ private:
 
 			m_rst_type = static_cast<spird::arg_type>(type);
 
+			constant_data constant_value;
+
+			constant_data* constant_value_ptr = nullptr;
+
+			if ((flags & spird::arg_flags::constant) == spird::arg_flags::constant)
+			{
+				if (spvcpu::result rst = extract_id_constant(static_cast<spird::arg_type>(type), word, word_end, &constant_value); rst != spvcpu::result::success)
+					return rst;
+
+				constant_value_ptr = &constant_value;
+			}
+
 			if (static_cast<spird::arg_type>(type) != spird::arg_type::AUTO)
 			{
 				if (spvcpu::result rst = extract_id_type(static_cast<spird::arg_type>(type), word, word_end); rst != spvcpu::result::success)
@@ -1191,7 +1301,7 @@ private:
 				if (m_rtype_id == ~0u)
 					return spvcpu::result::untyped_result;
 
-				if (spvcpu::result rst = m_id_map.add(*word, m_rtype_id); rst != spvcpu::result::success)
+				if (spvcpu::result rst = m_id_map.add(*word, m_rtype_id, constant_value_ptr); rst != spvcpu::result::success)
 					return rst;
 			}
 
@@ -1213,14 +1323,16 @@ private:
 
 				if (m_print_type_info)
 				{
-					type_data* data;
+					type_data* type;
 
-					if (spvcpu::result rst = m_id_map.get(*word, &data); rst == spvcpu::result::success)
+					constant_data* value;
+
+					if (spvcpu::result rst = m_id_map.get(*word, &type, &value); rst == spvcpu::result::success)
 					{
 						if (!print_char('('))
 							return spvcpu::result::no_memory;
 
-						if (spvcpu::result rst = print_type(data); rst != spvcpu::result::success)
+						if (spvcpu::result rst = print_type(type); rst != spvcpu::result::success)
 							return rst;
 
 						if (!print_char(')'))
@@ -1262,14 +1374,16 @@ private:
 			{
 				uint32_t ext_inst_set_id = word[-1];
 
-				type_data* ext_inst_set;
+				type_data* ext_inst_set_type;
 
-				if (spvcpu::result rst = m_id_map.get(ext_inst_set_id, &ext_inst_set); rst != spvcpu::result::success)
+				constant_data* ext_inst_set_value;
+
+				if (spvcpu::result rst = m_id_map.get(ext_inst_set_id, &ext_inst_set_type, &ext_inst_set_value); rst != spvcpu::result::success)
 					return rst;
 
 				spird::enum_location ext_inst_loc;
 
-				if (spvcpu::result rst = spird::get_enum_location(spird, ext_inst_set->m_data.ext_inst_set_data.name, &ext_inst_loc); rst != spvcpu::result::success)
+				if (spvcpu::result rst = spird::get_enum_location(spird, ext_inst_set_type->m_data.ext_inst_set_data.name, &ext_inst_loc); rst != spvcpu::result::success)
 					return rst;
 
 				// Just pass a bogus enum_id, as long as it is not Instruction it will have no effect
@@ -1279,12 +1393,14 @@ private:
 			{
 				if (m_rtype_id != ~0u)
 				{
-					type_data* data;
+					type_data* type;
 
-					if (spvcpu::result rst = m_id_map.get(m_rtype_id, &data); rst != spvcpu::result::success)
+					constant_data* value;
+
+					if (spvcpu::result rst = m_id_map.get(m_rtype_id, &type, &value); rst != spvcpu::result::success)
 						return rst;
 
-					if (spvcpu::result rst = print_literal(data, word, word_end); rst != spvcpu::result::success)
+					if (spvcpu::result rst = print_literal(type, word, word_end); rst != spvcpu::result::success)
 						return rst;
 				}
 				else
@@ -1489,14 +1605,16 @@ public:
 
 		if (m_print_type_info && m_rtype_id != ~0u)
 		{
-			type_data* rtype_data;
+			type_data* rtype_type;
 
-			if (spvcpu::result rst = m_id_map.get(m_rtype_id, &rtype_data); rst == spvcpu::result::success)
+			constant_data* rtype_value;
+
+			if (spvcpu::result rst = m_id_map.get(m_rtype_id, &rtype_type, &rtype_value); rst == spvcpu::result::success)
 			{
 				if (!print_char('('))
 					return spvcpu::result::no_memory;
 
-				if (spvcpu::result rst = print_type(rtype_data); rst != spvcpu::result::success)
+				if (spvcpu::result rst = print_type(rtype_type); rst != spvcpu::result::success)
 					return rst;
 
 				if (!print_char(')'))

@@ -199,16 +199,52 @@ struct alignas(uint64_t) type_data
 
 static_assert(sizeof(type_data) == 16);
 
+union constant_data
+{
+	struct bool_data_t
+	{
+		bool value;
+	} bool_data;
+
+	struct int_data_t
+	{
+		uint64_t value;
+	} int_data;
+
+	union float_data_t
+	{
+		float f32_value;
+		double f64_value;
+		uint16_t f16_value_bits;
+		uint8_t f8_value_bits;
+	} float_data;
+
+	struct sampler_data_t
+	{
+		uint8_t addressing_mode;
+		bool is_normalized;
+		uint8_t filter_mode;
+	} sampler_data;
+
+	struct composite_data_t
+	{
+		const uint32_t* component_ids;
+	} composite_data;
+};
+
 struct id_type_map
 {
 private:
 
 	struct id_data_mapper{
-		uint32_t id; 
-		uint32_t data_index;
+		uint32_t id;
+		uint32_t type_index;
+		uint32_t constant_index;
 	};
 
-	simple_vec<type_data> m_data;
+	simple_vec<type_data> m_types;
+
+	simple_vec<constant_data> m_constants;
 	
 	simple_table<id_data_mapper> m_ids;
 
@@ -271,7 +307,7 @@ public:
 
 	spvcpu::result initialize() noexcept
 	{
-		if (!m_data.initialize(512) || !m_ids.initialize(1 << 11))
+		if (!m_types.initialize(512) || !m_constants.initialize(512) || !m_ids.initialize(1 << 11))
 			return spvcpu::result::no_memory;
 
 		m_ids.memset(0xFF);
@@ -283,38 +319,48 @@ public:
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result add(uint32_t id, uint32_t type_id) noexcept
+	spvcpu::result add(uint32_t id, uint32_t type_id, const constant_data* constant_value = nullptr) noexcept
 	{
 		uint32_t type_h = hash(type_id, m_table_size_log2);
 
 		const uint32_t initial_type_h = type_h;
 
-		while (m_ids[type_h].id == ~0u)
+		while (m_ids[type_h].id != type_id)
 		{
 			type_h = (type_h + 1);
 
-			if (type_h == initial_type_h)
+			if (m_ids[type_h].id == ~0u || type_h == initial_type_h)
 				return spvcpu::result::id_not_found;
 		}
+
+		uint32_t constant_index = ~0u;
+
+		if (constant_value != nullptr)
+		{
+			constant_index = m_constants.size();
+
+			if (!m_constants.append(*constant_value))
+				return spvcpu::result::no_memory;
+		}
 		
-		if (!add_internal({ id, type_h }))
+		if (!add_internal({ id, type_h, constant_index }))
 			return spvcpu::result::no_memory;
 		
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result add(uint32_t id, const type_data& data) noexcept
+	spvcpu::result add(uint32_t id, const type_data& type) noexcept
 	{
-		if (!m_data.append(data))
+		if (!m_types.append(type))
 			return spvcpu::result::no_memory;
 
-		if (!add_internal({ id, m_data.size() -1 }))
+		if (!add_internal({ id, m_types.size() -1, ~0u }))
 			return spvcpu::result::no_memory;
 
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result get(uint32_t id, type_data** out_data) noexcept
+	spvcpu::result get(uint32_t id, type_data** out_type, constant_data** out_constant) noexcept
 	{
 		uint32_t h = hash(id, m_table_size_log2);
 
@@ -330,7 +376,12 @@ public:
 				return spvcpu::result::id_not_found;
 		}
 		
-		*out_data = &m_data[m_ids[h].data_index];
+		*out_type = &m_types[m_ids[h].type_index];
+
+		if (m_ids[h].constant_index != ~0u)
+			*out_constant = &m_constants[m_ids[h].constant_index];
+		else
+			*out_constant = nullptr;
 
 		return spvcpu::result::success;
 	}

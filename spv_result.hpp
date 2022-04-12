@@ -31,6 +31,8 @@ namespace spvcpu
 		untyped_result,
 		unexpected_literal_type,
 		unhandled_float_width,
+		expected_constant,
+		unknown_constant_instruction,
 	};
 }
 
