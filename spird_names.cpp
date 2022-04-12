@@ -489,6 +489,51 @@ static constexpr uint16_t capability_ids[]
 	6114,
 };
 
+static constexpr const char* const enum_names[]
+{
+	"Instruction",
+	"SourceLanguage",
+	"ExecutionModel",
+	"AddressingModel",
+	"MemoryModel",
+	"ExecutionMode",
+	"StorageClass",
+	"Dim",
+	"SamplerAddressingMode",
+	"SamplerFilterMode",
+	"ImageFormat",
+	"ImageChannelOrder",
+	"ImageChannelDataType",
+	"ImageOperands",
+	"FpFastMathMode",
+	"FpRoundingMode",
+	"LinkageType",
+	"AccessQualifier",
+	"FunctionParameterAttribute",
+	"Decoration",
+	"Builtin",
+	"SelectionControl",
+	"LoopControl",
+	"FunctionControl",
+	"MemorySemantics",
+	"MemoryOperands",
+	"Scope",
+	"GroupOperation",
+	"KernelEnqueueFlags",
+	"KernelProfilingInfo",
+	"Capability",
+	"ReservedRayFlags",
+	"ReservedRayQueryIntersection",
+	"ReservedRayQueryCommittedType",
+	"ReservedRayQueryCandidateType",
+	"ReservedFragmentShadingRate",
+	"ReservedFpDenormMode",
+	"ReservedFpOperationMode",
+	"QuantizationMode",
+	"OverflowMode",
+	"PackedVectorFormat",
+};
+
 static bool names_equal(const char* a, uint32_t a_bytes, const char* b) noexcept
 {
 	if (a_bytes == 0)
@@ -564,6 +609,31 @@ bool spird::get_capability_id_from_name(const char* name, uint32_t bytes, uint16
 		if (names_equal(name, bytes, capability_names[i]))
 		{
 			*out_id = capability_ids[i];
+
+			return true;
+		}
+
+	return false;
+}
+
+bool spird::get_name_from_enum_id(spird::enum_id id, const char** out_name) noexcept
+{
+	if (static_cast<uint32_t>(id) < sizeof(enum_names) / sizeof(*enum_names))
+	{
+		*out_name = enum_names[static_cast<uint32_t>(id)];
+
+		return true;
+	}
+
+	return false;
+}
+
+bool spird::get_enum_id_from_name(const char* name, uint32_t bytes, spird::enum_id* out_id) noexcept
+{
+	for (uint32_t i = 0; i != sizeof(enum_names) / sizeof(*enum_names); ++i)
+		if (names_equal(name, bytes, enum_names[i]))
+		{
+			*out_id = static_cast<spird::enum_id>(i);
 
 			return true;
 		}

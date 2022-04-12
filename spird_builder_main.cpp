@@ -666,23 +666,21 @@ void parse_elem(const char*& curr, elem_info* out_info) noexcept
 
 void parse_enum(const char*& curr) noexcept
 {
-	uint32_t enum_id = ~0u;
-
 	const char* enum_name = curr;
 
-	for (uint32_t i = 0; i != _countof(enum_name_strings); ++i)
-		if(token_equal(curr, enum_name_strings[i]))
-		{
-			enum_id = i;
+	uint32_t name_len = 0;
 
-			break;
-		}
+	while (!is_whitespace(curr[name_len]) && curr[name_len] != '\0' && curr[name_len] != enum_flag_char)
+		++name_len;
+
+	spird::enum_id enum_id;
 
 	// Delay check for valid name to after having parsed a possible @NAMED flag
 
-	if (enum_id == ~0u)
-		while(*curr != enum_flag_char && *curr != '\0' && !is_whitespace(*curr))
-			++curr;
+	if (!spird::get_enum_id_from_name(curr, name_len, &enum_id))
+		enum_id = static_cast<spird::enum_id>(~0u);
+
+	curr += name_len;
 
 	spird::enum_flags flags = spird::enum_flags::none;
 
@@ -709,15 +707,15 @@ void parse_enum(const char*& curr) noexcept
 
 		s_enum_names[s_named_enum_count] = enum_name;
 
-		enum_id = spird::enum_id_count + s_named_enum_count;
+		enum_id = static_cast<spird::enum_id>(spird::enum_id_count + s_named_enum_count);
 
 		++s_named_enum_count;
 	}
 
-	if (enum_id == ~0u)
+	if (enum_id == static_cast<spird::enum_id>(~0u))
 		parse_panic("enum-name", curr);
 
-	enum_info& out_info = s_enum_infos[enum_id];
+	enum_info& out_info = s_enum_infos[static_cast<uint32_t>(enum_id)];
 
 	out_info.flags = flags;
 
@@ -738,7 +736,14 @@ void parse_enum(const char*& curr) noexcept
 	while(*curr != ']')
 	{
 		if (index_count >= _countof(s_data_indices))
-			panic("Line %d: Exceeded maximum of %d elements in enumeration %s.\n", s_line_number, _countof(s_data_indices), enum_name_strings[enum_id]);
+		{
+			const char* enum_name;
+
+			if (!spird::get_name_from_enum_id(enum_id, &enum_name))
+				panic("Line %d: Exceeded maximum of %d elements in enumeration %d.\n", s_line_number, _countof(s_data_indices), enum_id);
+			else
+				panic("Line %d: Exceeded maximum of %d elements in enumeration %s.\n", s_line_number, _countof(s_data_indices), enum_name);
+		}
 
 		elem_info elem;
 

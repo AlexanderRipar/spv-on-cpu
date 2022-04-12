@@ -122,51 +122,6 @@ static constexpr const char* const argument_pair_string    = "PAIR";
 
 
 
-static constexpr const char* const enum_name_strings[]
-{
-	"Instruction",
-	"SourceLanguage",
-	"ExecutionModel",
-	"AddressingModel",
-	"MemoryModel",
-	"ExecutionMode",
-	"StorageClass",
-	"Dim",
-	"SamplerAddressingMode",
-	"SamplerFilterMode",
-	"ImageFormat",
-	"ImageChannelOrder",
-	"ImageChannelDataType",
-	"ImageOperands",
-	"FpFastMathMode",
-	"FpRoundingMode",
-	"LinkageType",
-	"AccessQualifier",
-	"FunctionParameterAttribute",
-	"Decoration",
-	"Builtin",
-	"SelectionControl",
-	"LoopControl",
-	"FunctionControl",
-	"MemorySemantics",
-	"MemoryOperands",
-	"Scope",
-	"GroupOperation",
-	"KernelEnqueueFlags",
-	"KernelProfilingInfo",
-	"Capability",
-	"ReservedRayFlags",
-	"ReservedRayQueryIntersection",
-	"ReservedRayQueryCommittedType",
-	"ReservedRayQueryCandidateType",
-	"ReservedFragmentShadingRate",
-	"ReservedFpDenormMode",
-	"ReservedFpOperationMode",
-	"QuantizationMode",
-	"OverflowMode",
-	"PackedVectorFormat",
-};
-
 static constexpr const char enum_flag_char = '@';
 
 static constexpr const char* const enum_flag_strings[]{

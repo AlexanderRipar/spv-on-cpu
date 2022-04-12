@@ -12,6 +12,10 @@ namespace spird
 	bool get_name_from_capability_id(uint16_t id, const char** out_name) noexcept;
 
 	bool get_capability_id_from_name(const char* name, uint32_t bytes, uint16_t* out_id) noexcept;
+
+	bool get_name_from_enum_id(spird::enum_id id, const char** out_name) noexcept;
+
+	bool get_enum_id_from_name(const char* name, uint32_t bytes, spird::enum_id* out_id) noexcept;
 }
 
 #endif // SPIRD_NAMES_HPP_INCLUDE_GUARD
