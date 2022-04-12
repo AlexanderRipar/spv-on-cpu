@@ -283,17 +283,12 @@ private:
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result print_enum(const void* spird, spird::enum_id enum_id, const uint32_t*& word, const uint32_t* word_end) noexcept
+	spvcpu::result print_enum(const void* spird, const spird::enum_location& enum_loc, const uint32_t*& word, const uint32_t* word_end) noexcept
 	{
 		if (word == word_end)
 			return spvcpu::result::instruction_wordcount_mismatch;
 
 		const uint32_t* tmp_word = word + 1;
-
-		spird::enum_location enum_loc;
-
-		if (spvcpu::result rst = spird::get_enum_location(spird, enum_id, &enum_loc); rst != spvcpu::result::success)
-			return rst;
 
 		spird::enum_data enum_data;
 		
@@ -1245,12 +1240,33 @@ private:
 		}
 		else if (static_cast<uint32_t>(type) < spird::enum_id_count)
 		{
-			return print_enum(spird, static_cast<spird::enum_id>(type), word, word_end);
+			spird::enum_location enum_loc;
+
+			if (spvcpu::result rst = spird::get_enum_location(spird, static_cast<spird::enum_id>(type), &enum_loc); rst != spvcpu::result::success)
+				return rst;
+
+			return print_enum(spird, enum_loc, word, word_end);
 		}
 		else
 		{
 			switch (type)
 			{
+			case spird::arg_type::NAMEDENUM:
+			{
+				uint32_t ext_inst_set_id = word[-1];
+
+				type_data* ext_inst_set;
+
+				if (spvcpu::result rst = m_id_map.get(ext_inst_set_id, &ext_inst_set); rst != spvcpu::result::success)
+					return rst;
+
+				spird::enum_location ext_inst_loc;
+
+				if (spvcpu::result rst = spird::get_enum_location(spird, ext_inst_set->m_data.ext_inst_set_data.name, &ext_inst_loc); rst != spvcpu::result::success)
+					return rst;
+
+				return print_enum(spird, ext_inst_loc, word, word_end);
+			}
 			case spird::arg_type::LITERAL:
 			{
 				if (m_rtype_id != ~0u)
