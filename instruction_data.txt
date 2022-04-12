@@ -47,7 +47,7 @@ Instruction : [
 		id : 2
 		name : "SourceContinued"
 		args : [
-			STR "Source"
+			String "Source"
 		]
 	}
 	{
@@ -56,15 +56,15 @@ Instruction : [
 		args : [
 			SOURCELANGUAGE
 			U32 "Version"
-			OPT STR "File"
-			OPT STR "Source"
+			OPT String "File"
+			OPT String "Source"
 		]
 	}
 	{
 		id : 4
 		name : "SourceExtension"
 		args : [
-			STR "Extension"
+			String "Extension"
 		]
 	}
 	{
@@ -72,7 +72,7 @@ Instruction : [
 		name : "Name"
 		args : [
 			ID UNKNOWN "Target"
-			STR "Name"
+			String "Name"
 		]
 	}
 	{
@@ -81,7 +81,7 @@ Instruction : [
 		args : [
 			ID TYPE "Type"
 			MEMBER "Member"
-			STR "Name"
+			String "Name"
 		]
 	}
 	{
@@ -89,14 +89,14 @@ Instruction : [
 		name : "String"
 		args : [
 			RST String
-			STR
+			String
 		]
 	}
 	{
 		id : 8
 		name : "Line"
 		args : [
-			ID STR "Filename"
+			ID String "Filename"
 			U32 "Line"
 			U32 "Column"
 		]
@@ -111,7 +111,7 @@ Instruction : [
 		id : 330
 		name : "ModuleProcessed"
 		args : [
-			STR "Process"
+			String "Process"
 		]
 	}
 	{
@@ -172,7 +172,7 @@ Instruction : [
 		args : [
 			ID UNKNOWN "Target"
 			DECORATION
-			VAR STR "Args"
+			VAR String "Args"
 		]
 	}
 	{
@@ -182,14 +182,14 @@ Instruction : [
 			ID TYPE
 			MEMBER
 			DECORATION
-			VAR STR "Args"
+			VAR String "Args"
 		]
 	}
 	{
 		id : 10
 		name : "Extension"
 		args : [
-			STR "Name"
+			String "Name"
 		]
 	}
 	{
@@ -197,7 +197,7 @@ Instruction : [
 		name : "ExtInstImport"
 		args : [
 			RST ExtInstSet
-			STR "InstructionName"
+			String "InstructionName"
 		]
 	}
 	{
@@ -206,8 +206,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST Auto
-			ID UNKNOWN "Set"
-			INSTRUCTION
+			ID ExtInstSet "Set"
+			NAMEDENUM
 			OPT VAR ARG
 		]
 	}
@@ -225,7 +225,7 @@ Instruction : [
 		args : [
 			EXECUTIONMODEL
 			ID UNKNOWN "EntryPoint"
-			STR "Name"
+			String "Name"
 			OPT VAR ID UNKNOWN "Interface"
 		]
 	}
@@ -365,7 +365,7 @@ Instruction : [
 		name : "TypeOpaque"
 		args : [
 			RST Opaque
-			STR "TypeName"
+			String "TypeName"
 		]
 		depends : Kernel
 	}
@@ -6559,7 +6559,7 @@ Decoration : [
 		id : 41
 		name : "LinkageAttributes"
 		args : [
-			STR "Name"
+			String "Name"
 			LINKAGETYPE
 		]
 		depends : Linkage
@@ -6767,14 +6767,14 @@ Decoration : [
 		id : 5635
 		name : "UserSemantic"
 		args : [
-			STR
+			String
 		]
 	}
 	{
 		id : 5636
 		name : "UserTypeGOOGLE"
 		args : [
-			STR
+			String
 		]
 	}
 	{
