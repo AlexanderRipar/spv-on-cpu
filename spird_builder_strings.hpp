@@ -118,7 +118,9 @@ static constexpr const char* const argument_id_string       = "ID";
 
 static constexpr const char* const argument_result_string   = "RST";
 
-static constexpr const char* const argument_pair_string    = "PAIR";
+static constexpr const char* const argument_pair_string     = "PAIR";
+
+static constexpr const char* const argument_const_string    = "CONST";
 
 
 

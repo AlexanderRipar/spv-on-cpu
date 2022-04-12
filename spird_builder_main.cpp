@@ -397,6 +397,13 @@ static arg_data parse_arg_type(const char*& curr, spird::arg_flags& prev_flags, 
 
 			data.flags |= spird::arg_flags::pair;
 		}
+		else if (token_equal(curr, argument_const_string))
+		{
+			if ((data.flags & spird::arg_flags::constant) == spird::arg_flags::constant)
+				panic("Line %d: '%s' specified more than once.\n", s_line_number, argument_const_string);
+
+			data.flags |= spird::arg_flags::constant;
+		}
 		else
 		{
 			break;
@@ -405,6 +412,9 @@ static arg_data parse_arg_type(const char*& curr, spird::arg_flags& prev_flags, 
 
 	if ((data.flags & spird::arg_flags::result) == spird::arg_flags::result && (data.flags & (spird::arg_flags::optional | spird::arg_flags::variadic)) != spird::arg_flags::none)
 		panic("Line %d: Cannot combine RST with other flags.\n", s_line_number);
+
+	if ((data.flags & (spird::arg_flags::constant | spird::arg_flags::id)) == spird::arg_flags::constant)
+		panic("Line %d: '%s' must be combined with '%s'.\n", s_line_number, argument_const_string, argument_id_string);
 
 	if ((data.flags & spird::arg_flags::optional) != spird::arg_flags::optional &&
 		(prev_flags & (spird::arg_flags::optional | spird::arg_flags::pair)) == spird::arg_flags::optional)
