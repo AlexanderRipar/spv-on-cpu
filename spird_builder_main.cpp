@@ -129,7 +129,7 @@ struct elem_info
 
 	uint32_t implies_or_depends_count;
 
-	uint8_t implies_or_depends[127];
+	uint16_t implies_or_depends[127];
 };
 
 struct enum_info
