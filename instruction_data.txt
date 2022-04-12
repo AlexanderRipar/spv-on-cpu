@@ -564,8 +564,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST Auto
-			U32 "Opcode"
-			OPT VAR ID UNKNOWN "Operands"
+			INSTRUCTION
+			OPT VAR ARG
 		]
 	}
 	{
