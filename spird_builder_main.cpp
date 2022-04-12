@@ -102,13 +102,6 @@ struct arg_data
 	spird::arg_type type = spird::arg_type::INSTRUCTION;
 };
 
-struct arg_state
-{
-	spird::arg_flags prev_flags;
-	spird::arg_type prev_type;
-	bool has_rtype;
-};
-
 struct elem_info
 {
 	uint32_t id;
@@ -352,9 +345,9 @@ static bool token_equal(const char*& curr, const char* token) noexcept
 	return true;
 }
 
-static arg_data parse_arg_type(const char*& curr, arg_state* state) noexcept
+static arg_data parse_arg_type(const char*& curr, spird::arg_flags& prev_flags, bool& elem_has_rtype) noexcept
 {
-	if ((state->prev_flags & (spird::arg_flags::variadic | spird::arg_flags::pair)) == spird::arg_flags::variadic)
+	if ((prev_flags & (spird::arg_flags::variadic | spird::arg_flags::pair)) == spird::arg_flags::variadic)
 		panic("Line %d: Cannot have another argument after variadic argument.\n", s_line_number - 1);
 
 	uint32_t name_len;
@@ -419,15 +412,15 @@ static arg_data parse_arg_type(const char*& curr, arg_state* state) noexcept
 		panic("Line %d: Cannot combine RST with other flags.\n", s_line_number);
 
 	if ((data.flags & spird::arg_flags::optional) != spird::arg_flags::optional &&
-		(state->prev_flags & (spird::arg_flags::optional | spird::arg_flags::pair)) == spird::arg_flags::optional)
+		(prev_flags & (spird::arg_flags::optional | spird::arg_flags::pair)) == spird::arg_flags::optional)
 		panic("Line %d: Cannot have non-optional argument after optional argument.\n", s_line_number);
 
 	if (token_equal_no_advance(curr, "RTYPE"))
 	{
-		if (state->has_rtype)
+		if (elem_has_rtype)
 			panic("Line %d: Cannot have more than one argument of type RTYPE.\n", s_line_number);
 
-		state->has_rtype = true;
+		elem_has_rtype = true;
 
 		data.flags |= spird::arg_flags::id;
 	}
@@ -437,9 +430,7 @@ static arg_data parse_arg_type(const char*& curr, arg_state* state) noexcept
 
 	curr = skip_whitespace(curr + name_len);
 
-	state->prev_flags = data.flags;
-
-	state->prev_type = data.type;
+	prev_flags = data.flags;
 
 	return data;
 }
@@ -532,7 +523,9 @@ void parse_elem(const char*& curr, elem_info* out_info) noexcept
 		if (!token_equal(curr, "["))
 			parse_panic("[", curr);
 
-		arg_state state{};
+		spird::arg_flags flag_state = spird::arg_flags::none;
+
+		bool has_rtype = false;
 
 		uint32_t argc = 0;
 
@@ -541,9 +534,9 @@ void parse_elem(const char*& curr, elem_info* out_info) noexcept
 			if (argc >= _countof(elem_info::arg_types))
 				panic("Line %d: Element has more than %d arguments.\n", _countof(elem_info::arg_types));
 
-			const bool is_pair_continued = (state.prev_flags & spird::arg_flags::pair) == spird::arg_flags::pair;
+			const bool is_pair_continued = (flag_state & spird::arg_flags::pair) == spird::arg_flags::pair;
 
-			arg_data arg = parse_arg_type(curr, &state);
+			arg_data arg = parse_arg_type(curr, flag_state, has_rtype);
 
 			if (is_pair_continued)
 			{
