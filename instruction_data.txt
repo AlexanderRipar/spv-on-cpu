@@ -20,7 +20,7 @@ Instruction : [
 		args : [
 			RTYPE
 			RST Auto
-			ID UNKNOWN "Pointer"
+			ID VALUE "Pointer"
 		]
 		depends : Addresses
 	}
@@ -38,8 +38,8 @@ Instruction : [
 		args : [
 			RTYPE
 			RST Auto
-			ID UNKNOWN "Value"
-			ID UNKNOWN "ExpectedValue"
+			ID VALUE "Value"
+			ID VALUE "ExpectedValue"
 		]
 		depends : ExpectAssumeKHR
 	}
