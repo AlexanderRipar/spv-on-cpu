@@ -680,7 +680,7 @@ void parse_enum(const char*& curr) noexcept
 	if (!spird::get_enum_id_from_name(curr, name_len, &enum_id))
 		enum_id = static_cast<spird::enum_id>(~0u);
 
-	curr += name_len;
+	curr = skip_whitespace(curr + name_len);
 
 	spird::enum_flags flags = spird::enum_flags::none;
 
