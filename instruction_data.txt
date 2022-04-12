@@ -475,7 +475,7 @@ Instruction : [
 		name : "ConstantTrue"
 		args : [
 			RTYPE
-			RST Auto
+			CONST RST Auto
 		]
 	}
 	{
@@ -483,7 +483,7 @@ Instruction : [
 		name : "ConstantFalse"
 		args : [
 			RTYPE
-			RST Auto
+			CONST RST Auto
 		]
 	}
 	{
@@ -491,7 +491,7 @@ Instruction : [
 		name : "Constant"
 		args : [
 			RTYPE
-			RST Auto
+			CONST RST Auto
 			LITERAL "Value"
 		]
 	}
@@ -500,7 +500,7 @@ Instruction : [
 		name : "ConstantComposite"
 		args : [
 			RTYPE
-			RST Auto
+			CONST RST Auto
 			VAR ID VALUE "Constituents"
 		]
 	}
@@ -509,7 +509,7 @@ Instruction : [
 		name : "ConstantSampler"
 		args : [
 			RTYPE
-			RST Auto
+			CONST RST Auto
 			SAMPLERADDRESSINGMODE
 			U32 "Param"
 			SAMPLERFILTERMODE
@@ -521,7 +521,7 @@ Instruction : [
 		name : "ConstantNull"
 		args : [
 			RTYPE
-			RST Auto
+			CONST RST Auto
 		]
 	}
 	{
@@ -529,7 +529,7 @@ Instruction : [
 		name : "SpecConstantTrue"
 		args : [
 			RTYPE
-			RST Auto
+			CONST RST Auto
 		]
 	}
 	{
@@ -537,7 +537,7 @@ Instruction : [
 		name : "SpecConstantFalse"
 		args : [
 			RTYPE
-			RST Auto
+			CONST RST Auto
 		]
 	}
 	{
@@ -545,7 +545,7 @@ Instruction : [
 		name : "SpecConstant"
 		args : [
 			RTYPE
-			RST Auto
+			CONST RST Auto
 			LITERAL "Value"
 		]
 	}
@@ -554,7 +554,7 @@ Instruction : [
 		name : "SpecConstantComposite"
 		args : [
 			RTYPE
-			RST Auto
+			CONST RST Auto
 			VAR ID VALUE "Constituents"
 		]
 	}
@@ -563,7 +563,7 @@ Instruction : [
 		name : "SpecConstantOp"
 		args : [
 			RTYPE
-			RST Auto
+			CONST RST Auto
 			INSTRUCTION
 			OPT VAR ARG
 		]
