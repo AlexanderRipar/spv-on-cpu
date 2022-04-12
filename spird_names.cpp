@@ -104,7 +104,7 @@ bool spird::get_name_from_arg_type(spird::arg_type type, const char** out_name) 
 
 	if (static_cast<uint8_t>(type) >= 256 - sizeof(arg_type_names_high_part) / sizeof(*arg_type_names_high_part))
 	{
-		*out_name = arg_type_names_high_part[static_cast<uint8_t>(type) - 216];
+		*out_name = arg_type_names_high_part[static_cast<uint8_t>(type) - 256 + sizeof(arg_type_names_high_part) / sizeof(*arg_type_names_high_part)];
 
 		return true;
 	}
