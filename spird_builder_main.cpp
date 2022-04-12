@@ -285,16 +285,11 @@ static void create_hashtable(uint16_t elem_count, const spird::elem_index* elems
 	*out_table = table;
 }
 
-static void print_usage() noexcept
-{
-	fprintf(stderr, "Usage: %s [--ignore=info[;info...]] inputfile outputfile\n", prog_name);
-}
-
 static bool parse_args(int argc, const char** argv, const char** out_input_filename, const char** out_output_filename) noexcept
 {
 	if (argc != 3)
 	{
-		print_usage();
+		fprintf(stderr, "Usage: %s inputfile outputfile\n", prog_name);
 
 		if (argc == 2 && strcmp(argv[1], "--help") == 0)
 			fputs(extended_help_string, stderr);
