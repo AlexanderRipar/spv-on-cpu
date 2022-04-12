@@ -9553,7 +9553,1254 @@ GLSL.std.450@NAMED : [
 ]
 
 OpenCL.std@NAMED : [
-
+	{
+		id : 0
+		name : "acos"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 1
+		name : "acosh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 2
+		name : "acospi"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 3
+		name : "asin"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 4
+		name : "asinh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 5
+		name : "asinpi"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 6
+		name : "atan"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 7
+		name : "atan2"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 8
+		name : "atanh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 9
+		name : "atanpi"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 10
+		name : "atan2pi"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 11
+		name : "cbrt"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 12
+		name : "ceil"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 13
+		name : "copysign"
+		args : [
+			ID VALUE
+			ID VALUE "SignSource"
+		]
+	}
+	{
+		id : 14
+		name : "cos"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 15
+		name : "cosh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 16
+		name : "cospi"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 17
+		name : "erfc"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 18
+		name : "erf"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 19
+		name : "exp"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 20
+		name : "exp2"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 21
+		name : "exp10"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 22
+		name : "expm1"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 23
+		name : "fabs"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 24
+		name : "fdim"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 25
+		name : "floor"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 26
+		name : "fma"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 27
+		name : "fmax"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 28
+		name : "fmin"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 29
+		name : "fmod"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 30
+		name : "fract"
+		args : [
+			ID VALUE
+			ID VALUE "Ptr"
+		]
+	}
+	{
+		id : 31
+		name : "frexp"
+		args : [
+			ID VALUE
+			ID VALUE "Exp"
+		]
+	}
+	{
+		id : 32
+		name : "hypot"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 33
+		name : "ilogb"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 34
+		name : "ldexp"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 35
+		name : "lgamma"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 36
+		name : "lgamma_r"
+		args : [
+			ID VALUE
+			ID VALUE "SignPtr"
+		]
+	}
+	{
+		id : 37
+		name : "log"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 38
+		name : "log2"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 39
+		name : "log10"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 40
+		name : "log1p"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 41
+		name : "logb"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 42
+		name : "mad"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 43
+		name : "maxmag"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 44
+		name : "minmag"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 45
+		name : "modf"
+		args : [
+			ID VALUE
+			ID VALUE "IntPartPtr"
+		]
+	}
+	{
+		id : 46
+		name : "nan"
+		args : [
+			ID VALUE "nancode"
+		]
+	}
+	{
+		id : 47
+		name : "nextafter"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 48
+		name : "pow"
+		args : [
+			ID VALUE "Base"
+			ID VALUE "Exp"
+		]
+	}
+	{
+		id : 49
+		name : "pown"
+		args : [
+			ID VALUE "Base"
+			ID VALUE "Exp"
+		]
+	}
+	{
+		id : 50
+		name : "powr"
+		args : [
+			ID VALUE "Base"
+			ID VALUE "Exp"
+		]
+	}
+	{
+		id : 51
+		name : "remainder"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 52
+		name : "remquo"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE "Quo"
+		]
+	}
+	{
+		id : 53
+		name : "rint"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 54
+		name : "rootn"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 55
+		name : "round"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 56
+		name : "rsqrt"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 57
+		name : "sin"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 58
+		name : "sincos"
+		args : [
+			ID VALUE
+			ID VALUE "CosValue"
+		]
+	}
+	{
+		id : 59
+		name : "sinh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 60
+		name : "sinpi"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 61
+		name : "sqrt"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 62
+		name : "tan"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 63
+		name : "tanh"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 64
+		name : "tanpi"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 65
+		name : "tgamma"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 66
+		name : "trunc"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 67
+		name : "half_cos"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 68
+		name : "half_divide"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 69
+		name : "half_exp"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 70
+		name : "half_exp2"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 71
+		name : "half_exp10"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 72
+		name : "half_log"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 73
+		name : "half_log2"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 74
+		name : "half_log10"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 75
+		name : "half_powr"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 76
+		name : "half_recip"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 77
+		name : "half_rsqrt"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 78
+		name : "half_sin"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 79
+		name : "half_sqrt"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 80
+		name : "half_tan"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 81
+		name : "native_cos"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 82
+		name : "native_divide"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 83
+		name : "native_exp"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 84
+		name : "native_exp2"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 85
+		name : "native_exp10"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 86
+		name : "native_log"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 87
+		name : "native_log2"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 88
+		name : "native_log10"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 89
+		name : "native_powr"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 90
+		name : "native_recip"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 91
+		name : "native_rsqrt"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 92
+		name : "native_sin"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 93
+		name : "native_sqrt"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 94
+		name : "native_tan"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 141
+		name : "s_abs"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 142
+		name : "s_abs_diff"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 143
+		name : "s_add_sat"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 144
+		name : "u_add_sat"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 145
+		name : "s_hadd"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 146
+		name : "u_hadd"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 147
+		name : "s_rhadd"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 148
+		name : "u_rhadd"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 149
+		name : "s_clamp"
+		args : [
+			ID VALUE
+			ID VALUE "Min"
+			ID VALUE "Max"
+		]
+	}
+	{
+		id : 150
+		name : "u_clamp"
+		args : [
+			ID VALUE
+			ID VALUE "Min"
+			ID VALUE "Max"
+		]
+	}
+	{
+		id : 151
+		name : "clz"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 152
+		name : "ctz"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 153
+		name : "s_mad_hi"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 154
+		name : "u_mad_sat"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 155
+		name : "s_mad_sat"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 156
+		name : "s_max"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 157
+		name : "u_max"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 158
+		name : "s_min"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 159
+		name : "u_min"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 160
+		name : "s_mul_hi"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 161
+		name : "rotate"
+		args : [
+			ID VALUE
+			ID VALUE "Rotation"
+		]
+	}
+	{
+		id : 162
+		name : "s_sub_sat"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 163
+		name : "u_sub_sat"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 164
+		name : "u_upsample"
+		args : [
+			ID VALUE "Hi"
+			ID VALUE "Lo"
+		]
+	}
+	{
+		id : 165
+		name : "s_upsample"
+		args : [
+			ID VALUE "Hi"
+			ID VALUE "Lo"
+		]
+	}
+	{
+		id : 166
+		name : "popcount"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 167
+		name : "s_mad24"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 168
+		name : "u_mad24"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 169
+		name : "s_mul24"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 170
+		name : "u_mul24"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 201
+		name : "u_abs"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 202
+		name : "u_abs_diff"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 203
+		name : "u_mul_hi"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 204
+		name : "u_mad_hi"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 95
+		name : "fclamp"
+		args : [
+			ID VALUE
+			ID VALUE "Min"
+			ID VALUE "Max"
+		]
+	}
+	{
+		id : 96
+		name : "degrees"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 97
+		name : "fmax_common"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 98
+		name : "fmin_common"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 99
+		name : "mix"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE "Interpolant"
+		]
+	}
+	{
+		id : 100
+		name : "radians"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 101
+		name : "step"
+		args : [
+			ID VALUE "Edge"
+			ID VALUE
+		]
+	}
+	{
+		id : 102
+		name : "smoothstep"
+		args : [
+			ID VALUE "Edge0"
+			ID VALUE "Edge1"
+			ID VALUE
+		]
+	}
+	{
+		id : 103
+		name : "sign"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 104
+		name : "cross"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 105
+		name : "distance"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 106
+		name : "length"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 107
+		name : "normalize"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 108
+		name : "fast_distance"
+		args : [
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 109
+		name : "fast_length"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 110
+		name : "fast_normalize"
+		args : [
+			ID VALUE
+		]
+	}
+	{
+		id : 186
+		name : "bitselect"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 187
+		name : "select"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE
+		]
+	}
+	{
+		id : 171
+		name : "vloadn"
+		args : [
+			ID VALUE "Offset"
+			ID VALUE "Ptr"
+			U32 "N"
+		]
+	}
+	{
+		id : 172
+		name : "vstoren"
+		args : [
+			ID VALUE "Data"
+			ID VALUE "Offset"
+			ID VALUE "Ptr"
+		]
+	}
+	{
+		id : 173
+		name : "vload_half"
+		args : [
+			ID VALUE "Offset"
+			ID VALUE "Ptr"
+		]
+	}
+	{
+		id : 174
+		name : "vload_halfn"
+		args : [
+			ID VALUE "Offset"
+			ID VALUE "Ptr"
+			U32 "N"
+		]
+	}
+	{
+		id : 175
+		name : "vstore_half"
+		args : [
+			ID VALUE "Data"
+			ID VALUE "Offset"
+			ID VALUE "Ptr"
+		]
+	}
+	{
+		id : 176
+		name : "vstore_half_r"
+		args : [
+			ID VALUE "Data"
+			ID VALUE "Offset"
+			ID VALUE "Ptr"
+			FPROUNDINGMODE
+		]
+	}
+	{
+		id : 177
+		name : "vstore_halfn"
+		args : [
+			ID VALUE "Data"
+			ID VALUE "Offset"
+			ID VALUE "Ptr"
+		]
+	}
+	{
+		id : 178
+		name : "vstore_halfn_r"
+		args : [
+			ID VALUE "Data"
+			ID VALUE "Offset"
+			ID VALUE "Ptr"
+			FPROUNDINGMODE
+		]
+	}
+	{
+		id : 179
+		name : "vloada_halfn"
+		args : [
+			ID VALUE "Offset"
+			ID VALUE "Ptr"
+			U32 "N"
+		]
+	}
+	{
+		id : 180
+		name : "vstorea_halfn"
+		args : [
+			ID VALUE "Data"
+			ID VALUE "Offset"
+			ID VALUE "Ptr"
+		]
+	}
+	{
+		id : 181
+		name : "vstorea_halfn_r"
+		args : [
+			ID VALUE "Data"
+			ID VALUE "Offset"
+			ID VALUE "Ptr"
+			FPROUNDINGMODE
+		]
+	}
+	{
+		id : 182
+		name : "shuffle"
+		args : [
+			ID VALUE
+			ID VALUE "ShuffleMask"
+		]
+	}
+	{
+		id : 183
+		name : "shuffle2"
+		args : [
+			ID VALUE
+			ID VALUE
+			ID VALUE "ShuffleMask"
+		]
+	}
+	{
+		id : 184
+		name : "printf"
+		args : [
+			ID VALUE "Format"
+			OPT VAR ID VALUE "Arguments"
+		]
+	}
+	{
+		id : 185
+		name : "prefetch"
+		args : [
+			ID VALUE "Ptr"
+			ID VALUE "NumElements"
+		]
+	}
 ]
 
 SPV_AMD_shader_explicit_vertex_parameter@NAMED : [
