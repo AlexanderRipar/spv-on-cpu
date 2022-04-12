@@ -627,20 +627,17 @@ void parse_elem(const char*& curr, elem_info* out_info) noexcept
 			if (implies_or_depends_count > 127)
 				panic("Line %d: More than 127 elements in 'depends' array (%d elements).\n", s_line_number, implies_or_depends_count);
 
-			uint32_t capability_id = ~0u;
+			uint32_t capability_len = 0;
 
-			for (uint32_t i = 0; i != _countof(capability_name_strings); ++i)
-			{
-				if (token_equal(curr, capability_name_strings[i]))
-				{
-					capability_id = capability_ids[i];
+			while (!is_whitespace(curr[capability_len]) && curr[capability_len] != '\0')
+				++capability_len;
+			
+			uint16_t capability_id;
 
-					break;
-				}
-			}
-
-			if (capability_id == ~0u)
+			if (!spird::get_capability_id_from_name(curr, capability_len, &capability_id))
 				parse_panic("capability-name", curr);
+
+			curr = skip_whitespace(curr + capability_len);
 
 			out_info->implies_or_depends[implies_or_depends_count] = capability_id;
 
