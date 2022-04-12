@@ -268,13 +268,13 @@ int cycle(int argc, const char** argv) noexcept
 				{
 					fprintf(output_file, "[\n");
 
-					for (uint8_t i = 0; i != elem_data.capability_cnt; ++i)
+					for (uint8_t j = 0; j != elem_data.capability_cnt; ++j)
 					{
 						const char* str;
 
-						if (!spird::get_name_from_capability_id(elem_data.capabilities[i], &str))
+						if (!spird::get_name_from_capability_id(elem_data.capabilities[j], &str))
 						{
-							fprintf(stderr, "Could not get name of capability %d.\n", elem_data.capabilities[i]);
+							fprintf(stderr, "Could not get name of capability %d.\n", elem_data.capabilities[j]);
 
 							return 1;
 						}
