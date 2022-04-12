@@ -1,6 +1,7 @@
 #include "spird_builder_strings.hpp"
 #include "spird_defs.hpp"
 #include "spird_hashing.hpp"
+#include "spird_names.hpp"
 
 #include <cstdio>
 #include <cstdint>
@@ -421,7 +422,7 @@ static arg_data parse_arg_type(const char*& curr, arg_state* state) noexcept
 		(state->prev_flags & (spird::arg_flags::optional | spird::arg_flags::pair)) == spird::arg_flags::optional)
 		panic("Line %d: Cannot have non-optional argument after optional argument.\n", s_line_number);
 
-	if (token_equal_no_advance(curr, argument_type_names[static_cast<uint32_t>(spird::arg_type::RTYPE)]))
+	if (token_equal_no_advance(curr, "RTYPE"))
 	{
 		if (state->has_rtype)
 			panic("Line %d: Cannot have more than one argument of type RTYPE.\n", s_line_number);
@@ -431,43 +432,10 @@ static arg_data parse_arg_type(const char*& curr, arg_state* state) noexcept
 		data.flags |= spird::arg_flags::id;
 	}
 
-	if ((data.flags & spird::arg_flags::result) == spird::arg_flags::none)
-	{
-		bool found = false;
+	if (!spird::get_arg_type_from_name(curr, name_len, &data.type))
+		parse_panic("argument-type", curr);
 
-		for (uint32_t i = 0; i != _countof(argument_type_names); ++i)
-			if (token_equal(curr, argument_type_names[i]))
-			{
-				found = true;
-
-				data.type = static_cast<spird::arg_type>(i);
-
-				break;
-			}
-			
-		if (!found)
-			parse_panic("argument-type", curr);
-	}
-	else
-	{
-		bool found = false;
-
-		for (uint32_t i = 0; i != _countof(result_type_names); ++i)
-			if (token_equal(curr, result_type_names[i]))
-			{
-				found = true;
-
-				if (static_cast<spird::rst_type>(i) == spird::rst_type::Auto && !state->has_rtype)
-					panic("Line %d: Cannot have result of type %s without RTYPE.\n", s_line_number, result_type_names[static_cast<uint32_t>(spird::rst_type::Auto)]);
-
-				data.type = static_cast<spird::arg_type>(i);
-
-				break;
-			}
-
-		if (!found)
-			parse_panic("result-type", curr);
-	}
+	curr = skip_whitespace(curr + name_len);
 
 	state->prev_flags = data.flags;
 

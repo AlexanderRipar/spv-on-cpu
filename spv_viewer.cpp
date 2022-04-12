@@ -34,7 +34,7 @@ private:
 
 	id_type_map m_id_map;
 
-	spird::rst_type m_rst_type;
+	spird::arg_type m_rst_type;
 
 	bool m_print_type_info;
 
@@ -393,19 +393,19 @@ private:
 	{
 		switch (data->m_type)
 		{
-		case spird::rst_type::Void:
+		case spird::arg_type::VOID:
 		{
 			if (!print_str("void"))
 				return spvcpu::result::no_memory;
 			break;
 		}
-		case spird::rst_type::Bool:
+		case spird::arg_type::BOOL:
 		{
 			if (!print_str("bool"))
 				return spvcpu::result::no_memory;
 			break;
 		}
-		case spird::rst_type::Int:
+		case spird::arg_type::INT:
 		{
 			if (!print_str(data->m_data.int_data.is_signed ? "int" : "uint"))
 				return spvcpu::result::no_memory;
@@ -416,7 +416,7 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Float:
+		case spird::arg_type::FLOAT:
 		{
 			const char* str = "float";
 
@@ -432,13 +432,13 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Vector:
+		case spird::arg_type::VECTOR:
 		{
 			char prefix = '\0';
 
 			uint8_t width = 0xFF;
 
-			if (data->m_data.vector_data.component_type == spird::rst_type::Float)
+			if (data->m_data.vector_data.component_type == spird::arg_type::FLOAT)
 			{
 				if (data->m_data.vector_data.float_component.width == 16)
 					prefix = 'h';
@@ -447,7 +447,7 @@ private:
 				else if (data->m_data.vector_data.float_component.width != 32)
 					width = data->m_data.vector_data.float_component.width;
 			}
-			else if (data->m_data.vector_data.component_type == spird::rst_type::Int)
+			else if (data->m_data.vector_data.component_type == spird::arg_type::INT)
 			{
 				if (data->m_data.vector_data.int_component.is_signed)
 					prefix = 'i';
@@ -457,7 +457,7 @@ private:
 				if (data->m_data.vector_data.int_component.width != 32)
 					width = data->m_data.vector_data.int_component.width;
 			}
-			else if (data->m_data.vector_data.component_type == spird::rst_type::Bool)
+			else if (data->m_data.vector_data.component_type == spird::arg_type::BOOL)
 			{
 				prefix = 'b';
 			}
@@ -479,13 +479,13 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Matrix:
+		case spird::arg_type::MATRIX:
 		{
 			char prefix = '\0';
 
 			uint8_t width = 0xFF;
 
-			if (data->m_data.matrix_data.column_data.component_type == spird::rst_type::Float)
+			if (data->m_data.matrix_data.column_data.component_type == spird::arg_type::FLOAT)
 			{
 				if (data->m_data.matrix_data.column_data.float_component.width == 16)
 					prefix = 'h';
@@ -494,7 +494,7 @@ private:
 				else if (data->m_data.matrix_data.column_data.float_component.width != 32)
 					width = data->m_data.matrix_data.column_data.float_component.width != 32;
 			}
-			else if (data->m_data.matrix_data.column_data.component_type == spird::rst_type::Int)
+			else if (data->m_data.matrix_data.column_data.component_type == spird::arg_type::INT)
 			{
 				if (data->m_data.matrix_data.column_data.int_component.is_signed)
 					prefix = 'i';
@@ -504,7 +504,7 @@ private:
 				if (data->m_data.matrix_data.column_data.int_component.width != 32)
 					width = data->m_data.matrix_data.column_data.int_component.width != 32;
 			}
-			else if (data->m_data.matrix_data.column_data.component_type == spird::rst_type::Bool)
+			else if (data->m_data.matrix_data.column_data.component_type == spird::arg_type::BOOL)
 			{
 				prefix = 'b';
 			}
@@ -534,28 +534,28 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Image:
+		case spird::arg_type::IMAGE:
 		{
 			if (!print_str("Image"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::Sampler:
+		case spird::arg_type::SAMPLER:
 		{
 			if (!print_str("Sampler"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::SampledImage:
+		case spird::arg_type::SAMPLEDIMAGE:
 		{
 			if (!print_str("SampledImage"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::Array:
+		case spird::arg_type::ARRAY:
 		{
 			type_data* elem_data;
 
@@ -570,7 +570,7 @@ private:
 
 			break;
 		}
-		case spird::rst_type::RuntimeArray:
+		case spird::arg_type::RUNTIMEARRAY:
 		{
 			type_data* elem_data;
 
@@ -585,21 +585,21 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Struct:
+		case spird::arg_type::STRUCT:
 		{
 			if (!print_str("Struct"))
 				return spvcpu::result::success;
 			
 			break;
 		}
-		case spird::rst_type::Opaque:
+		case spird::arg_type::OPAQUE:
 		{
 			if (!print_str("Opaque"))
 				return spvcpu::result::success;
 			
 			break;
 		}
-		case spird::rst_type::Pointer:
+		case spird::arg_type::POINTER:
 		{
 			type_data* pointee_data;
 
@@ -614,7 +614,7 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Function:
+		case spird::arg_type::FUNCTION:
 		{
 			type_data* arg_data;
 
@@ -646,105 +646,105 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Event:
+		case spird::arg_type::EVENT:
 		{
 			if (!print_str("Event"))
 				return spvcpu::result::no_memory;
 			
 			break;
 		}
-		case spird::rst_type::DeviceEvent:
+		case spird::arg_type::DEVICEEVENT:
 		{
 			if (!print_str("DeviceEvent"))
 				return spvcpu::result::no_memory;
 			
 			break;
 		}
-		case spird::rst_type::ReserveId:
+		case spird::arg_type::RESERVEID:
 		{
 			if (!print_str("ReserveId"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::Queue:
+		case spird::arg_type::QUEUE:
 		{
 			if (!print_str("Queue"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::Pipe:
+		case spird::arg_type::PIPE:
 		{
 			if (!print_str("Pipe"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::PipeStorage:
+		case spird::arg_type::PIPESTORAGE:
 		{
 			if (!print_str("PipeStorage"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::NamedBarrier:
+		case spird::arg_type::NAMEDBARRIER:
 		{
 			if (!print_str("NamedBarrier"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::BufferSurfaceINTEL:
+		case spird::arg_type::BUFFERSURFACEINTEL:
 		{
 			if (!print_str("BufferSurfaceINTEL"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::RayQueryKHR:
+		case spird::arg_type::RAYQUERYKHR:
 		{
 			if (!print_str("RayQueryKHR"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::AccelerationStructureKHR:
+		case spird::arg_type::ACCELERATIONSTRUCTUREKHR:
 		{
 			if (!print_str("AccelerationStructureKHR"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::CooperativeMatrixNV:
+		case spird::arg_type::COOPERATIVEMATRIXNV:
 		{
 			if (!print_str("CooperativeMatrixNV"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::String:
+		case spird::arg_type::STRING:
 		{
 			if (!print_str("String \"") || !print_str(data->m_data.string_data.string) || !print_str("\""))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::ExtInstSet:
+		case spird::arg_type::EXTINSTSET:
 		{
 			if (!print_str("ExtInstSet") || !print_str(data->m_data.ext_inst_set_data.name))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::Label:
+		case spird::arg_type::LABEL:
 		{
 			if (!print_str("Label"))
 				return spvcpu::result::no_memory;
 
 			break;
 		}
-		case spird::rst_type::DecoGroup:
+		case spird::arg_type::DECOGROUP:
 		{
 			if (!print_str("DecoGroup"))
 				return spvcpu::result::no_memory;
@@ -767,7 +767,7 @@ private:
 
 		switch (data->m_type)
 		{
-		case spird::rst_type::Int:
+		case spird::arg_type::INT:
 		{
 			uint64_t n = *literal_word;
 
@@ -792,7 +792,7 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Float:
+		case spird::arg_type::FLOAT:
 		{
 			uint64_t float_bits = *literal_word;
 
@@ -874,7 +874,7 @@ private:
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result extract_id_type(spird::rst_type type, const uint32_t* word, const uint32_t* word_end) noexcept
+	spvcpu::result extract_id_type(spird::arg_type type, const uint32_t* word, const uint32_t* word_end) noexcept
 	{
 		type_data data;
 
@@ -883,23 +883,23 @@ private:
 		// Not passing 'Auto' as type is required from the caller
 		switch (type)
 		{
-		case spird::rst_type::Void:
-		case spird::rst_type::Bool:
-		case spird::rst_type::Sampler:
-		case spird::rst_type::Event:
-		case spird::rst_type::DeviceEvent:
-		case spird::rst_type::ReserveId:
-		case spird::rst_type::Queue:
-		case spird::rst_type::PipeStorage:
-		case spird::rst_type::NamedBarrier:
-		case spird::rst_type::RayQueryKHR:
-		case spird::rst_type::AccelerationStructureKHR:
-		case spird::rst_type::DecoGroup:
+		case spird::arg_type::VOID:
+		case spird::arg_type::BOOL:
+		case spird::arg_type::SAMPLER:
+		case spird::arg_type::EVENT:
+		case spird::arg_type::DEVICEEVENT:
+		case spird::arg_type::RESERVEID:
+		case spird::arg_type::QUEUE:
+		case spird::arg_type::PIPESTORAGE:
+		case spird::arg_type::NAMEDBARRIER:
+		case spird::arg_type::RAYQUERYKHR:
+		case spird::arg_type::ACCELERATIONSTRUCTUREKHR:
+		case spird::arg_type::DECOGROUP:
 		{
 			// All these types are not parameterized.
 			break;
 		}
-		case spird::rst_type::Int:
+		case spird::arg_type::INT:
 		{
 			data.m_data.int_data.width = word[1];
 
@@ -907,13 +907,13 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Float:
+		case spird::arg_type::FLOAT:
 		{
 			data.m_data.float_data.width = word[1];
 
 			break;
 		}
-		case spird::rst_type::Vector:
+		case spird::arg_type::VECTOR:
 		{
 			uint32_t component_type_id = word[1];
 
@@ -922,19 +922,19 @@ private:
 			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
 				return rst;
 
-			if (component_type->m_type == spird::rst_type::Bool)
+			if (component_type->m_type == spird::arg_type::BOOL)
 			{
-				data.m_data.vector_data.component_type = spird::rst_type::Bool;
+				data.m_data.vector_data.component_type = spird::arg_type::BOOL;
 			}
-			else if (component_type->m_type == spird::rst_type::Int)
+			else if (component_type->m_type == spird::arg_type::INT)
 			{
-				data.m_data.vector_data.component_type = spird::rst_type::Int;
+				data.m_data.vector_data.component_type = spird::arg_type::INT;
 
 				data.m_data.vector_data.int_component = component_type->m_data.int_data;
 			}
-			else if (component_type->m_type == spird::rst_type::Float)
+			else if (component_type->m_type == spird::arg_type::FLOAT)
 			{
-				data.m_data.vector_data.component_type = spird::rst_type::Float;
+				data.m_data.vector_data.component_type = spird::arg_type::FLOAT;
 
 				data.m_data.vector_data.float_component = component_type->m_data.float_data;
 			}
@@ -947,7 +947,7 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Matrix:
+		case spird::arg_type::MATRIX:
 		{
 			uint32_t component_type_id = word[1];
 
@@ -956,7 +956,7 @@ private:
 			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
 				return rst;
 
-			if (component_type->m_type == spird::rst_type::Vector)
+			if (component_type->m_type == spird::arg_type::VECTOR)
 			{
 				data.m_data.matrix_data.column_data = component_type->m_data.vector_data;
 			}
@@ -969,7 +969,7 @@ private:
 			
 			break;
 		}
-		case spird::rst_type::Image:
+		case spird::arg_type::IMAGE:
 		{
 			uint32_t component_type_id = word[1];
 
@@ -978,19 +978,19 @@ private:
 			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
 				return rst;
 
-			if (component_type->m_type == spird::rst_type::Void)
+			if (component_type->m_type == spird::arg_type::VOID)
 			{
-				data.m_data.image_data.sample_type = spird::rst_type::Void;
+				data.m_data.image_data.sample_type = spird::arg_type::VOID;
 			}
-			else if (component_type->m_type == spird::rst_type::Int)
+			else if (component_type->m_type == spird::arg_type::INT)
 			{
-				data.m_data.image_data.sample_type = spird::rst_type::Int;
+				data.m_data.image_data.sample_type = spird::arg_type::INT;
 
 				data.m_data.image_data.sample_int = component_type->m_data.int_data;
 			}
-			else if (component_type->m_type == spird::rst_type::Float)
+			else if (component_type->m_type == spird::arg_type::FLOAT)
 			{
-				data.m_data.image_data.sample_type = spird::rst_type::Float;
+				data.m_data.image_data.sample_type = spird::arg_type::FLOAT;
 
 				data.m_data.image_data.sample_float = component_type->m_data.float_data;
 			}
@@ -1018,7 +1018,7 @@ private:
 
 			break;
 		}
-		case spird::rst_type::SampledImage:
+		case spird::arg_type::SAMPLEDIMAGE:
 		{
 			uint32_t component_type_id = word[1];
 
@@ -1027,14 +1027,14 @@ private:
 			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
 				return rst;
 
-			if (component_type->m_type == spird::rst_type::Image)
+			if (component_type->m_type == spird::arg_type::IMAGE)
 				data.m_data.sampled_image_data = component_type->m_data.image_data;
 			else
 				return spvcpu::result::incompatible_types;
 			
 			break;
 		}
-		case spird::rst_type::Array:
+		case spird::arg_type::ARRAY:
 		{
 			data.m_data.array_data.element_id = word[1];
 
@@ -1044,13 +1044,13 @@ private:
 
 			break;
 		}
-		case spird::rst_type::RuntimeArray:
+		case spird::arg_type::RUNTIMEARRAY:
 		{
 			data.m_data.runtime_array_data.element_id = word[1];
 
 			break;
 		}
-		case spird::rst_type::Struct:
+		case spird::arg_type::STRUCT:
 		{
 			const ptrdiff_t member_cnt = word_end - word - 1;
 
@@ -1063,13 +1063,13 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Opaque:
+		case spird::arg_type::OPAQUE:
 		{
 			data.m_data.opaque_data.name = reinterpret_cast<const char*>(word + 1);
 
 			break;
 		}
-		case spird::rst_type::Pointer:
+		case spird::arg_type::POINTER:
 		{
 			data.m_data.pointer_data.storage_class = word[1];
 
@@ -1077,7 +1077,7 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Function:
+		case spird::arg_type::FUNCTION:
 		{
 			data.m_data.function_data.return_type_id = word[1];
 
@@ -1087,19 +1087,19 @@ private:
 
 			break;
 		}
-		case spird::rst_type::Pipe:
+		case spird::arg_type::PIPE:
 		{
 			data.m_data.pipe_data.access_qualifier = static_cast<uint8_t>(word[1]);
 
 			break;
 		}
-		case spird::rst_type::BufferSurfaceINTEL:
+		case spird::arg_type::BUFFERSURFACEINTEL:
 		{
 			data.m_data.buffer_surface_intel_data.access_qualifier = static_cast<uint8_t>(word[1]);
 
 			break;
 		}
-		case spird::rst_type::CooperativeMatrixNV:
+		case spird::arg_type::COOPERATIVEMATRIXNV:
 		{
 			uint32_t component_type_id = word[1];
 
@@ -1108,15 +1108,15 @@ private:
 			if (spvcpu::result rst = m_id_map.get(component_type_id, &component_type); rst != spvcpu::result::success)
 				return rst;
 
-			if (component_type->m_type == spird::rst_type::Int)
+			if (component_type->m_type == spird::arg_type::INT)
 			{
-				data.m_data.cooperative_matrix_nv_data.component_type = spird::rst_type::Int;
+				data.m_data.cooperative_matrix_nv_data.component_type = spird::arg_type::INT;
 
 				data.m_data.cooperative_matrix_nv_data.int_component = component_type->m_data.int_data;
 			}
-			else if (component_type->m_type == spird::rst_type::Float)
+			else if (component_type->m_type == spird::arg_type::FLOAT)
 			{
-				data.m_data.cooperative_matrix_nv_data.component_type = spird::rst_type::Float;
+				data.m_data.cooperative_matrix_nv_data.component_type = spird::arg_type::FLOAT;
 
 				data.m_data.cooperative_matrix_nv_data.float_component = component_type->m_data.float_data;
 			}
@@ -1133,19 +1133,19 @@ private:
 
 			break;
 		}
-		case spird::rst_type::String:
+		case spird::arg_type::STRING:
 		{
 			data.m_data.string_data.string = reinterpret_cast<const char*>(word + 1);
 
 			break;
 		}
-		case spird::rst_type::ExtInstSet:
+		case spird::arg_type::EXTINSTSET:
 		{
 			data.m_data.ext_inst_set_data.name = reinterpret_cast<const char*>(word + 1);
 
 			break;
 		}
-		case spird::rst_type::Label:
+		case spird::arg_type::LABEL:
 		{
 			data.m_data.label_data.location = word - 1;
 
@@ -1177,11 +1177,11 @@ private:
 
 			m_rst_id = *word;
 
-			m_rst_type = static_cast<spird::rst_type>(type);
+			m_rst_type = static_cast<spird::arg_type>(type);
 
-			if (static_cast<spird::rst_type>(type) != spird::rst_type::Auto)
+			if (static_cast<spird::arg_type>(type) != spird::arg_type::AUTO)
 			{
-				if (spvcpu::result rst = extract_id_type(static_cast<spird::rst_type>(type), word, word_end); rst != spvcpu::result::success)
+				if (spvcpu::result rst = extract_id_type(static_cast<spird::arg_type>(type), word, word_end); rst != spvcpu::result::success)
 					return rst;
 			}
 			else
@@ -1295,7 +1295,7 @@ private:
 
 				break;
 			}
-			case spird::arg_type::STR:
+			case spird::arg_type::STRING:
 			{
 				const char* str = reinterpret_cast<const char*>(word);
 
@@ -1543,7 +1543,7 @@ public:
 
 		m_rtype_id = ~0u;
 
-		m_rst_type = spird::rst_type::Auto;
+		m_rst_type = spird::arg_type::AUTO;
 		
 		return spvcpu::result::success;
 	}

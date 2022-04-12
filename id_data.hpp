@@ -32,7 +32,7 @@ union raw_type_data
 
 	struct vector_data_t
 	{
-		spird::rst_type component_type;
+		spird::arg_type component_type;
 
 		union
 		{
@@ -55,7 +55,7 @@ union raw_type_data
 
 	struct image_data_t
 	{
-		spird::rst_type sample_type;
+		spird::arg_type sample_type;
 
 		union
 		{
@@ -158,7 +158,7 @@ union raw_type_data
 
 		uint32_t columns_id;
 
-		spird::rst_type component_type;
+		spird::arg_type component_type;
 
 		union
 		{
@@ -194,7 +194,7 @@ struct alignas(uint64_t) type_data
 	raw_type_data m_data;
 	
 	// This goes at the end so it doesn't cause any misalignment within the union
-	spird::rst_type m_type;
+	spird::arg_type m_type;
 };
 
 static_assert(sizeof(type_data) == 16);

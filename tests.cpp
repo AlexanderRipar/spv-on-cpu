@@ -799,7 +799,7 @@ int cycle(int argc, const char** argv) noexcept
 
 int disasm(int argc, const char** argv) noexcept
 {
-	if (argc < 3 && argc > 5)
+	if (argc < 3 || argc > 5)
 	{
 		printf("Usage: %s [--types] shader-file spird-file [output-file]\n", argv[0]);
 
