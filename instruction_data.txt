@@ -56,7 +56,7 @@ Instruction : [
 		args : [
 			SOURCELANGUAGE
 			U32 "Version"
-			OPT String "File"
+			OPT ID String "File"
 			OPT String "Source"
 		]
 	}
