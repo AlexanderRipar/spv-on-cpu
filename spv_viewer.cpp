@@ -283,7 +283,7 @@ private:
 		return spvcpu::result::success;
 	}
 
-	spvcpu::result print_enum(const void* spird, const spird::enum_location& enum_loc, const uint32_t*& word, const uint32_t* word_end) noexcept
+	spvcpu::result print_enum(const void* spird, const spird::enum_location& enum_loc, spird::enum_id enum_id, const uint32_t*& word, const uint32_t* word_end) noexcept
 	{
 		if (word == word_end)
 			return spvcpu::result::instruction_wordcount_mismatch;
@@ -359,7 +359,14 @@ private:
 			if (!print_str(elem_data.name))
 				return spvcpu::result::no_memory;
 
-			for (uint32_t arg = 0; arg != elem_data.argc; ++arg)
+			// Skip RST and RTYPE for instructions, as these should only be encountered in
+			// OpSpecConstantOp, which includes RST and RTYPE before the opcode.
+			const uint32_t initial_arg = enum_id == spird::enum_id::Instruction ? 2 : 0;
+
+			if (enum_id == spird::enum_id::Instruction && elem_data.argc < 2)
+				return spvcpu::result::instruction_wordcount_mismatch;
+
+			for (uint32_t arg = initial_arg; arg != elem_data.argc; ++arg)
 			{
 				spird::arg_flags flags = elem_data.arg_flags[arg], second_flags = spird::arg_flags::none;
 
@@ -1245,7 +1252,7 @@ private:
 			if (spvcpu::result rst = spird::get_enum_location(spird, static_cast<spird::enum_id>(type), &enum_loc); rst != spvcpu::result::success)
 				return rst;
 
-			return print_enum(spird, enum_loc, word, word_end);
+			return print_enum(spird, enum_loc, static_cast<spird::enum_id>(type), word, word_end);
 		}
 		else
 		{
@@ -1265,7 +1272,8 @@ private:
 				if (spvcpu::result rst = spird::get_enum_location(spird, ext_inst_set->m_data.ext_inst_set_data.name, &ext_inst_loc); rst != spvcpu::result::success)
 					return rst;
 
-				return print_enum(spird, ext_inst_loc, word, word_end);
+				// Just pass a bogus enum_id, as long as it is not Instruction it will have no effect
+				return print_enum(spird, ext_inst_loc, spird::enum_id::QuantizationMode, word, word_end);
 			}
 			case spird::arg_type::LITERAL:
 			{
