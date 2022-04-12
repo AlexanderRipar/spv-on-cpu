@@ -1393,7 +1393,7 @@ public:
 
 		m_string_capacity = 4096;
 
-		m_line = static_cast<char*>(malloc(1024));
+		m_line = static_cast<char*>(malloc(4096));
 
 		if (m_line == nullptr)
 			return spvcpu::result::no_memory;
