@@ -4,107 +4,13 @@
 #include <cstring>
 
 #include "spird_accessor.hpp"
+#include "spird_names.hpp"
 #include "spv_viewer.hpp"
 
 #ifdef _WIN32
 #define ftell _ftelli64
 #define fseek _fseeki64
 #endif
-
-static constexpr const char* argument_type_names[]
-{
-	"INSTRUCTION",
-	"SOURCELANGUAGE",
-	"EXECUTIONMODEL",
-	"ADDRESSINGMODEL",
-	"MEMORYMODEL",
-	"EXECUTIONMODE",
-	"STORAGECLASS",
-	"DIM",
-	"SAMPLERADDRESSINGMODE",
-	"SAMPLERFILTERMODE",
-	"IMAGEFORMAT",
-	"IMAGECHANNELORDER",
-	"IMAGECHANNELDATATYPE",
-	"IMAGEOPERANDS",
-	"FPFASTMATHMODE",
-	"FPROUNDINGMODE",
-	"LINKAGETYPE",
-	"ACCESSQUALIFIER",
-	"FUNCTIONPARAMETERATTRIBUTE",
-	"DECORATION",
-	"BUILTIN",
-	"SELECTIONCONTROL",
-	"LOOPCONTROL",
-	"FUNCTIONCONTROL",
-	"MEMORYSEMANTICSID",
-	"MEMORYOPERANDS",
-	"SCOPEID",
-	"GROUPOPERATION",
-	"KERNELENQUEUEFLAGS",
-	"KERNELPROFILINGINFO",
-	"CAPABILITY",
-	"RESERVEDRAYFLAGS",
-	"RESERVEDRAYQUERYINTERSECTION",
-	"RESERVEDRAYQUERYCOMMITTEDTYPE",
-	"RESERVEDRAYQUERYCANDIDATETYPE",
-	"RESERVEDFRAGMENTSHADINGRATE",
-	"RESERVEDFPDENORMMODE",
-	"RESERVEDFPOPERATIONMODE",
-	"QUANTIZATIONMODE",
-	"OVERFLOWMODE",
-	"PACKEDVECTORFORMAT",
-
-	"RST",
-	"RTYPE",
-	"LITERAL",
-	"VALUE",
-	"TYPE",
-	"UNKNOWN",
-	"U32",
-	"STR",
-	"ARG",
-	"MEMBER",
-	"U32IDPAIR",
-	"IDMEMBERPAIR",
-	"IDIDPAIR",
-	"IDU32PAIR",
-	"I64",
-};
-
-static constexpr const char* const result_type_names[]{
-	"Auto",
-	"Void",
-	"Bool",
-	"Int",
-	"Float",
-	"Vector",
-	"Matrix",
-	"Image",
-	"Sampler",
-	"SampledImage",
-	"Array",
-	"RuntimeArray",
-	"Struct",
-	"Opaque",
-	"Pointer",
-	"Function",
-	"Event",
-	"DeviceEvent",
-	"ReserveId",
-	"Queue",
-	"Pipe",
-	"PipeStorage",
-	"NamedBarrier",
-	"BufferSurfaceINTEL",
-	"RayQueryKHR",
-	"AccelerationStructureKHR",
-	"CooperativeMatrixNV",
-	"String",
-	"ExtInstSet",
-	"Label",
-	"DecoGroup",
-};
 
 static constexpr uint16_t capability_ids[]
 {
@@ -724,18 +630,22 @@ int cycle(int argc, const char** argv) noexcept
 				if ((arg_flags & spird::arg_flags::pair) == spird::arg_flags::pair)
 					pairstr = "PAIR ";
 
+				const char* type_name;
+
+				if (!spird::get_name_from_arg_type(arg_type, &type_name))
+				{
+					fprintf(stderr, "Could not get name of arg_type %d.\n", arg_type);
+
+					return 1;
+				}
+
 				if ((arg_flags & spird::arg_flags::result) == spird::arg_flags::result)
 				{
-					fprintf(output_file, "\t\t\tRST %s\n", result_type_names[static_cast<uint8_t>(arg_type)]);
+					fprintf(output_file, "\t\t\tRST %s\n", type_name);
 				}
 				else
 				{
-					const char* argtypename = "<Invalid>";
-
-					if (static_cast<uint8_t>(arg_type) < _countof(argument_type_names))
-						argtypename = argument_type_names[static_cast<uint8_t>(arg_type)];
-
-					fprintf(output_file, "\t\t\t%s%s%s%s", optstr, varstr, idstr, argtypename);
+					fprintf(output_file, "\t\t\t%s%s%s%s", optstr, varstr, idstr, type_name);
 
 					if (elem_data.arg_names[i] == nullptr)
 						fprintf(output_file, "\n");
